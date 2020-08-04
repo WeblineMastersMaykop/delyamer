@@ -5,14 +5,14 @@ from pages.models import PageDocument, PageImage, PageQuote, PageVideo, Page
 
 class PageDocumentInline(admin.TabularInline):
     model = PageDocument
-    extra = 1
+    extra = 0
     fields = ('title', 'document')
     classes = ('grp-collapse grp-closed',)
 
 
 class PageImageInline(admin.TabularInline):
     model = PageImage
-    extra = 1
+    extra = 0
     fields = ('image',)
     classes = ('grp-collapse grp-closed',)
 
@@ -26,7 +26,7 @@ class PageImageInline(admin.TabularInline):
 
 class PageVideoInline(admin.TabularInline):
     model = PageVideo
-    extra = 1
+    extra = 0
     fields = ('video_link', 'channel_link')
     classes = ('grp-collapse grp-closed',)
 

@@ -45,9 +45,14 @@ INSTALLED_APPS = [
 
     'mptt',
     'django_mptt_admin',
+    'colorfield',
 
     'pages',
     'core',
+    'contacts',
+    'news',
+    'products',
+    'orders',
 ]
 
 MIDDLEWARE = [
