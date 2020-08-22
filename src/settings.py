@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'news',
     'products',
     'orders',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -146,7 +147,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 SITE_ID = 1
 
-FILEBROWSER_DIRECTORY = 'upload/'
+FILEBROWSER_DIRECTORY = ''
 DIRECTORY = ''
 
 EMAIL_BACKEND = 'core.email_backend.EmailBackend'
@@ -154,3 +155,5 @@ EMAIL_BACKEND = 'core.email_backend.EmailBackend'
 GOOGLE_RECAPTCHA_SECRET_KEY = '6LcNnpAUAAAAAP8zDEOl2Erhj2F9bMPOjQza78Hb'
 
 GRAPPELLI_ADMIN_TITLE = "DE'LYAMER"
+
+AUTH_USER_MODEL = 'users.User'

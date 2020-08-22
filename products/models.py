@@ -48,7 +48,8 @@ class Size(models.Model):
 
 
 class Property(models.Model):
-    # TODO Остановился тут
+    name = models.CharField('Характеристика', max_length=250)
+
     class Meta:
         verbose_name = 'Характеристика'
         verbose_name_plural = 'Характеристики'
@@ -75,6 +76,20 @@ class Product(SEO):
 
     def __str__(self):
         return self.name
+
+
+class ProductProperty(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='properties', verbose_name='Товар')
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='properties', verbose_name='Характеристика')
+    value = models.CharField('Значение', max_length=250)
+
+    class Meta:
+        verbose_name = 'Характеристика товара'
+        verbose_name_plural = 'Характеристики товара'
+        unique_together = ('product', 'property')
+
+    def __str__(self):
+        return '{0} -- {1}'.format(self.product.name, self.property.name)
 
 
 class Offer(models.Model):

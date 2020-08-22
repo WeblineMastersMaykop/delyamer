@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django_mptt_admin.admin import DjangoMpttAdmin
-from products.models import Color, Size, Category, Product, Offer, OfferImage
+from products.models import Color, Size, Category, Product, Offer, OfferImage, Property, ProductProperty
 
 
 admin.site.register(Size)
+admin.site.register(Property)
 
 
 @admin.register(Category)
@@ -40,6 +41,12 @@ class OfferInline(admin.TabularInline):
     classes = ('grp-collapse grp-closed',)
 
 
+class ProductPropertyInline(admin.TabularInline):
+    model = ProductProperty
+    extra = 0
+    classes = ('grp-collapse grp-closed',)
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     fieldsets = (
@@ -56,7 +63,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ('is_active', 'is_new', 'is_bs')
     search_fields = ('name', 'vendor_code', 'category__name', 'desc')
     prepopulated_fields = {'slug': ('name',)}
-    inlines = (OfferInline, OfferImageInline)
+    inlines = (OfferInline, OfferImageInline, ProductPropertyInline)
 
 
 @admin.register(Offer)
