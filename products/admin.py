@@ -51,7 +51,7 @@ class ProductPropertyInline(admin.TabularInline):
 class ProductAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
-            'fields': ('category', 'name', 'vendor_code', 'price', 'desc', 'is_new', 'is_bs', 'is_active'),
+            'fields': ('category', 'code_1c', 'name', 'vendor_code', 'price', 'desc', 'is_new', 'is_bs', 'is_active'),
         }),
         ('SEO', {
             'classes': ('grp-collapse grp-closed',),
@@ -59,9 +59,9 @@ class ProductAdmin(admin.ModelAdmin):
         }),
     )
 
-    list_display = ('name', 'category', 'price', 'vendor_code', 'is_new', 'is_bs', 'is_active', 'created', 'updated')
+    list_display = ('name', 'category', 'code_1c', 'price', 'vendor_code', 'is_new', 'is_bs', 'is_active', 'created', 'updated')
     list_editable = ('is_active', 'is_new', 'is_bs')
-    search_fields = ('name', 'vendor_code', 'category__name', 'desc')
+    search_fields = ('name', 'code_1c', 'vendor_code', 'category__name')
     prepopulated_fields = {'slug': ('name',)}
     inlines = (OfferInline, OfferImageInline, ProductPropertyInline)
 
@@ -76,3 +76,4 @@ class OfferAdmin(admin.ModelAdmin):
 
     list_display = ('product', 'color', 'size', 'stock', 'sale', 'is_active', 'created', 'updated')
     list_editable = ('is_active',)
+    search_fields = ('product__name', 'color__name')

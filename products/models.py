@@ -60,6 +60,7 @@ class Property(models.Model):
 
 class Product(SEO):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', verbose_name='Категория')
+    code_1c = models.CharField('Код 1с', max_length=100, unique=True)
     name = models.CharField('Название', max_length=250)
     vendor_code = models.CharField('Артикул', max_length=20)
     price = models.PositiveIntegerField('Цена')
