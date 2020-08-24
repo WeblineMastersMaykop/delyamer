@@ -106,6 +106,7 @@ class Offer(models.Model):
     class Meta:
         verbose_name = 'Вариант товара'
         verbose_name_plural = 'Варианты товара'
+        unique_together = ('product', 'color', 'size')
 
     def __str__(self):
         return '{0} -- {1} -- {2}'.format(self.product.name, self.color.name, self.size.name)

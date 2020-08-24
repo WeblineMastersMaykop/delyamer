@@ -76,4 +76,4 @@ class OfferAdmin(admin.ModelAdmin):
 
     list_display = ('product', 'color', 'size', 'stock', 'sale', 'is_active', 'created', 'updated')
     list_editable = ('is_active',)
-    search_fields = ('product__name', 'color__name')
+    search_fields = ('product__name', 'color__name', 'size__name', 'product__category__name', 'product__category__parent__name')
