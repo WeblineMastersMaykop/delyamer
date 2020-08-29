@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Каталог</title>
+<meta name="description" content="Каталог товаров">
+<meta name="keywords" content="каталог, товары">
+{% endblock %}
+
+{% block content %}
+{% for item in categories %}
+{{ item }} <br>
+{% endfor %}
+<br>
+{{ parents }}
+
+{% endblock %}

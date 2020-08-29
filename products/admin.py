@@ -1,9 +1,8 @@
 from django.contrib import admin
 from django_mptt_admin.admin import DjangoMpttAdmin
-from products.models import Color, Size, Category, Product, Offer, OfferImage, Property, ProductProperty
+from products.models import Color, Size, Category, Product, Offer, ProductImage, Property, ProductProperty, Cup
 
 
-admin.site.register(Size)
 admin.site.register(Property)
 
 
@@ -11,7 +10,7 @@ admin.site.register(Property)
 class CategoryAdmin(DjangoMpttAdmin):
     fieldsets = (
         (None, {
-            'fields': ('parent', 'name'),
+            'fields': ('parent', 'name', 'code_1c'),
         }),
         ('SEO', {
             'classes': ('grp-collapse grp-closed',),
@@ -19,18 +18,27 @@ class CategoryAdmin(DjangoMpttAdmin):
         }),
     )
 
-    list_display = ('name', 'parent', 'position')
+    list_display = ('name', 'parent', 'code_1c', 'position')
     sortable_field_name = 'position'
     prepopulated_fields = {'slug': ('name',)}
 
 
 @admin.register(Color)
 class ColorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'color')
+    list_display = ('name', 'color', 'code_1c')
 
 
-class OfferImageInline(admin.TabularInline):
-    model = OfferImage
+@admin.register(Size)
+class SizeAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+@admin.register(Cup)
+class CupAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
     extra = 0
     classes = ('grp-collapse grp-closed',)
 
@@ -51,7 +59,7 @@ class ProductPropertyInline(admin.TabularInline):
 class ProductAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
-            'fields': ('category', 'code_1c', 'name', 'vendor_code', 'price', 'desc', 'is_new', 'is_bs', 'is_active'),
+            'fields': ('category', 'code_1c', 'name', 'vendor_code', 'pushup', 'price', 'desc', 'is_new', 'is_bs', 'is_active'),
         }),
         ('SEO', {
             'classes': ('grp-collapse grp-closed',),
@@ -59,21 +67,22 @@ class ProductAdmin(admin.ModelAdmin):
         }),
     )
 
-    list_display = ('name', 'category', 'code_1c', 'price', 'vendor_code', 'is_new', 'is_bs', 'is_active', 'created', 'updated')
+    list_display = ('name', 'category', 'code_1c', 'price', 'vendor_code', 'pushup', 'is_new', 'is_bs', 'is_active', 'created', 'updated')
     list_editable = ('is_active', 'is_new', 'is_bs')
     search_fields = ('name', 'code_1c', 'vendor_code', 'category__name')
-    prepopulated_fields = {'slug': ('name',)}
-    inlines = (OfferInline, OfferImageInline, ProductPropertyInline)
+    list_filter = ('is_active', 'is_new', 'is_bs', 'category', 'pushup')
+    prepopulated_fields = {'slug': ('name','code_1c')}
+    inlines = (OfferInline, ProductImageInline, ProductPropertyInline)
 
 
 @admin.register(Offer)
 class OfferAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
-            'fields': ('product', 'color', 'size', 'stock', 'sale', 'is_active'),
+            'fields': ('product', 'color', 'size', 'cup', 'stock', 'sale', 'is_active'),
         }),
     )
 
-    list_display = ('product', 'color', 'size', 'stock', 'sale', 'is_active', 'created', 'updated')
+    list_display = ('product', 'color', 'size', 'cup', 'stock', 'sale', 'is_active', 'created', 'updated')
     list_editable = ('is_active',)
-    search_fields = ('product__name', 'color__name', 'size__name', 'product__category__name', 'product__category__parent__name')
+    search_fields = ('product__name', 'color__name', 'size__name', 'cup__name', 'product__category__name', 'product__category__parent__name')

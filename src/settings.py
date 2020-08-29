@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+    'django_crontab',
     'grappelli',
     'filebrowser',
     'django.contrib.admin',
@@ -158,3 +159,7 @@ GOOGLE_RECAPTCHA_SECRET_KEY = '6LcNnpAUAAAAAP8zDEOl2Erhj2F9bMPOjQza78Hb'
 GRAPPELLI_ADMIN_TITLE = "DE'LYAMER"
 
 AUTH_USER_MODEL = 'users.User'
+
+CRONJOBS = [
+    ('0 2 * * *', 'core.cron.sync_1c')
+]

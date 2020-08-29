@@ -11,7 +11,8 @@ from django.urls import reverse
 class Page(MPTTModel, SEO, Position):
     ACTION_CHOICES = (
         ('pages', 'Информативная страница'),
-        ('activity_area', 'Зона деятельности'),
+        ('shops', 'Магазины'),
+        ('products', 'Каталог'),
         ('news', 'Новости'),
         ('contacts', 'Контакты'),
         ('dropdown', 'Промежуточная страница'),
