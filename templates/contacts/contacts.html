@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load tags %}
 
 {% block title %}
 <title>Контакты и реквизиты</title>
@@ -7,7 +8,66 @@
 {% endblock %}
 
 {% block content %}
-{{ contact_info }}
-<br>
-{{ parents }}
+<main>
+    <div class="container pb-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            {% for parent in parents %}
+            <li class="breadcrumb-item"><a href="{{ parent.get_absolute_url }}">{{ parent.title }}</a></li>
+            {% endfor %}
+            <li class="breadcrumb-item active">Контакты и реквизиты</li>
+        </ol>
+
+        <h1 class="h3 mb-4">Контакты и реквизиты</h1>
+        <div class="row align-items-center">
+            <div class="col-lg-6 border-lg-right">
+                <ul class="list-unstyled">
+                    <li class="mb-2 smaller"><span class="text-muted mr-2">Наменование организации:</span>{{ contact_info.name }}</li>
+                    <li class="mb-2 smaller"><span class="text-muted mr-2">Адрес:</span>{{ contact_info.address }}</li>
+                    <li class="mb-2 smaller"><span class="text-muted mr-2">ИНН:</span>{{ contact_info.inn }}</li>
+                    <li class="mb-2 smaller"><span class="text-muted mr-2">КПП:</span>{{ contact_info.kpp }}</li>
+                    <li class="mb-2 smaller"><span class="text-muted mr-2">БИК:</span>{{ contact_info.bik }}</li>
+                    <li class="mb-2 smaller"><span class="text-muted mr-2">Кор.счет:</span>{{ contact_info.cor_acc }}</li>
+                    <li class="mb-2 smaller"><span class="text-muted mr-2">Рас.счет:</span>{{ contact_info.check_acc }}</li>
+                    <li class="mb-2 smaller"><span class="text-muted mr-2">Банк получателя:</span>{{ contact_info.bank }}</li>
+                    <li class="mb-2 smaller"><span class="text-muted mr-2">ОКПО:</span>{{ contact_info.okpo }}</li>
+                    <li class="mb-2 smaller"><span class="text-muted mr-2">ОКОХН:</span>{{ contact_info.okohn }}</li>
+                    <li class="mb-2 smaller"><span class="text-muted mr-2">ОГРН:</span>{{ contact_info.ogrn }}</li>
+                    <li class="mb-2 smaller"><span class="text-muted mr-2">Эл.почта:</span><a href="mailto:{{ contact_info.email }}" title="" class="text-dark">{{ contact_info.email }}</a></li>
+                    <li class="mb-2 smaller"><span class="text-muted mr-2">Сайт:</span><a href="{{ contact_info.site }}" title="" target="_blank" class="text-dark">{{ contact_info.site }}</a></li>
+                    <li class="mb-2 smaller"><span class="text-muted mr-2">Телефон:</span><a href="tel:{{ contact_info.phone|only_digits }}" title="" class="text-decoration-none text-dark">{{ contact_info.phone }}</a></li>
+                    <li class="mb-2 smaller"><span class="text-muted mr-2">Директор:</span>{{ contact_info.director }}</li>
+                </ul>
+            </div>
+
+            <div class="col-lg-6 text-lg-center">
+                <div class="d-inline-block text-left">
+                    <div class="mb-4 mt-4 mt-lg-0">
+                        <a href="tel:{{ contact_info.phone|only_digits }}" title="" class="text-dark text-decoration-none font-500 h5">{{ contact_info.phone }}</a>
+                        <div class="clearfix"></div>
+                        <span class="smallest text-muted">звонок бесплатный</span>
+                    </div>
+
+
+                    {% if whatsapp %}
+                        <a href="https://api.whatsapp.com/send?phone=+{{ whatsapp.link|only_digits }}" target="_blank" title="" class="text-dark text-decoration-none whatsapp-link" role="button"><i class="fab fa-{{ whatsapp.short_name }} mr-1 mr-sm-2"></i><span class="smaller">Написать в WhatsApp</span></a>
+                    {% endif %}
+
+                    <div class="socials pt-1">
+                        <ul class="list-unstyled list-inline m-0">
+                            {% for item in socials %}
+                                {% if item != whatsapp %}
+                                <li class="list-inline-item">
+                                    <a href="{{ item.link }}" target="_blank" title=""><i class="fab fa-{{ item.short_name }}"></i></a>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
 {% endblock %}

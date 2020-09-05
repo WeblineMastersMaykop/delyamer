@@ -1,7 +1,175 @@
-{% block title %}
+<!doctype html>
+<html lang="ru">
+    <head>
+        {% include '__head.html' %}
 
-{% endblock %}
+        {% if seo_titles %}
+            <title>{{ seo_titles.seo_title }}</title>
+            <meta name="description" content="{{ seo_titles.seo_desc }}">
+            <meta name="keywords" content="{{ seo_titles.seo_kwrds }}">
+        {% else %}
+            {% block title %}
+            {% endblock %}
+        {% endif %}
+    </head>
+    <body>
+        {% include '__header.html' %}
 
-{% block content %}
+        {% block content %}
+        {% endblock %}
 
-{% endblock %}
+        <div class="text-center position-fixed scroll-to-top">
+            <i class="fas fa-chevron-up"></i>
+        </div>
+
+        <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="pswp__bg"></div>
+            <div class="pswp__scroll-wrap">
+                <div class="pswp__container">
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                    <div class="pswp__item"></div>
+                </div>
+
+                <div class="pswp__ui pswp__ui--hidden">
+                    <div class="pswp__top-bar">
+                        <div class="pswp__counter"></div>
+                        <button class="pswp__button pswp__button--close" title="Закрыть (Esc)"></button>
+                        <div class="pswp__preloader">
+                            <div class="pswp__preloader__icn">
+                                <div class="pswp__preloader__cut">
+                                    <div class="pswp__preloader__donut"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                        <div class="pswp__share-tooltip"></div> 
+                    </div>
+
+                    <button class="pswp__button pswp__button--arrow--left" title="Назад (стрелка влево)">
+                    </button>
+
+                    <button class="pswp__button pswp__button--arrow--right" title="Вперёд (стрелка вправо)">
+                    </button>
+
+                    <div class="pswp__caption">
+                        <div class="pswp__caption__center"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="SignInModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                <div class="modal-content overflow-hidden shadow bg-light">
+                    <div class="modal-header">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="SignIn-tab" data-toggle="tab" href="#SignIn-pane" role="tab" aria-controls="SignIn-pane" aria-selected="true">Вход</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="SignUp-tab" data-toggle="tab" href="#SignUp-pane" role="tab" aria-controls="SignUp-pane" aria-selected="false">Регистрация</a>
+                            </li>
+                        </ul>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="SignIn-pane" role="tabpanel" aria-labelledby="SignIn-tab">
+                                <form class="needs-validation" novalidate action="profile.html">
+                                    <div class="form-label-group smaller mb-4">
+                                        <input type="email" class="form-control" placeholder="Эл. почта" required>
+                                        <label>Эл. почта</label>
+
+                                        <div class="invalid-feedback">
+                                            Проверьте верность почты
+                                        </div>
+                                    </div>
+
+                                    <div class="form-label-group smaller mb-4">
+                                        <input type="password" class="form-control" placeholder="Пароль" required>
+                                        <label>Пароль</label>
+
+                                        <div class="invalid-feedback">
+                                            Это обязательное поле
+                                        </div>
+                                    </div>
+
+                                    <div class="custom-control custom-checkbox mb-4">
+                                        <input type="checkbox" class="custom-control-input" id="CheckKeepSignIn">
+                                        <label class="custom-control-label text-muted smaller" for="CheckKeepSignIn">Оставаться в системе</label>
+                                    </div>
+
+                                    <button class="btn btn-outline-dark d-block w-100 mb-4" type="submit">Войти</button>
+
+                                    <!--
+<div class="alert alert-secondary alert-dismissible small fade show mb-4" role="alert">
+Текст ошибки
+<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+-->
+
+                                    <a href="restore-password.html" title="" class="text-dark small">Забыли пароль?</a>
+
+                                </form>
+                            </div>
+
+                            <div class="tab-pane fade" id="SignUp-pane" role="tabpanel" aria-labelledby="SignUp-tab">
+                                <form class="needs-validation" novalidate action="profile.html">
+                                    <div class="form-label-group smaller mb-4">
+                                        <input type="email" class="form-control" placeholder="Эл. почта" required>
+                                        <label>Эл. почта</label>
+
+                                        <div class="invalid-feedback">
+                                            Проверьте верность почты
+                                        </div>
+                                    </div>
+
+                                    <div class="form-label-group smaller mb-4">
+                                        <input type="password" class="form-control" placeholder="Пароль" required>
+                                        <label>Пароль</label>
+
+                                        <div class="invalid-feedback">
+                                            Это обязательное поле
+                                        </div>
+                                    </div>
+
+                                    <div class="form-label-group smaller mb-4">
+                                        <input type="password" class="form-control" placeholder="Повторите пароль" required>
+                                        <label>Повторите пароль</label>
+
+                                        <div class="invalid-feedback">
+                                            Это обязательное поле
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-outline-dark d-block w-100 mb-4" type="submit">Зарегистрироваться</button>
+
+                                    <!--
+<div class="alert alert-secondary alert-dismissible small fade show mb-4" role="alert">
+Текст ошибки
+<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+<span aria-hidden="true">&times;</span>
+</button>
+</div>
+-->
+
+                                    <p class="text-muted smallest border-top mb-0 pt-3">Нажимая кнопку "Зарегистрироваться", вы даёте согласие на <a href="content.html" target="_blank">обработку персональных данных</a></p>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include '__footer.html' %}
+        {% include '__scripts.html' %}
+    </body>
+</html>

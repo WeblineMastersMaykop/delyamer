@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>{% firstof category.seo_title category.name %}</title>
+<meta name="description" content="{{ category.seo_kwrds }}">
+<meta name="keywords" content="{{ category.seo_kwrds }}">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container pb-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Главная</a></li>
+            <li class="breadcrumb-item"><a href="catalogue.html">Каталог</a></li>
+            <li class="breadcrumb-item active">Комплекты нижнего белья</li>
+        </ol>
+        <div class="d-md-flex align-items-center justify-content-between mb-4">
+            <h1 class="h4 mb-md-0 mb-4 mr-5 flex-grow-1">Комплекты нижнего белья<small class="ml-3 smaller text-muted">142 товара</small></h1>
+
+            <div class="d-flex d-lg-block align-items-center">
+                <a href="#" title="" class="offcanvas-filters-toggler-icon mr-4 d-lg-none" type="button" data-toggle="offcanvas-filters"><i class="fas fa-sliders-h fa-lg"></i> <i class="fas fa-times fa-lg"></i></a>
+
+                <select class="custom-select custom-select-sm border-white">
+                    <option selected>Популярные</option>
+                    <option value="1">Сначала дешёвые</option>
+                    <option value="2">Сначала дорогие</option>
+                    <option value="3">Новинки</option>
+                    <option value="3">По размеру скидки</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="d-lg-none offcanvas-filters navbar-expand-lg">
+            <div class="container">
+                <div class="filters">
+                    <form>
+                        <div class="mb-4">
+                            <h6 class="mb-2 pb-1 smaller">Цена</h6>
+                            <div class="d-flex align-items-center justify-content-between justify-content-sm-start">
+                                <div class="range-input">
+                                    <span>от</span>
+                                    <input type="text" class="form-control form-control-sm border-white" placeholder="" value="0">
+                                </div>
+
+                                <span class="px-2">-</span>
+
+                                <div class="range-input">
+                                    <span>до</span>
+                                    <input type="text" class="form-control form-control-sm border-white" placeholder="" value="12500">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="mb-2 pb-1 smaller">Цвет</h6>
+                            <div class="custom-control custom-checkbox color-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt3-1">
+                                <label class="custom-control-label smaller" for="opt3-1"><span class="filter-tag tag-red"></span>Красный</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox color-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt3-2">
+                                <label class="custom-control-label smaller" for="opt3-2"><span class="filter-tag tag-pink"></span>Розовый</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox color-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt3-3">
+                                <label class="custom-control-label smaller" for="opt3-3"><span class="filter-tag tag-green"></span>Зелёный</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox color-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt3-4">
+                                <label class="custom-control-label smaller" for="opt3-4"><span class="filter-tag tag-blue"></span>Синий</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox color-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt3-5">
+                                <label class="custom-control-label smaller" for="opt3-5"><span class="filter-tag tag-black"></span>Чёрный</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox color-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt3-6">
+                                <label class="custom-control-label smaller" for="opt3-6"><span class="filter-tag tag-white"></span>Белый</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="mb-2 pb-1 smaller">Размер</h6>
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt1-1">
+                                <label class="custom-control-label smaller" for="opt1-1">XS</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt1-2">
+                                <label class="custom-control-label smaller" for="opt1-2">S</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt1-3">
+                                <label class="custom-control-label smaller" for="opt1-3">M</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt1-4">
+                                <label class="custom-control-label smaller" for="opt1-4">L</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt1-5">
+                                <label class="custom-control-label smaller" for="opt1-5">XL</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt1-6">
+                                <label class="custom-control-label smaller" for="opt1-6">XXL</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="mb-2 pb-1 smaller">Пуш-ап</h6>
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt2-1">
+                                <label class="custom-control-label smaller" for="opt2-1">Есть</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt2-2">
+                                <label class="custom-control-label smaller" for="opt2-2">Нет</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-3 d-none d-lg-block">
+                <ul class="lz-menu mb-4 pb-4 border-bottom">
+                    <li><a href="catalogue-category.html" class="font-500"><i class="fas fa-percentage mr-2"></i>Распродажа<span>13</span></a></li>
+                    <li><a href="catalogue-category.html" class="font-500"><i class="fas fa-fire-alt mr-2"></i>Новинки<span>32</span></a></li>
+                    <li class="active"><a href="catalogue-category.html">Комплекты нижнего белья<span>142</span></a></li>
+                    <li><a href="catalogue-category.html">Бюстгалтеры<span>184</span></a></li>
+                    <li><a href="catalogue-category.html">Трусы<span>201</span></a></li>
+                    <li><a href="catalogue-category.html">Боди<span>145</span></a></li>
+                    <li><a href="catalogue-category.html">Пижамы<span>65</span></a></li>
+                    <li><a href="catalogue-category.html">Халаты, пеньюары<span>42</span></a></li>
+                    <li><a href="catalogue-category.html">Домашняя одежда<span>28</span></a></li>
+                    <li><a href="catalogue-category.html">Чулки, колготки<span>32</span></a></li>
+                    <li>
+                        <a href="catalogue-category.html" class="lz-sub">Аксессуары<span>52</span></a>
+                        <ul>
+                            <li><a href="catalogue-subcategory.html">Маски<span>15</span></a></li>
+                            <li><a href="catalogue-subcategory.html">Стрепы<span>28</span></a></li>
+                            <li><a href="catalogue-subcategory.html">Пояса<span>9</span></a></li>
+                        </ul>
+                    </li>
+                    <li><a href="catalogue-category.html">Пляжная одежда<span>25</span></a></li>
+                    <li><a href="catalogue-category.html">Купальники<span>189</span></a></li>
+                </ul>
+
+                <div class="filters">
+                    <form>
+                        <div class="mb-4">
+                            <h6 class="mb-2 pb-1 smaller">Цена</h6>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="range-input">
+                                    <span>от</span>
+                                    <input type="text" class="form-control form-control-sm border-white" placeholder="" value="0">
+                                </div>
+
+                                <span class="px-2">-</span>
+
+                                <div class="range-input">
+                                    <span>до</span>
+                                    <input type="text" class="form-control form-control-sm border-white" placeholder="" value="12500">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="mb-2 pb-1 smaller">Цвет</h6>
+                            <div class="custom-control custom-checkbox color-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt3-1">
+                                <label class="custom-control-label smaller" for="opt3-1"><span class="filter-tag tag-red"></span>Красный</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox color-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt3-2">
+                                <label class="custom-control-label smaller" for="opt3-2"><span class="filter-tag tag-pink"></span>Розовый</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox color-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt3-3">
+                                <label class="custom-control-label smaller" for="opt3-3"><span class="filter-tag tag-green"></span>Зелёный</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox color-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt3-4">
+                                <label class="custom-control-label smaller" for="opt3-4"><span class="filter-tag tag-blue"></span>Синий</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox color-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt3-5">
+                                <label class="custom-control-label smaller" for="opt3-5"><span class="filter-tag tag-black"></span>Чёрный</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox color-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt3-6">
+                                <label class="custom-control-label smaller" for="opt3-6"><span class="filter-tag tag-white"></span>Белый</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="mb-2 pb-1 smaller">Размер</h6>
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt1-1">
+                                <label class="custom-control-label smaller" for="opt1-1">XS</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt1-2">
+                                <label class="custom-control-label smaller" for="opt1-2">S</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt1-3">
+                                <label class="custom-control-label smaller" for="opt1-3">M</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt1-4">
+                                <label class="custom-control-label smaller" for="opt1-4">L</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt1-5">
+                                <label class="custom-control-label smaller" for="opt1-5">XL</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt1-6">
+                                <label class="custom-control-label smaller" for="opt1-6">XXL</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="mb-2 pb-1 smaller">Пуш-ап</h6>
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt2-1">
+                                <label class="custom-control-label smaller" for="opt2-1">Есть</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="opt2-2">
+                                <label class="custom-control-label smaller" for="opt2-2">Нет</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="row">
+                    {% for offer in page_object.object_list %}
+                    <div class="col-lg-4 col-md-4 col-sm-6">
+                        <div class="product-card mb-5">
+                            <div class="bg-img mb-2" {% if offer.get_image %}style="background-image: url({{ offer.get_image.image.url }})"{% endif %}>
+                                <div class="d-flex status-badges">
+                                    {% if offer.product.is_new %}
+                                    <span class="badge badge-success">NEW</span>
+                                    {% endif %}
+                                    {% if offer.product.is_bs %}
+                                    <span class="badge badge-info">ХИТ</span>
+                                    {% endif %}
+                                </div>
+
+                                {% if offer.promotion_sale %}
+                                <span class="badge badge-danger sale-badge">-{{ offer.promotion_sale.sale }}%</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="product-card-caption">
+                                <a href="{{ offer.product.get_absolute_url }}" title="" class="stretched-link text-decoration-none text-dark smaller">{{ offer.product.name }}</a>
+
+                                {% if offer.promotion_sale %}
+                                <div>
+                                    <div class="d-inline-block mr-2 text-muted small"><del><span class="number font-500 mr-1">{{ offer.product.price }}</span><span class="small">₽</span></del></div>
+                                    <div class="d-inline-block text-danger"><span class="number font-500 mr-1">{{ offer.price_with_sale }}</span><span class="smaller">₽</span></div>
+                                </div>
+                                {% else %}
+                                <div><span class="number font-500 mr-1">{{ offer.product.price }}</span><span class="smaller">₽</span></div>
+                                {% endif %}
+
+                                <div class="color-tags pt-2">
+                                    <span class="tag-green"></span>
+                                    <span class="tag-white"></span>
+                                    <span class="tag-black"></span>
+                                </div>
+
+                                <div class="product-card-extra">
+                                    <div class="product-card-extra-content">
+                                        <span class="d-block small text-muted">Размеры: 75B, 80B, 80C, 85C, 85D</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% include '__pagination.html' %}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -7,10 +7,28 @@
 {% endblock %}
 
 {% block content %}
-{% for item in categories %}
-{{ item }} <br>
-{% endfor %}
-<br>
-{{ parents }}
+<main>
+    <div class="container pb-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            <li class="breadcrumb-item active">Каталог</li>
+        </ol>
 
+        <h1 class="h3 mb-4">Каталог</h1>
+
+        <div class="mosaic mosaic-page">
+            <div class="row">
+                {% for category in categories %}
+                <div class="col-lg-3 col-md-4 col-6">
+                    <div class="mosaic-item mi-tall mb-4">
+                        <div class="bg-img d-flex align-items-end" {% if category.image %}style="background-image: url({{ category.image_small.url }})"{% endif %}>
+                            <a href="{% url 'products' %}?category={{ category.slug }}" title="" class="stretched-link text-decoration-none">{{ category.name }}</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</main>
 {% endblock %}

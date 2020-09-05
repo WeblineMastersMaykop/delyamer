@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load tags %}
+
+{% block title %}
+<title>{% firstof page.seo_title page.title %}</title>
+<meta name="description" content="{{ page.seo_kwrds }}">
+<meta name="keywords" content="{{ page.seo_kwrds }}">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container pb-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            {% for parent in parents %}
+            <li class="breadcrumb-item"><a href="{{ parent.get_absolute_url }}">{{ parent.title }}</a></li>
+            {% endfor %}
+            <li class="breadcrumb-item active">{{ page.title }}</li>
+        </ol>
+
+        <h1 class="h3 mb-4">{{ page.title }}</h1>
+        <ul class="list-unstyled">
+            {% for item in page.sub_pages %}
+                {% if item.action in 'news;contacts;shops'|split %}
+                    <li><a href="{% url item.action %}" title="" class="smaller text-muted">{{ item.title }}</a></li>
+                {% else %}
+                    <li><a href="{{ item.get_absolute_url }}" title="" class="smaller text-muted">{{ item.title }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</main>
+{% endblock %}

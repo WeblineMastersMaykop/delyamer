@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from core.models import SEO
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill

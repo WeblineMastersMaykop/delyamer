@@ -1,0 +1,195 @@
+{% load static %}
+{% load tags %}
+
+<div class="top-bar pt-3 pb-2 pb-lg-3">
+    <div class="container">
+        <div class="row no-gutters align-items-sm-center">
+            <div class="col-lg-4 d-none d-lg-block">
+                <a href="tel:{{ index.phone|only_digits }}" title="" class="text-dark text-decoration-none font-500 h5">{{ index.phone }}</a>
+                <div class="clearfix"></div>
+                <span class="smallest text-muted">звонок бесплатный</span>
+            </div>
+
+            <div class="col-lg-4 col-auto mr-auto">
+                <div class="text-center">
+                    <a href="{% url 'index' %}" title="" class="d-lg-inline-block d-none"><img src="{% static 'images/logo.png' %}" alt="" height="96"></a>
+                    <a href="{% url 'index' %}" title="" class="d-lg-none"><img src="{% static 'images/logo-mobile.png' %}" alt="" height="32"></a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-auto">
+                <div class="d-flex justify-content-end align-items-end flex-lg-column">
+                    <a href="https://api.whatsapp.com/send?phone=+79094702111" target="_blank" title="" class="text-dark text-decoration-none whatsapp-link" role="button"><i class="fab fa-whatsapp mr-1 mr-sm-2"></i><span class="smaller">Написать в WhatsApp</span></a>
+
+                    <div class="socials d-none d-sm-block pt-lg-1 pl-4 pl-lg-0">
+                        <ul class="list-unstyled list-inline m-0">
+                            {% for item in socials %}
+                                {% if item != whatsapp %}
+                                <li class="list-inline-item">
+                                    <a href="{{ item.link }}" target="_blank" title=""><i class="fab fa-{{ item.short_name }}"></i></a>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-light mb-2 py-2">
+    <div class="container position-relative">
+        <button class="navbar-toggler" type="button" data-toggle="offcanvas">
+            <span class="navbar-toggler-icon"><i class="fas fa-bars fa-lg"></i><i class="fas fa-times fa-lg"></i></span>
+        </button>
+
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                {% for item in top_menu %}
+                    {% if item.action == 'products' %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle font-500" href="{% url 'categories' %}" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-bars mr-2"></i>Каталог
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item font-500" href="{% url 'products' %}?in_sale=1"><i class="fas fa-percentage mr-2"></i>Распродажа</a>
+                            <a class="dropdown-item font-500" href="{% url 'products' %}?is_new=1"><i class="fas fa-fire-alt mr-2"></i>Новинки</a>
+                            {% for category in categories %}
+                            <a class="dropdown-item" href="{% url 'products' %}?category={{ category.slug }}">{{ category.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                    {% elif item.action == 'dropdown' %}
+                    <li class="nav-item dropdown
+                            {% if item.slug in request.path %} active {% endif %}
+                            {% for point in item.sub_pages %}
+                                {% if point.action in 'news;contacts;shops'|split %}
+                                    {% if point.action in request.path %}
+                                        active 
+                                    {% endif %}
+                                {% else %}
+                                    {% if point.slug in request.path %}
+                                        active 
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                    ">
+                        <a class="nav-link dropdown-toggle" href="{{ item.get_absolute_url }}" role="button" aria-haspopup="true" aria-expanded="false">
+                            {{ item.title }}
+                        </a>
+                        <div class="dropdown-menu">
+                            {% for point in item.sub_pages %}
+                                {% if point.action in 'news;contacts;shops'|split %}
+                                <a class="dropdown-item" href="{% url point.action %}">{{ point.title }}</a>
+                                {% else %}
+                                <a class="dropdown-item" href="{{ point.get_absolute_url }}">{{ point.title }}</a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </li>
+                    {% else %}
+                    <li class="nav-item
+                        {% if item.action in 'news;contacts;shops'|split %}
+                            {% if item.action in request.path %}
+                                active 
+                            {% endif %}
+                        {% else %}
+                            {% if item.slug in request.path %}
+                                active 
+                            {% endif %}
+                        {% endif %}
+                    ">
+                        {% if item.action in 'news;contacts;shops'|split %}
+                        <a class="nav-link" href="{% url item.action %}">{{ item.title }}</a>
+                        {% else %}
+                        <a class="nav-link" href="{{ item.get_absolute_url }}">{{ item.title }}</a>
+                        {% endif %}
+                    </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="d-flex">
+            <a href="#" title="" class="nav-link text-dark text-decoration-none font-500 smaller mr-4 px-2 py-2" data-toggle="modal" data-target="#SignInModal">Войти</a>
+
+            <a href="favourites.html" title="" class="nav-link badged mr-4 px-2 py-2"><img src="{% static 'images/heart.svg' %}" alt="" height="18"><span class="badge badge-pill badge-primary">2</span></a>
+
+            <a href="cart.html" title="" class="nav-link badged mr-5 px-2 py-2"><img src="{% static 'images/shopping-bag.svg' %}" alt="" height="18"><span class="badge badge-pill badge-primary">0</span></a>
+
+            <form action="search.html" class="search-box">
+                <div class="">
+                    <input type="text" class="text search-input typeahead" placeholder="Найти..." />
+                </div>
+            </form>
+        </div>
+
+        <div class="d-lg-none offcanvas-collapse navbar-expand-lg">
+            <div class="container">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link font-500" href="{% url 'products' %}?in_sale=1"><i class="fas fa-percentage mr-2"></i>Распродажа</a>
+                    </li> 
+                    <li class="nav-item">
+                        <a class="nav-link font-500" href="{% url 'products' %}?is_new=1"><i class="fas fa-fire-alt mr-2"></i>Новинки</a>
+                    </li>
+
+                    {% for category in categories %}
+                        {% if category.sub_categories %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="{% url 'products' %}?category={{ category.slug }}" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">
+                                {{ category.name }}<i class="fas fa-angle-down fa-xs ml-2"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                {% for item in category.sub_categories %}
+                                <li><a class="dropdown-item" href="{% url 'products' %}?category={{ item.slug }}">{{ item.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li> 
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'products' %}?category={{ category.slug }}">{{ category.name }}</a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    <ul class="list-unstyled py-3">
+                        {% for item in top_menu %}
+                            {% if item.action == 'dropdown' %}
+                            <li class="nav-item dropdown"> 
+                                <a class="nav-link dropdown-toggle" href="{{ item.get_absolute_url }}" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">
+                                    {{ item.title }}<i class="fas fa-angle-down fa-xs ml-2"></i>
+                                </a>
+                                <div class="dropdown-menu">
+                                    {% for point in item.sub_pages %}
+                                        {% if point.action in 'news;contacts;shops'|split %}
+                                        <a class="dropdown-item" href="{% url point.action %}">{{ point.title }}</a>
+                                        {% else %}
+                                        <a class="dropdown-item" href="{{ point.get_absolute_url }}">{{ point.title }}</a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </li>
+                            {% elif not item.parent %}
+                                {% if item.action in 'news;contacts;shops'|split %}
+                                <a class="nav-link" href="{% url item.action %}">{{ item.title }}</a>
+                                {% elif item.action == 'pages' %}
+                                <a class="nav-link" href="{{ item.get_absolute_url }}">{{ item.title }}</a>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+
+                    <li class="nav-item">
+                        <a href="tel:{{ index.phone|only_digits }}" title="" class="text-dark text-decoration-none font-500 h5">{{ index.phone }}</a>
+                        <div class="clearfix"></div>
+                        <span class="smallest text-muted">звонок бесплатный</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</nav>

@@ -1,0 +1,143 @@
+@mixin lzhover($background, $foreground) {
+    text-decoration: none;
+    background-color: $background;
+    color: $foreground;
+}
+
+@mixin arrow-button($color) {
+    position: absolute;
+    top: 50%;
+    right: .5rem;
+    width: .5rem;
+    height: .5rem;
+    padding: 0;
+    margin-top: -.3rem;
+    border-style: solid;
+    border-width: 2px 2px 0 0;
+    transform: rotate(135deg);
+
+}
+
+@mixin expanded($color) {
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid $color;
+    border-bottom: 0;
+}
+
+/*--- STYLE ---*/
+
+ul.lz-menu {
+    padding: 0;
+    width: 100%;
+    line-height: 1.4em;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 20px;
+
+    color: $dark;
+    position: relative;
+
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    font-size: $font-size-sm;
+
+    a {
+        display: block;
+        text-decoration: none;
+
+        span {
+            color: $gray-500;
+            font-size: 10px;
+            margin-left: .5rem;
+        }
+    }
+
+    ul, li, h3 {
+        margin: 0;
+        font-size: $font-size-sm;
+    }
+
+    li {
+        border: 0;
+        margin: 0;
+        display: list-item;
+        text-align: -webkit-match-parent;
+        list-style-type: none;
+        .active > a {
+            color: $link-color;
+            font-weight: 500;
+        }
+
+        a {
+            padding: .25rem .5rem;
+
+            &:hover {
+                @include lzhover($gray-200, $link-color);
+            }
+        }
+
+        h3 {
+            margin: 0;
+            position: relative;
+            display: block;
+            a+a {
+                cursor: pointer;
+            }
+            .arrow-btn {
+                @include arrow-button($gray-500);
+            }
+            .expanded {
+                @include expanded($gray-500);
+            }
+            :hover {
+                @include lzhover($gray-200, $link-color);
+            }
+        }
+
+        ul {
+            padding: 0;
+            li {
+                h3 {
+                    border-bottom: 0;
+
+                    .arrow-btn {
+                        @include arrow-button($gray-500);
+                    }
+                    .expanded {
+                        @include expanded($gray-500);
+                    }
+                }
+                a {
+                    padding-left: 1rem;
+                }
+
+                :hover {
+                    @include lzhover($gray-200, $link-color);
+                }
+
+                ul {
+                    li {
+                        border-bottom: 0;
+                        a {
+                            padding-left: 1rem;
+                        }
+
+                        :hover {
+                            @include lzhover($gray-200, $link-color);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+ul.lz-menu:first-of-type > li:last-child {
+    h3.collapsed {
+        border-bottom: none;
+    }
+    :last-child {
+        border-bottom: none;
+    }
+}

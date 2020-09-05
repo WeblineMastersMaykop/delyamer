@@ -26,7 +26,6 @@ class Page(MPTTModel, SEO, Position):
     body3 = models.TextField(verbose_name='Текст страницы #3', null=True, blank=True)
     action = models.CharField(max_length=32, choices=ACTION_CHOICES, verbose_name='Название модуля')
     is_active = models.BooleanField(default=True, verbose_name='Показывать в меню')
-    in_footer = models.BooleanField(default=True, verbose_name='Показывать в футере')
 
     def __str__(self):
         return self.title
@@ -75,7 +74,7 @@ class PageImage(models.Model):
 
 class PageDocument(models.Model):
     page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='documents', verbose_name='Страница')  
-    title = models.TextField(verbose_name='Название документа')
+    title = models.CharField('Название документа', max_length=250)
     
     def get_document_url(self, filename):
         ext = filename.split('.')[-1]
@@ -94,8 +93,8 @@ class PageDocument(models.Model):
 
 class PageVideo(models.Model):
     page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='videos', verbose_name='Страница')
-    video_link = models.URLField(max_length=250, verbose_name='Ссылка на видео')
-    channel_link = models.URLField(max_length=250, verbose_name='Ссылка на канал')
+    video_link = models.URLField('Ссылка на видео', max_length=250)
+    channel_link = models.URLField('Ссылка на канал', max_length=250)
 
     def __str__(self):
         return self.video_link
@@ -107,9 +106,9 @@ class PageVideo(models.Model):
 
 class PageQuote(models.Model):
     page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='quotes', verbose_name='Страница')
-    text = models.TextField(verbose_name='Текст цитаты')
-    author = models.CharField(max_length=250, verbose_name='Автор цитаты')
-    profession = models.CharField(max_length=250, verbose_name='Профессия автора')
+    text = models.TextField('Текст цитаты')
+    author = models.CharField('Автор цитаты', max_length=250)
+    profession = models.CharField('Профессия автора', max_length=250)
 
     def get_image_url(self, filename):
         ext = filename.split('.')[-1]

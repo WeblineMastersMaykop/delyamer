@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django_mptt_admin.admin import DjangoMpttAdmin
-from products.models import Color, Size, Category, Product, Offer, ProductImage, Property, ProductProperty, Cup
+from products.models import Color, Size, Category, Product, Offer, ProductImage, Property, Cup
 
 
 admin.site.register(Property)
@@ -10,7 +10,7 @@ admin.site.register(Property)
 class CategoryAdmin(DjangoMpttAdmin):
     fieldsets = (
         (None, {
-            'fields': ('parent', 'name', 'code_1c'),
+            'fields': ('parent', 'name', 'code_1c', 'image'),
         }),
         ('SEO', {
             'classes': ('grp-collapse grp-closed',),
@@ -43,16 +43,16 @@ class ProductImageInline(admin.TabularInline):
     classes = ('grp-collapse grp-closed',)
 
 
-class OfferInline(admin.TabularInline):
+class OfferInline(admin.StackedInline):
     model = Offer
     extra = 0
     classes = ('grp-collapse grp-closed',)
 
 
-class ProductPropertyInline(admin.TabularInline):
-    model = ProductProperty
-    extra = 0
-    classes = ('grp-collapse grp-closed',)
+# class ProductPropertyInline(admin.TabularInline):
+#     model = ProductProperty
+#     extra = 0
+#     classes = ('grp-collapse grp-closed',)
 
 
 @admin.register(Product)
@@ -72,17 +72,20 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('name', 'code_1c', 'vendor_code', 'category__name')
     list_filter = ('is_active', 'is_new', 'is_bs', 'category', 'pushup')
     prepopulated_fields = {'slug': ('name','code_1c')}
-    inlines = (OfferInline, ProductImageInline, ProductPropertyInline)
+    inlines = (OfferInline, ProductImageInline)
 
 
 @admin.register(Offer)
 class OfferAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
-            'fields': ('product', 'color', 'size', 'cup', 'stock', 'sale', 'is_active'),
+            'fields': ('product', 'color', 'size', 'cup', 'stock', 'is_active'),
         }),
+        ('Акции', {
+            'fields': ('promotion_sum_present', 'promotion_three_sales', 'promotion_min_present', 'promotion_sale'),
+        })
     )
 
-    list_display = ('product', 'color', 'size', 'cup', 'stock', 'sale', 'is_active', 'created', 'updated')
+    list_display = ('product', 'color', 'size', 'cup', 'stock', 'is_active', 'created', 'updated')
     list_editable = ('is_active',)
-    search_fields = ('product__name', 'color__name', 'size__name', 'cup__name', 'product__category__name', 'product__category__parent__name')
+    search_fields = ('product__name', 'color__name', 'size__name', 'cup__name', 'product__category__name')

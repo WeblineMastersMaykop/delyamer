@@ -10,8 +10,8 @@ from products.models import Offer, Product, Category, Color, Size, Cup, ProductI
 def sync_1c():
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
-    logger_path = os.path.join(os.path.dirname(__file__), 'cron.log')
-    # logger_path = 'E:\\Goga\\PycharmProjects\\delyamer\\core\\cron.log'
+    # logger_path = os.path.join(os.path.dirname(__file__), 'cron.log')
+    logger_path = 'E:\\Goga\\PycharmProjects\\delyamer\\core\\cron.log'
     handler = logging.FileHandler(logger_path, 'a', 'utf-8')
     handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s', datefmt='%d.%m.%y %H:%M:%S'))
     logger.addHandler(handler)
@@ -61,6 +61,9 @@ def sync_1c():
 
             offers = Offer.objects.filter(product=product, is_active=True)
 
+            # Удаляю у товара все картинки и добавляю заново
+            ProductImage.objects.filter(product=product).delete()
+
             for color_key in product_key:
                 # Создание и изменение цветов
                 color, created = Color.objects.update_or_create(
@@ -70,11 +73,8 @@ def sync_1c():
                     },
                 )
 
-                # Удаляю у товара все картинки и добавляю заново
-                ProductImage.objects.filter(product=product).delete()
-
                 if color_key.attrib['Picture']:
-                    ProductImage.objects.create(
+                    product_image = ProductImage.objects.create(
                         product=product,
                         color=color,
                         image=ImageFile(open(os.path.join(path, 'Images', color_key.attrib['Picture']), 'rb'))
@@ -110,20 +110,16 @@ def sync_1c():
                     offers = offers.exclude(product=product, size=size, color=color, cup=cup)
 
             # Варианты товаров, которых нет в выгрузке делаю неактивными
-            for offer in offers:
-                offer.is_active = False
+            # for offer in offers:
+            #     offer.is_active = False
 
-            Offer.objects.bulk_update(offers, ['is_active'])
+            # Offer.objects.bulk_update(offers, ['is_active'])
+            offers.update(is_active=False)
 
         # Товары, которых нет в выгрузке делаю неактивными
-        for product in products:
-            product.is_active = False
-
-        Product.objects.bulk_update(products, ['is_active'])
-
-        break
+        products.update(is_active=False)
 
     logger.info('КОНЕЦ СКРИПТА\n')
 
 
-# sync_1c()
+sync_1c()

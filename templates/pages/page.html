@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>{% firstof page.seo_title page.title %}</title>
+<meta name="description" content="{{ page.seo_kwrds }}">
+<meta name="keywords" content="{{ page.seo_kwrds }}">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container pb-5 ">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            {% for parent in parents %}
+            <li class="breadcrumb-item"><a href="{{ parent.get_absolute_url }}">{{ parent.title }}</a></li>
+            {% endfor %}
+            <li class="breadcrumb-item active">{{ page.title }}</li>
+        </ol>
+        <article>
+            <h1>{{ page.title }}</h1>
+
+            {{ page.body1|safe }}
+
+            {% for video in page.videos.all %}
+            <div class="embed-video pb-4 ">
+                <div class="embed-responsive embed-responsive-16by9 mb-4">
+                    <iframe class="embed-responsive-item" src="{{ video.video_link }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <small class="text-muted d-block mt-n3">
+                    YouTube-канал <a href="{{ video.channel_link }}" target="_blank">Set Up</a>
+                </small>
+            </div>
+            {% endfor %}
+
+            {{ page.body2|safe }}
+
+            {% for image in page.images.all %}
+            <div class="pb-4">
+                <div class="photo-swipe" itemscope itemtype="http://schema.org/ImageGallery">
+                    <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" class="mb-4">
+                        <a href="{{ image.image.url }}" itemprop="contentUrl" data-size="1920x1080">
+                            <img src="{{ image.image_standart.url }}" itemprop="thumbnail" alt="...">
+                        </a>
+                        <figcaption itemprop="caption description" class="d-none">Информация об изображении, если нужно</figcaption>
+                    </figure>
+                </div>
+                <!-- <small class="text-muted d-block mt-n3">
+                    Источник: <a href="" target="_blank">unsplash.com</a>
+                </small> -->
+            </div>
+            {% endfor %}
+
+            {{ page.body3|safe }}
+
+            {% for quote in page.quotes.all %}
+            <blockquote class="blockquote">
+                <p>{{ quote.text|striptags }}</p>
+                <footer class="blockquote-footer d-flex justify-content-start align-items-center">
+                    <img src="{{ quote.image_small.url }}" class="mr-3">
+                    <div>
+                        <span class="d-block font-weight-bold">{{ quote.author }}</span>
+                        <small class="text-muted font-italic">{{ quote.profession }}</small>
+                    </div>
+                </footer>
+            </blockquote>
+            {% endfor %}
+
+            {% for doc in page.documents.all %}
+                <a href="{{ doc.document.url }}" target="_blank" class="d-block mb-2">{{ doc.title|striptags }}</a>
+            {% endfor %}
+        </article>
+    </div>
+</main>
+{% endblock %}

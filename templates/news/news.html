@@ -7,8 +7,33 @@
 {% endblock %}
 
 {% block content %}
-{{ news }}
-<br>
-{{ parents }}
+<main>
+    <div class="container pb-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            {% for parent in parents %}
+            <li class="breadcrumb-item"><a href="{{ parent.get_absolute_url }}">{{ parent.title }}</a></li>
+            {% endfor %}
+            <li class="breadcrumb-item active">Новости</li>
+        </ol>
 
+        <h1 class="h3 mb-4">Новости</h1>
+
+        <div class="row row-last-nomargin">
+            {% for item in page_object.object_list %}
+            <div class="col-lg-4">
+                <div class="news-item row no-gutters mb-4">
+                    <div class="bg-img col-lg-12 col-3" style="background-image: url({{ item.image_small.url }})"></div>
+                    <div class="news-item-caption bg-white p-4 col-lg-12 col-9">
+                        <p class="text-uppercase smallest text-muted text-lg-center mb-2">{{ item.category.name }}</p>
+                        <a href="{{ item.get_absolute_url }}" title="" class="stretched-link d-block text-dark font-500 text-lg-center text-decoration-none mh-1 mb-lg-5">{{ item.title }}</a>
+                        <span class="d-lg-block d-none text-muted small font-500 text-center">читать<i class="fas fa-long-arrow-alt-right fa-xs ml-2"></i></span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% include '__pagination.html' %}
+    </div>
+</main>
 {% endblock %}

@@ -2,17 +2,17 @@ from django.db import models
 
 
 class SEO(models.Model):
-    seo_title = models.CharField(max_length=250, verbose_name='Title', null=True, blank=True)
-    seo_desc = models.CharField(max_length=250, verbose_name='Description', null=True, blank=True)
-    seo_kwrds = models.CharField(max_length=250, verbose_name='Keywords', blank=True)
-    slug = models.SlugField(max_length=250, verbose_name='Slug', unique=True)
+    seo_title = models.CharField('Title', max_length=250, null=True, blank=True)
+    seo_desc = models.CharField('Description', max_length=250, null=True, blank=True)
+    seo_kwrds = models.CharField('Keywords', max_length=250, blank=True)
+    slug = models.SlugField('Slug', max_length=250, unique=True)
 
     class Meta:
         abstract = True
 
 
 class Position(models.Model):
-    position = models.PositiveIntegerField(verbose_name='Позиция', null=True, blank=True)
+    position = models.PositiveIntegerField('Позиция', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.position is None:
@@ -35,7 +35,7 @@ class MailToString(models.Model):
     # ]
 
     # email_type = models.CharField(max_length=250, choices=EMAIL_TYPES, verbose_name='Тип email')
-    email = models.EmailField(max_length=250, verbose_name='E-mail')
+    email = models.EmailField('E-mail', max_length=250)
 
     class Meta:
         verbose_name = 'Кому отправлять письмо'
@@ -46,12 +46,12 @@ class MailToString(models.Model):
 
 
 class MailFromString(models.Model):
-    use_tls = models.BooleanField(verbose_name='EMAIL_USE_TLS(gmail.com, mail.ru)')
-    use_ssl = models.BooleanField(verbose_name='EMAIL_USE_SSL(yandex.ru)')
-    port = models.PositiveIntegerField(verbose_name='EMAIL_PORT')
-    host = models.CharField(max_length=250, verbose_name='EMAIL_HOST')
-    host_user = models.EmailField(max_length=250, verbose_name='EMAIL_HOST_USER')
-    host_password = models.CharField(max_length=250, verbose_name='EMAIL_HOST_PASSWORD')
+    use_tls = models.BooleanField('EMAIL_USE_TLS(gmail.com, mail.ru)')
+    use_ssl = models.BooleanField('EMAIL_USE_SSL(yandex.ru)')
+    port = models.PositiveIntegerField('EMAIL_PORT')
+    host = models.CharField('EMAIL_HOST', max_length=250)
+    host_user = models.EmailField('EMAIL_HOST_USER', max_length=250)
+    host_password = models.CharField('EMAIL_HOST_PASSWORD', max_length=250)
 
     class Meta:
         verbose_name = 'Откуда отправлять письмо'
@@ -62,10 +62,10 @@ class MailFromString(models.Model):
 
 
 class TitleTag(models.Model):
-    url = models.CharField(max_length=250, verbose_name='URL')
-    seo_title = models.CharField(max_length=250, verbose_name='Title', null=True, blank=True)
-    seo_desc = models.CharField(max_length=250, verbose_name='Description', null=True, blank=True)
-    seo_kwrds = models.CharField(max_length=250, verbose_name='Keywords', null=True, blank=True)
+    url = models.CharField('URL', max_length=250)
+    seo_title = models.CharField('Title', max_length=250)
+    seo_desc = models.CharField('Description', max_length=250, null=True, blank=True)
+    seo_kwrds = models.CharField('Keywords', max_length=250, null=True, blank=True)
 
     class Meta:
         verbose_name = 'SEO title'
@@ -76,9 +76,7 @@ class TitleTag(models.Model):
 
 
 class Index(models.Model):
-    title = models.CharField(max_length=250, verbose_name='Заголовок')
-    title_text = models.TextField(verbose_name='Текст под заголовком')
-    about = models.TextField(verbose_name='О нас')
+    phone = models.CharField('Телефон в шапке сайта', max_length=20)
 
     class Meta:
         verbose_name = 'Статические элементы'

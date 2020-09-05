@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class ContactsConfig(AppConfig):
     name = 'contacts'
-    verbose_name = 'Контактная информация'
+    verbose_name = '5. Контактная информация'

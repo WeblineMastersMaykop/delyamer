@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class ProductsConfig(AppConfig):
     name = 'products'
-    verbose_name = 'Каталог товаров'
+    verbose_name = '2. Каталог товаров'

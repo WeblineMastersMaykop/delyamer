@@ -7,7 +7,50 @@
 {% endblock %}
 
 {% block content %}
-{{ news_item }}
-<br>
-{{ parents }}
+<main>
+    <div class="container pb-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            {% for parent in parents %}
+            <li class="breadcrumb-item"><a href="{{ parent.get_absolute_url }}">{{ parent.title }}</a></li>
+            {% endfor %}
+            <li class="breadcrumb-item"><a href="{% url 'news' %}">Новости</a></li>
+            <li class="breadcrumb-item active">{{ news_item.title }}</li>
+        </ol>
+        <article>
+            <h1>{{ news_item.title }}</h1>
+
+            <div class="d-flex align-items-center border-top border-bottom py-3 my-4">
+                <span class="mr-3 text-muted">Поделиться:</span>
+                <div>
+                    <script src="https://yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
+                    <script src="https://yastatic.net/share2/share.js"></script>
+                    <div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,twitter,whatsapp,telegram"></div>
+                </div>
+            </div>
+
+            {{ news_item.body1|safe }}
+
+            {% for image in news_item.images.all %}
+            <div class="pb-4">
+                <div class="photo-swipe" itemscope itemtype="http://schema.org/ImageGallery">
+                    <figure itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" class="mb-4">
+                        <a href="{{ image.image.url }}" itemprop="contentUrl" data-size="{{ image.image.width }}x{{ image.image.height }}">
+                            <img src="{{ image.image_standart.url }}" itemprop="thumbnail" alt="...">
+                        </a>
+                        <figcaption itemprop="caption description" class="d-none">Информация об изображении, если нужно</figcaption>
+                    </figure>
+                </div>
+                <!-- <small class="text-muted d-block mt-n3">
+                    Источник: <a href="" target="_blank">unsplash.com</a>
+                </small> -->
+            </div>
+            {% endfor %}
+
+            {{ news_item.body2|safe }}
+            {{ news_item.body3|safe }}
+
+        </article>
+    </div>
+</main>
 {% endblock %}

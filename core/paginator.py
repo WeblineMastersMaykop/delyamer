@@ -1,20 +1,21 @@
 from django.core.paginator import Paginator
 
 
-def pagination(queryset, page_number):
-    PRODUCT_PER_PAGE = 1
-    paginator = Paginator(queryset, PRODUCT_PER_PAGE)
+def pagination(queryset, page_number, get_request):
+    paginator = Paginator(queryset, 15)
     page = paginator.get_page(page_number)
 
     is_paginated = page.has_other_pages()
 
     prev_url = None
     if page.has_previous():
-        prev_url = '?page=%s' % page.previous_page_number()
+        get_request['page'] = page.previous_page_number()
+        prev_url = '?{}'.format(get_request.urlencode())
 
     next_url = None
     if page.has_next():
-        next_url = '?page=%s' % page.next_page_number()
+        get_request['page'] = page.next_page_number()
+        next_url = '?{}'.format(get_request.urlencode())
 
     context = {
         'page': page,

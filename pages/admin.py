@@ -38,7 +38,7 @@ class PageAdmin(DjangoMpttAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ('parent', 'action', 'is_active', 'in_footer'),
+            'fields': ('parent', 'action', 'is_active'),
         }),
         ('Текст', {
             'classes': ('grp-collapse grp-open',),

@@ -1,0 +1,17 @@
+.media {
+  display: flex;
+  align-items: flex-start;
+}
+
+.media-body {
+  flex: 1;
+
+    h6 {
+        line-height: 1.5em;
+    }
+
+    span {
+        font-size: 10px;
+        color: $gray-500;
+    }
+}

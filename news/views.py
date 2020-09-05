@@ -7,7 +7,7 @@ from core.paginator import pagination
 
 class NewsView(View):
     def get(self, request):
-        news = News.objects.filter(is_active=True)
+        news = News.objects.filter(is_active=True).select_related('category')
 
         try:
             parents = Page.objects.get(action='news').get_ancestors(ascending=False, include_self=False)
@@ -15,7 +15,7 @@ class NewsView(View):
             parents = Page.objects.none()
 
         page_number = request.GET.get('page', 1)
-        pag_res = pagination(news, page_number)
+        pag_res = pagination(news, page_number, request.GET.copy())
 
         context = {
             'news': news,

@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class PagesConfig(AppConfig):
     name = 'pages'
-    verbose_name = 'Страницы сайта'
+    verbose_name = '6. Страницы сайта'

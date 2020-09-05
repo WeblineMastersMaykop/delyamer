@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load tags %}
 
 {% block title %}
 <title>Магазины</title>
@@ -7,7 +8,69 @@
 {% endblock %}
 
 {% block content %}
-{{ cities }}
-<br>
-{{ parents }}
+<main>
+    <div class="container pb-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            {% for parent in parents %}
+            <li class="breadcrumb-item"><a href="{{ parent.get_absolute_url }}">{{ parent.title }}</a></li>
+            {% endfor %}
+            <li class="breadcrumb-item active">Магазины</li>
+        </ol>
+
+        <h1 class="h3 mb-4">Магазины</h1>
+
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            {% for city in cities %}
+            <li class="nav-item" role="presentation">
+                <a class="nav-link smaller py-1 px-4 {% if city == first_city %} active {% endif %}" id="pills-{{ city.id }}-tab" data-toggle="pill" href="#pills-{{ city.id }}" role="tab" aria-controls="pills-{{ city.id }}" aria-selected="true">{{ city.name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+            {% for city in cities %}
+            <div class="tab-pane pt-3 {% if city == first_city %} fade show active {% endif %}" id="pills-{{ city.id }}" role="tabpanel" aria-labelledby="pills-{{ city.id }}-tab">
+                {% for shop in city.shops.all %}
+                <div class="row no-gutters last-nomargin mb-5">
+                    <div class="col-lg-5">
+                        <div class="bg-white p-md-5 p-4 map-caption">
+                            <address>
+                                <div class="mb-4 mb-md-3">
+                                    <span class="d-block mb-2 smallest text-muted">Адрес</span>
+                                    <span class="d-block smaller mb-1">{{ shop.address }}</span>
+                                </div>
+
+                                <div class="mb-4 mb-md-3">
+                                    <span class="d-block mb-2 smallest text-muted">Телефон</span>
+                                    <a href="tel:+{{ shop.phone|only_digits }}" title="" class="d-block smaller mb-1 text-dark text-decoration-none">{{ shop.phone }}</a>
+                                </div>
+
+                                {% if shop.email %}
+                                <div class="mb-4 mb-md-3">
+                                    <span class="d-block mb-2 smallest text-muted">Почта</span>
+                                    <a href="mailto:{{ shop.email }}" title="" class="smaller mb-1 text-dark">{{ shop.email }}</a>
+                                </div>
+                                {% endif %}
+
+                                <div class="mb-4 mb-md-3">
+                                    <span class="d-block mb-2 smallest text-muted">Режим работы</span>
+                                    {% for item in shop.schedule|split %}
+                                    <span class="d-block smaller mb-1">{{ item }}</span>
+                                    {% endfor %}
+                                </div>
+                            </address>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-7">
+                        {{ shop.map_code|safe }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</main>
 {% endblock %}
