@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'mptt',
     'django_mptt_admin',
     'colorfield',
+    'adminsortable2',
 
     'pages',
     'core',

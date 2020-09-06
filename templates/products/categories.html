@@ -22,7 +22,7 @@
                 <div class="col-lg-3 col-md-4 col-6">
                     <div class="mosaic-item mi-tall mb-4">
                         <div class="bg-img d-flex align-items-end" {% if category.image %}style="background-image: url({{ category.image_small.url }})"{% endif %}>
-                            <a href="{% url 'products' %}?category={{ category.slug }}" title="" class="stretched-link text-decoration-none">{{ category.name }}</a>
+                            <a href="{{ category.get_absolute_url }}" title="" class="stretched-link text-decoration-none">{{ category.name }}</a>
                         </div>
                     </div>
                 </div>

@@ -54,10 +54,10 @@
                             <i class="fas fa-bars mr-2"></i>Каталог
                         </a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item font-500" href="{% url 'products' %}?in_sale=1"><i class="fas fa-percentage mr-2"></i>Распродажа</a>
+                            <a class="dropdown-item font-500" href=" %}?in_sale=1"><i class="fas fa-percentage mr-2"></i>Распродажа</a>
                             <a class="dropdown-item font-500" href="{% url 'products' %}?is_new=1"><i class="fas fa-fire-alt mr-2"></i>Новинки</a>
                             {% for category in categories %}
-                            <a class="dropdown-item" href="{% url 'products' %}?category={{ category.slug }}">{{ category.name }}</a>
+                            <a class="dropdown-item" href="{{ category.get_absolute_url }}">{{ category.name }}</a>
                             {% endfor %}
                         </div>
                     </li>
@@ -137,22 +137,9 @@
                     </li>
 
                     {% for category in categories %}
-                        {% if category.sub_categories %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="{% url 'products' %}?category={{ category.slug }}" role="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown">
-                                {{ category.name }}<i class="fas fa-angle-down fa-xs ml-2"></i>
-                            </a>
-                            <ul class="dropdown-menu">
-                                {% for item in category.sub_categories %}
-                                <li><a class="dropdown-item" href="{% url 'products' %}?category={{ item.slug }}">{{ item.name }}</a></li>
-                                {% endfor %}
-                            </ul>
-                        </li> 
-                        {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'products' %}?category={{ category.slug }}">{{ category.name }}</a>
+                            <a class="nav-link" href="{{ category.get_absolute_url }}">{{ category.name }}</a>
                         </li>
-                        {% endif %}
                     {% endfor %}
 
                     <ul class="list-unstyled py-3">

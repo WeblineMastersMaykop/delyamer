@@ -10,7 +10,7 @@ def context_info(request):
     drop_pages = Page.objects.filter(is_active=True, action='dropdown')
     top_menu = Page.objects.filter(is_active=True, parent=None)
     whatsapp = Social.objects.filter(name__icontains='whatsapp').first()
-    categories = Category.objects.filter(parent=None)
+    categories = Category.objects.all()
     seo_titles = TitleTag.objects.filter(url=request.path).first()
 
     try:

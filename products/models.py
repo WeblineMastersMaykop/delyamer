@@ -1,21 +1,17 @@
 from django.db import models
 from django.urls import reverse
-import mptt
 from uuid import uuid1
 from math import ceil
-from mptt.models import MPTTModel, TreeForeignKey
 from colorfield.fields import ColorField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from core.models import SEO, Position
+from django.conf import settings
 
 
-
-class Category(MPTTModel, SEO, Position):
-    parent = TreeForeignKey('self', on_delete=models.SET_NULL, related_name='children',
-                            verbose_name='Родительская категория', blank=True, null=True)
+class Category(SEO, Position):
     name = models.CharField('Название', max_length=100)
     code_1c = models.CharField('Код 1с', max_length=20, unique=True)
 
@@ -36,14 +32,14 @@ class Category(MPTTModel, SEO, Position):
         verbose_name_plural = 'Категории'
         ordering = ('position',)
 
-    @property
-    def sub_categories(self):
-        return Category.objects.filter(parent=self)
+    def get_absolute_url(self):
+        return '{}?category={}'.format(reverse('products'), self.slug)
+
+    def get_products(self):
+        return self.products.filter(is_active=True)
 
     def __str__(self):
         return self.name
-
-mptt.register(Category,)
 
 
 class Color(models.Model):
@@ -81,15 +77,15 @@ class Cup(models.Model):
         return self.name
 
 
-class Property(models.Model):
-    name = models.CharField('Характеристика', max_length=250)
+# class Property(models.Model):
+#     name = models.CharField('Характеристика', max_length=250)
 
-    class Meta:
-        verbose_name = 'Характеристика'
-        verbose_name_plural = 'Характеристики'
+#     class Meta:
+#         verbose_name = 'Характеристика'
+#         verbose_name_plural = 'Характеристики'
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 
 class Product(SEO):
@@ -112,6 +108,12 @@ class Product(SEO):
 
     def get_absolute_url(self):
         return reverse('product', args=[self.slug])
+
+    def get_colors(self):
+        return set(offer.color for offer in self.offers.filter(is_active=True).exclude(color__name='Без цвета').select_related('color'))
+
+    def get_sizes(self):
+        return set(offer.size for offer in self.offers.filter(is_active=True).exclude(size__name='Без размера').select_related('size'))
 
     # def main_offer(self):
     #     main_offer = self.offers.filter(is_active=True).select_related('promotion_sale').order_by('promotions_promotionsale.sale').last()
@@ -228,3 +230,20 @@ class ProductImage(models.Model):
 @receiver(pre_delete, sender=ProductImage)
 def product_image_delete(sender, instance, **kwargs):
     instance.image.delete(False)
+
+
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews', verbose_name='Товар')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews', verbose_name='Пользователь')
+    rating = models.PositiveIntegerField('Оценка')
+    text = models.TextField('Текст')
+    created = models.DateField('Дата создания', auto_now_add=True)
+    updated = models.DateField('Дата изменения', auto_now=True)
+
+
+    class Meta:
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
+
+    def __str__(self):
+        return '{}. {} -- {}'.format(self.id, self.product.name, self.user.username)

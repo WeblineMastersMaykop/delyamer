@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-<title>{% firstof category.seo_title category.name %}</title>
+<title>{% firstof category.seo_title category_name %}</title>
 <meta name="description" content="{{ category.seo_kwrds }}">
 <meta name="keywords" content="{{ category.seo_kwrds }}">
 {% endblock %}
@@ -10,22 +10,21 @@
 <main>
     <div class="container pb-5">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index.html">Главная</a></li>
-            <li class="breadcrumb-item"><a href="catalogue.html">Каталог</a></li>
-            <li class="breadcrumb-item active">Комплекты нижнего белья</li>
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'categories' %}">Каталог</a></li>
+            <li class="breadcrumb-item active">{{ category_name }}</li>
         </ol>
         <div class="d-md-flex align-items-center justify-content-between mb-4">
-            <h1 class="h4 mb-md-0 mb-4 mr-5 flex-grow-1">Комплекты нижнего белья<small class="ml-3 smaller text-muted">142 товара</small></h1>
+            <h1 class="h4 mb-md-0 mb-4 mr-5 flex-grow-1">{{ category_name }}<small class="ml-3 smaller text-muted">{{ main_offers|length }} товара (ов)</small></h1>
 
             <div class="d-flex d-lg-block align-items-center">
                 <a href="#" title="" class="offcanvas-filters-toggler-icon mr-4 d-lg-none" type="button" data-toggle="offcanvas-filters"><i class="fas fa-sliders-h fa-lg"></i> <i class="fas fa-times fa-lg"></i></a>
-
-                <select class="custom-select custom-select-sm border-white">
-                    <option selected>Популярные</option>
-                    <option value="1">Сначала дешёвые</option>
-                    <option value="2">Сначала дорогие</option>
-                    <option value="3">Новинки</option>
-                    <option value="3">По размеру скидки</option>
+                <select id="ordering" class="custom-select custom-select-sm border-white" name="ordering" onchange="submitForm();">
+                    <option {% if ordering == 1 %}selected{% endif %} value="1">Популярные</option>
+                    <option {% if ordering == 2 %}selected{% endif %} value="2">Сначала дешёвые</option>
+                    <option {% if ordering == 3 %}selected{% endif %} value="3">Сначала дорогие</option>
+                    <option {% if ordering == 4 %}selected{% endif %} value="4">Новинки</option>
+                    <option {% if ordering == 5 %}selected{% endif %} value="5">По размеру скидки</option>
                 </select>
             </div>
         </div>
@@ -33,102 +32,57 @@
         <div class="d-lg-none offcanvas-filters navbar-expand-lg">
             <div class="container">
                 <div class="filters">
-                    <form>
+                    <form id="small_filters" action="{% url 'products' %}" method="GET" onsubmit="submitSmallFilters();">
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Цена</h6>
                             <div class="d-flex align-items-center justify-content-between justify-content-sm-start">
                                 <div class="range-input">
                                     <span>от</span>
-                                    <input type="text" class="form-control form-control-sm border-white" placeholder="" value="0">
+                                    <input type="number"  min=0 name="price_min" class="form-control form-control-sm border-white" placeholder="" value="{{ price_min }}">
                                 </div>
 
                                 <span class="px-2">-</span>
 
                                 <div class="range-input">
                                     <span>до</span>
-                                    <input type="text" class="form-control form-control-sm border-white" placeholder="" value="12500">
+                                    <input type="number" min=0 name="price_max" class="form-control form-control-sm border-white" placeholder="" value="{{ price_max }}">
                                 </div>
                             </div>
                         </div>
 
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Цвет</h6>
+                            {% for color in colors %}
                             <div class="custom-control custom-checkbox color-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt3-1">
-                                <label class="custom-control-label smaller" for="opt3-1"><span class="filter-tag tag-red"></span>Красный</label>
+                                <input type="checkbox" name="color" value="{{ color.id }}" class="custom-control-input" id="sopt3-{{ color.id }}" {% if color.checked %}checked{% endif %}>
+                                <label class="custom-control-label smaller" for="sopt3-{{ color.id }}"><span class="filter-tag" style="background-color: {{ color.color }};"></span>{{ color.name }}</label>
                             </div>
-
-                            <div class="custom-control custom-checkbox color-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt3-2">
-                                <label class="custom-control-label smaller" for="opt3-2"><span class="filter-tag tag-pink"></span>Розовый</label>
-                            </div>
-
-                            <div class="custom-control custom-checkbox color-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt3-3">
-                                <label class="custom-control-label smaller" for="opt3-3"><span class="filter-tag tag-green"></span>Зелёный</label>
-                            </div>
-
-                            <div class="custom-control custom-checkbox color-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt3-4">
-                                <label class="custom-control-label smaller" for="opt3-4"><span class="filter-tag tag-blue"></span>Синий</label>
-                            </div>
-
-                            <div class="custom-control custom-checkbox color-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt3-5">
-                                <label class="custom-control-label smaller" for="opt3-5"><span class="filter-tag tag-black"></span>Чёрный</label>
-                            </div>
-
-                            <div class="custom-control custom-checkbox color-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt3-6">
-                                <label class="custom-control-label smaller" for="opt3-6"><span class="filter-tag tag-white"></span>Белый</label>
-                            </div>
+                            {% endfor %}
                         </div>
 
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Размер</h6>
+                            {% for size in sizes %}
                             <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt1-1">
-                                <label class="custom-control-label smaller" for="opt1-1">XS</label>
+                                <input type="checkbox" name="size" value="{{ size.id }}" class="custom-control-input" id="sopt1-{{ size.id }}" {% if size.checked %}checked{% endif %}>
+                                <label class="custom-control-label smaller" for="sopt1-{{ size.id }}">{{ size.name }}</label>
                             </div>
-
-                            <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt1-2">
-                                <label class="custom-control-label smaller" for="opt1-2">S</label>
-                            </div>
-
-                            <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt1-3">
-                                <label class="custom-control-label smaller" for="opt1-3">M</label>
-                            </div>
-
-                            <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt1-4">
-                                <label class="custom-control-label smaller" for="opt1-4">L</label>
-                            </div>
-
-                            <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt1-5">
-                                <label class="custom-control-label smaller" for="opt1-5">XL</label>
-                            </div>
-
-                            <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt1-6">
-                                <label class="custom-control-label smaller" for="opt1-6">XXL</label>
-                            </div>
+                            {% endfor %}
                         </div>
 
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Пуш-ап</h6>
-                            <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt2-1">
-                                <label class="custom-control-label smaller" for="opt2-1">Есть</label>
+                            <div class="custom-control custom-radio mb-1">
+                                <input type="radio" name="pushup" value="1" class="custom-control-input" id="sopt2-1" {% if pushup == 1 %}checked{% endif %}>
+                                <label class="custom-control-label smaller" for="sopt2-1">Есть</label>
                             </div>
 
-                            <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt2-2">
-                                <label class="custom-control-label smaller" for="opt2-2">Нет</label>
+                            <div class="custom-control custom-radio mb-1">
+                                <input type="radio" name="pushup" value="0" class="custom-control-input" id="sopt2-2" {% if pushup == 0 %}checked{% endif %}>
+                                <label class="custom-control-label smaller" for="sopt2-2">Нет</label>
                             </div>
                         </div>
+                        <button type="submit" class="btn btn-success">Применить</button>
                     </form>
                 </div>
             </div>
@@ -137,125 +91,67 @@
         <div class="row">
             <div class="col-lg-3 d-none d-lg-block">
                 <ul class="lz-menu mb-4 pb-4 border-bottom">
-                    <li><a href="catalogue-category.html" class="font-500"><i class="fas fa-percentage mr-2"></i>Распродажа<span>13</span></a></li>
-                    <li><a href="catalogue-category.html" class="font-500"><i class="fas fa-fire-alt mr-2"></i>Новинки<span>32</span></a></li>
-                    <li class="active"><a href="catalogue-category.html">Комплекты нижнего белья<span>142</span></a></li>
-                    <li><a href="catalogue-category.html">Бюстгалтеры<span>184</span></a></li>
-                    <li><a href="catalogue-category.html">Трусы<span>201</span></a></li>
-                    <li><a href="catalogue-category.html">Боди<span>145</span></a></li>
-                    <li><a href="catalogue-category.html">Пижамы<span>65</span></a></li>
-                    <li><a href="catalogue-category.html">Халаты, пеньюары<span>42</span></a></li>
-                    <li><a href="catalogue-category.html">Домашняя одежда<span>28</span></a></li>
-                    <li><a href="catalogue-category.html">Чулки, колготки<span>32</span></a></li>
-                    <li>
-                        <a href="catalogue-category.html" class="lz-sub">Аксессуары<span>52</span></a>
-                        <ul>
-                            <li><a href="catalogue-subcategory.html">Маски<span>15</span></a></li>
-                            <li><a href="catalogue-subcategory.html">Стрепы<span>28</span></a></li>
-                            <li><a href="catalogue-subcategory.html">Пояса<span>9</span></a></li>
-                        </ul>
-                    </li>
-                    <li><a href="catalogue-category.html">Пляжная одежда<span>25</span></a></li>
-                    <li><a href="catalogue-category.html">Купальники<span>189</span></a></li>
+                    <li><a href="{% url 'products' %}?in_sale=1" class="font-500"><i class="fas fa-percentage mr-2"></i>Распродажа</a></li>
+                    <li><a href="{% url 'products' %}?is_new=1" class="font-500"><i class="fas fa-fire-alt mr-2"></i>Новинки</a></li>
+                    {% for category_item in categories %}
+                        <li class="{% if category_item.slug == category_slug %}active{% endif %}">
+                            <a href="{{ category_item.get_absolute_url }}">{{ category_item.name }}<span>{{ category_item.get_products|length }}</span></a>
+                        </li>
+                    {% endfor %}
                 </ul>
 
                 <div class="filters">
-                    <form>
+                    <form id="big_filters" action="{% url 'products' %}" method="GET" onsubmit="submitBigFilters();">
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Цена</h6>
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="range-input">
                                     <span>от</span>
-                                    <input type="text" class="form-control form-control-sm border-white" placeholder="" value="0">
+                                    <input type="number" name="price_min" min=0 class="form-control form-control-sm border-white" placeholder="" value="{{ price_min }}">
                                 </div>
 
                                 <span class="px-2">-</span>
 
                                 <div class="range-input">
                                     <span>до</span>
-                                    <input type="text" class="form-control form-control-sm border-white" placeholder="" value="12500">
+                                    <input type="number" name="price_max" min=0 class="form-control form-control-sm border-white" placeholder="" value="{{ price_max }}">
                                 </div>
                             </div>
                         </div>
 
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Цвет</h6>
+                            {% for color in colors %}
                             <div class="custom-control custom-checkbox color-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt3-1">
-                                <label class="custom-control-label smaller" for="opt3-1"><span class="filter-tag tag-red"></span>Красный</label>
+                                <input type="checkbox" name="color" value="{{ color.id }}" class="custom-control-input" id="bopt3-{{ color.id }}" {% if color.checked %}checked{% endif %}>
+                                <label class="custom-control-label smaller" for="bopt3-{{ color.id }}"><span class="filter-tag" style="background-color: {{ color.color }};"></span>{{ color.name }}</label>
                             </div>
-
-                            <div class="custom-control custom-checkbox color-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt3-2">
-                                <label class="custom-control-label smaller" for="opt3-2"><span class="filter-tag tag-pink"></span>Розовый</label>
-                            </div>
-
-                            <div class="custom-control custom-checkbox color-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt3-3">
-                                <label class="custom-control-label smaller" for="opt3-3"><span class="filter-tag tag-green"></span>Зелёный</label>
-                            </div>
-
-                            <div class="custom-control custom-checkbox color-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt3-4">
-                                <label class="custom-control-label smaller" for="opt3-4"><span class="filter-tag tag-blue"></span>Синий</label>
-                            </div>
-
-                            <div class="custom-control custom-checkbox color-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt3-5">
-                                <label class="custom-control-label smaller" for="opt3-5"><span class="filter-tag tag-black"></span>Чёрный</label>
-                            </div>
-
-                            <div class="custom-control custom-checkbox color-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt3-6">
-                                <label class="custom-control-label smaller" for="opt3-6"><span class="filter-tag tag-white"></span>Белый</label>
-                            </div>
+                            {% endfor %}
                         </div>
 
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Размер</h6>
+                            {% for size in sizes %}
                             <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt1-1">
-                                <label class="custom-control-label smaller" for="opt1-1">XS</label>
+                                <input type="checkbox" name="size" value="{{ size.id }}" class="custom-control-input" id="bopt1-{{ size.id }}" {% if size.checked %}checked{% endif %}>
+                                <label class="custom-control-label smaller" for="bopt1-{{ size.id }}">{{ size.name }}</label>
                             </div>
-
-                            <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt1-2">
-                                <label class="custom-control-label smaller" for="opt1-2">S</label>
-                            </div>
-
-                            <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt1-3">
-                                <label class="custom-control-label smaller" for="opt1-3">M</label>
-                            </div>
-
-                            <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt1-4">
-                                <label class="custom-control-label smaller" for="opt1-4">L</label>
-                            </div>
-
-                            <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt1-5">
-                                <label class="custom-control-label smaller" for="opt1-5">XL</label>
-                            </div>
-
-                            <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt1-6">
-                                <label class="custom-control-label smaller" for="opt1-6">XXL</label>
-                            </div>
+                            {% endfor %}
                         </div>
 
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Пуш-ап</h6>
-                            <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt2-1">
-                                <label class="custom-control-label smaller" for="opt2-1">Есть</label>
+                            <div class="custom-control custom-radio mb-1">
+                                <input type="radio" name="pushup" value="1" class="custom-control-input" id="bopt2-1" {% if pushup == 1 %}checked{% endif %}>
+                                <label class="custom-control-label smaller" for="bopt2-1">Есть</label>
                             </div>
 
-                            <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" class="custom-control-input" id="opt2-2">
-                                <label class="custom-control-label smaller" for="opt2-2">Нет</label>
+                            <div class="custom-control custom-radio mb-1">
+                                <input type="radio" name="pushup" value="0" class="custom-control-input" id="bopt2-2" {% if pushup == 0 %}checked{% endif %}>
+                                <label class="custom-control-label smaller" for="bopt2-2">Нет</label>
                             </div>
                         </div>
+                        <button type="submit" class="btn btn-success">Применить</button>
                     </form>
                 </div>
             </div>
@@ -293,14 +189,18 @@
                                 {% endif %}
 
                                 <div class="color-tags pt-2">
-                                    <span class="tag-green"></span>
-                                    <span class="tag-white"></span>
-                                    <span class="tag-black"></span>
+                                    {% for color in offer.product.get_colors %}
+                                    <span style="background-color: {{ color.color }};"></span>
+                                    {% endfor %}
                                 </div>
 
                                 <div class="product-card-extra">
                                     <div class="product-card-extra-content">
-                                        <span class="d-block small text-muted">Размеры: 75B, 80B, 80C, 85C, 85D</span>
+                                        <span class="d-block small text-muted">
+                                            {% if offer.product.get_sizes %}
+                                                Размеры: {{ offer.product.get_sizes|join:", " }}
+                                            {% endif %}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -314,4 +214,25 @@
         </div>
     </div>
 </main>
+
+<script>
+    function submitBigFilters(){
+        form = document.getElementById('big_filters');
+        ordering = document.getElementById('ordering');
+        form.append(ordering);
+    }
+
+    function submitSmallFilters(){
+        form = document.getElementById('small_filters');
+        ordering = document.getElementById('ordering');
+        form.append(ordering);
+    }
+
+    function submitForm(){
+        form = document.getElementById('small_filters');
+        ordering = document.getElementById('ordering');
+        form.append(ordering);
+        form.submit();
+    }
+</script>
 {% endblock %}

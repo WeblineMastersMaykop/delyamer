@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import View
-from products.models import Category, Product, Offer
+from products.models import Category, Product, Offer, Color, Size
 from pages.models import Page
-from django.db.models import F
+from django.db.models import F, Case, When, Value, BooleanField
 from django.db.models.functions import Coalesce
 from core.paginator import pagination
 
@@ -27,9 +27,10 @@ class ProductsView(View):
         in_sale = request.GET.get('in_sale')
         price_min = request.GET.get('price_min')
         price_max = request.GET.get('price_max')
-        color_list = request.GET.getlist('color')
-        size_list = request.GET.getlist('size')
-        pushup = request.GET.getlist('pushup')
+        color_list = request.GET.getlist('color', [])
+        size_list = request.GET.getlist('size', [])
+        pushup = request.GET.get('pushup')
+        ordering = request.GET.get('ordering', 1)
 
         get_request = request.GET.copy()
 
@@ -51,23 +52,22 @@ class ProductsView(View):
         except:
             get_request.pop('is_new', None)
 
-        if pushup:
-            try:
-                pushup = map(int, pushup)
-                offers = offers.filter(product__pushup__in=pushup)
-            except:
-                get_request.pop('pushup', None)
+        try:
+            pushup = int(pushup)
+            offers = offers.filter(product__pushup=pushup)
+        except:
+            get_request.pop('pushup', None)
 
         if color_list:
             try:
-                color_list = map(int, color_list)
+                color_list = list(map(int, color_list))
                 offers = offers.filter(color__in=color_list)
             except:
                 get_request.pop('color_list', None)
 
         if size_list:
             try:
-                size_list = map(int, size_list)
+                size_list = list(map(int, size_list))
                 offers = offers.filter(size__in=size_list)
             except:
                 get_request.pop('size_list', None)
@@ -90,7 +90,7 @@ class ProductsView(View):
         except:
             get_request.pop('in_sale', None)
 
-        offers = offers.order_by('product__id', '-price_with_sale')
+        offers = offers.order_by('product__id', 'price_with_sale')
 
         main_offers = []
         offer_old = None
@@ -99,12 +99,59 @@ class ProductsView(View):
                 main_offers.append(offer)
                 offer_old = offer.product.id
 
+        if ordering:
+            try:
+                ordering = int(ordering)
+                if ordering == 1:
+                    main_offers.sort(key=lambda offer: offer.product.is_bs, reverse=True)
+                elif ordering == 2:
+                    main_offers.sort(key=lambda offer: offer.price_with_sale)
+                elif ordering == 3:
+                    main_offers.sort(key=lambda offer: offer.price_with_sale, reverse=True)
+                elif ordering == 4:
+                    main_offers.sort(key=lambda offer: offer.product.is_new, reverse=True)
+                elif ordering == 5:
+                    main_offers.sort(key=lambda offer: offer.promotion_sale if offer.promotion_sale else 0, reverse=True)
+            except:
+                get_request.pop('ordering', None)
+
         page_number = request.GET.get('page', 1)
         pag_res = pagination(main_offers, page_number, get_request)
 
+        colors = Color.objects.all().annotate(checked=Case(
+            When(id__in=color_list, then=Value(1)),
+            default=0,
+            output_field=BooleanField()
+        ))
+
+        sizes = Size.objects.all().annotate(checked=Case(
+            When(id__in=size_list, then=Value(1)),
+            default=0,
+            output_field=BooleanField()
+        ))
+
+        if category:
+            category_name = category.name
+        elif in_sale:
+            category_name = 'Распродажа'
+        elif is_new:
+            category_name = 'Новинки'
+        else:
+            category_name = 'Все товары'
+
         context = {
+            'price_min': price_min,
+            'price_max': price_max,
+            'ordering': ordering,
+            'category_slug': category_slug,
+            'category_name': category_name,
+
+            'colors': colors,
+            'sizes': sizes,
+            'pushup': pushup,
             'category': category,
             'main_offers': main_offers,
+
             'page_object': pag_res['page'],
             'is_paginated': pag_res['is_paginated'],
             'next_url': pag_res['next_url'],
@@ -114,8 +161,7 @@ class ProductsView(View):
 
 
 class ProductView(View):
-    def get(self, request, category_slug, product_slug):
-        print(category_slug, product_slug)
+    def get(self, request, product_slug):
         product = get_object_or_404(Product, slug=product_slug)
 
         try:
