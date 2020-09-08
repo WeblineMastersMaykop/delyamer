@@ -3,6 +3,7 @@ from contacts.models import Social, ContactInfo
 from pages.models import Page
 from core.models import Index, TitleTag
 from products.models import Category
+from users.forms import LoginForm, RegisterForm
 
 
 def context_info(request):
@@ -23,7 +24,12 @@ def context_info(request):
     except:
         contact_info = ContactInfo.objects.none()
 
+    login_form = LoginForm()
+    register_form = RegisterForm()
+
     context = {
+        'login_form': login_form,
+        'register_form': register_form,
         'socials': socials,
         'drop_pages': drop_pages,
         'contact_info': contact_info,

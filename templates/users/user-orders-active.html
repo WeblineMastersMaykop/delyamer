@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Активные заказы</title>
+<meta name="description" content="Активные заказы">
+<meta name="keywords" content="заказы">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container pb-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            <li class="breadcrumb-item active">Активные заказы</li>
+        </ol>
+
+        <ul class="nav nav-pills mb-4">
+            <li class="nav-item">
+                <a class="nav-link smaller py-1 px-4 active" href="{% url 'active_orders' %}">Заказы</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link smaller py-1 px-4" href="{% url 'profile' %}">Личные данные</a>
+            </li>
+        </ul>
+
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link smaller active" href="{% url 'active_orders' %}"><h1 class="smaller m-0 font-weight-normal d-inline-block">Активные</h1><span class="badge badge-pill badge-dark ml-2">{{ request.user.get_active_orders.count }}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link smaller" href="{% url 'finished_orders' %}">Завершённые<span class="badge badge-pill badge-dark ml-2">{{ request.user.get_finished_orders.count }}</span></a>
+            </li>
+        </ul>
+
+        <div class="row">
+            {% for order in request.user.get_active_orders %}
+            <div class="col-lg-6">
+                <div class="profile-order-item position-relative bg-white mb-4 p-md-4 p-3 mh-3">
+                    <div class="border-bottom mb-3 pb-3">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <span class="d-block small text-muted">Заказ от {{ order.created|date:"d.m.Y" }}</span>
+                                <a href="{{ order.get_absolute_url }}" title="" class="font-500 text-decoration-none d-inline-block">#{{ order.id }}</a>
+                            </div>
+
+                            <div class="col-6 text-right">
+                                <span><span class="number h5 mb-0 mr-1">{{ order.total_price }}</span><span class="smallest">₽</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-5">
+                            <span class="d-block smaller mb-3">
+                                {{ order.delivery.name }}
+                                {% if order.delivery.info %}
+                                <span class="text-muted smaller ml-2">({{ order.delivery.info }})</span>
+                                {% endif %}
+                            </span>
+                            <span class="d-inline-block small px-2 py-1 rounded-lg bg-orange">{{ order.get_status_display }}</span>
+                        </div>
+
+                        <div class="col-md-7">
+                            <div class="row no-gutters justify-content-md-end pt-4 pt-md-none">
+                                {% for item in order.items.all %}
+                                <div class="col-2 pl-1 mb-1">
+                                    <a href="{{ item.offer.product.get_absolute_url }}" title="" class="bg-img d-block" style="background-image: url({{ item.offer.get_image.image_small.url }})"></a>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</main>
+{% endblock %}

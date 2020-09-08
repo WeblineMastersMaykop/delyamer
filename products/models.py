@@ -8,7 +8,6 @@ from imagekit.processors import ResizeToFill
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from core.models import SEO, Position
-from django.conf import settings
 
 
 class Category(SEO, Position):
@@ -77,17 +76,6 @@ class Cup(models.Model):
         return self.name
 
 
-# class Property(models.Model):
-#     name = models.CharField('Характеристика', max_length=250)
-
-#     class Meta:
-#         verbose_name = 'Характеристика'
-#         verbose_name_plural = 'Характеристики'
-
-#     def __str__(self):
-#         return self.name
-
-
 class Product(SEO):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name='products', verbose_name='Категория', null=True, blank=True)
     code_1c = models.CharField('Код 1с', max_length=100, unique=True)
@@ -140,20 +128,6 @@ class Product(SEO):
 
     def __str__(self):
         return self.name
-
-
-# class ProductProperty(models.Model):
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='properties', verbose_name='Товар')
-#     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='properties', verbose_name='Характеристика')
-#     value = models.CharField('Значение', max_length=250)
-
-#     class Meta:
-#         verbose_name = 'Характеристика товара'
-#         verbose_name_plural = 'Характеристики товара'
-#         unique_together = ('product', 'property')
-
-#     def __str__(self):
-#         return '{0} -- {1}'.format(self.product.name, self.property.name)
 
 
 class Offer(models.Model):
@@ -214,7 +188,7 @@ class ProductImage(models.Model):
                                  options={'quality': 90})
 
     image_small = ImageSpecField(source='image',
-                                 processors=[ResizeToFill(648, 110)],
+                                 processors=[ResizeToFill(150, 110)],
                                  format='JPEG',
                                  options={'quality': 90})
 
@@ -230,20 +204,3 @@ class ProductImage(models.Model):
 @receiver(pre_delete, sender=ProductImage)
 def product_image_delete(sender, instance, **kwargs):
     instance.image.delete(False)
-
-
-class Review(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews', verbose_name='Товар')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews', verbose_name='Пользователь')
-    rating = models.PositiveIntegerField('Оценка')
-    text = models.TextField('Текст')
-    created = models.DateField('Дата создания', auto_now_add=True)
-    updated = models.DateField('Дата изменения', auto_now=True)
-
-
-    class Meta:
-        verbose_name = 'Отзыв'
-        verbose_name_plural = 'Отзывы'
-
-    def __str__(self):
-        return '{}. {} -- {}'.format(self.id, self.product.name, self.user.username)

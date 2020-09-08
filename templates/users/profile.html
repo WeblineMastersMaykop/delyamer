@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Личная информация</title>
+<meta name="description" content="Личная информация">
+<meta name="keywords" content="информация, профиль">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container pb-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            <li class="breadcrumb-item active">Личные данные</li>
+        </ol>
+
+        <ul class="nav nav-pills mb-4">
+            <li class="nav-item">
+                <a class="nav-link smaller py-1 px-4" href="{% url 'active_orders' %}">Заказы</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link smaller py-1 px-4 active" href="{% url 'profile' %}"><h1 class="smaller m-0 font-weight-normal">Личные данные</h1></a>
+            </li>
+        </ul>
+
+        <div class="row mb-3">
+            <div class="col-lg-8">
+                <div class="bg-white px-xl-5 px-lg-4 px-md-5 px-3 pt-xl-5 pt-lg-4 pt-md-5 pt-3 pb-xl-3 pb-lg-2 pb-md-3 pb-1 mb-4">
+                    <h2 class="mb-4 h6">Доставка</h2>
+                    <form class="needs-validation" novalidate action="{% url 'profile' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ update_form.postcode }}
+                                    <label>Почтовый индекс</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ update_form.country }}
+                                    <label>Страна</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ update_form.region }}
+                                    <label>Регион</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ update_form.city }}
+                                    <label>Населённый пункт</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ update_form.address }}
+                                    <label>Адрес</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ update_form.phone }}
+                                    <label>Телефон</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-8">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ update_form.full_name }}
+                                    <label>ФИО</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ update_form.new_email }}
+                                    <label>Эл. почта</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-outline-dark d-block mb-4 px-4" type="submit">Сохранить</button>
+
+                        {% for field in update_form %}
+                            {% for error in field.errors %}
+                            <div class="alert alert-secondary alert-dismissible small fade show mb-4" role="alert">
+                                {{ error }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {% endfor %}
+                        {% endfor %}
+
+                        {% if changed %}
+                        <div class="alert alert-light border alert-dismissible small fade show mb-4" role="alert">
+                            Данные успешно сохранены
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="bg-white px-xl-5 px-lg-4 px-md-5 px-3 pt-xl-5 pt-lg-4 pt-md-5 pt-3 pb-xl-3 pb-lg-2 pb-md-3 pb-1">
+                    <h2 class="mb-4 h6">Изменить пароль</h2>
+                    <form class="needs-validation" novalidate action="{% url 'change_password' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="form-label-group form-label-group-sm smaller mb-4">
+                            {{ change_password_form.old_password }}
+                            <label>Старый пароль</label>
+
+                            <div class="invalid-feedback">
+                                Это обязательное поле
+                            </div>
+                        </div>
+
+                        <div class="form-label-group form-label-group-sm smaller mb-4">
+                            {{ change_password_form.new_password1 }}
+                            <label>Новый пароль</label>
+
+                            <div class="invalid-feedback">
+                                Это обязательное поле
+                            </div>
+                        </div>
+
+                        <div class="form-label-group form-label-group-sm smaller mb-4">
+                            {{ change_password_form.new_password2 }}
+                            <label>Повторите новый пароль</label>
+
+                            <div class="invalid-feedback">
+                                Это обязательное поле
+                            </div>
+                        </div>
+
+                        <button class="btn btn-outline-dark d-block mb-4 px-4" type="submit">Сохранить</button>
+
+                        {% for field in change_password_form %}
+                            {% for error in field.errors %}
+                            <div class="alert alert-secondary alert-dismissible small fade show mb-4" role="alert">
+                                {{ error }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {% endfor %}
+                        {% endfor %}
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <a href="#" title="" class="text-muted small" data-toggle="modal" data-target="#AccountDeleteModal">Удалить аккаунт</a>
+    </div>
+</main>
+
+<div class="modal fade" id="AccountDeleteModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content overflow-hidden shadow bg-light">
+            <div class="modal-header">
+                <p class="small mb-0">Для удаления аккаунта подтвердите свои учётные данные</p>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body pt-3">
+                <form class="needs-validation" novalidate action="{% url 'delete_user' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-label-group smaller mb-4">
+                        {{ delete_user_form.username }}
+                        <label>Эл. почта</label>
+
+                        <div class="invalid-feedback">
+                            Проверьте верность почты
+                        </div>
+                    </div>
+
+                    <div class="form-label-group smaller mb-4">
+                        {{ delete_user_form.password }}
+                        <label>Пароль</label>
+
+                        <div class="invalid-feedback">
+                            Это обязательное поле
+                        </div>
+                    </div>
+
+                    <button class="btn btn-outline-dark d-block w-100" type="submit">Удалить аккаунт</button>
+                    <br>
+                    <div id="delete-errors"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

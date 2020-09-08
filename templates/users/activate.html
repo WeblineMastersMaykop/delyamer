@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>{{ msg }}</title>
+<meta name="description" content="{{ msg }}">
+<meta name="keywords" content="активация, activation, {{ msg }}"> 
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container pb-5">
+        <div class="row">
+            <div class="col-xl-4 col-lg-5 col-md-7 mx-auto pt-md-5 pb-md-4">
+                <div class="position-relative bg-white p-md-5 p-4">
+                    <h1 class="h5">{{ msg }}</h1>
+                    <p class="mb-4 small">{{ text }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+
+
+
+
+
+
+
+

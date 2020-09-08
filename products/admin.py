@@ -1,6 +1,6 @@
 from django.contrib import admin
 from adminsortable2.admin import SortableAdminMixin
-from products.models import Color, Size, Category, Product, Offer, ProductImage, Cup, Review
+from products.models import Color, Size, Category, Product, Offer, ProductImage, Cup
 
 
 @admin.register(Category)
@@ -45,12 +45,6 @@ class OfferInline(admin.StackedInline):
     classes = ('grp-collapse grp-closed',)
 
 
-class ReviewInline(admin.TabularInline):
-    model = Review
-    extra = 0
-    classes = ('grp-collapse grp-closed',)
-
-
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     fieldsets = (
@@ -68,7 +62,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('name', 'code_1c', 'vendor_code', 'category__name')
     list_filter = ('is_active', 'is_new', 'is_bs', 'category', 'pushup')
     prepopulated_fields = {'slug': ('name','code_1c')}
-    inlines = (OfferInline, ProductImageInline, ReviewInline)
+    inlines = (OfferInline, ProductImageInline)
 
 
 @admin.register(Offer)
@@ -85,9 +79,3 @@ class OfferAdmin(admin.ModelAdmin):
     list_display = ('product', 'color', 'size', 'cup', 'stock', 'is_active', 'created', 'updated')
     list_editable = ('is_active',)
     search_fields = ('product__name', 'color__name', 'size__name', 'cup__name', 'product__category__name')
-
-
-@admin.register(Review)
-class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('product', 'user', 'rating', 'created', 'updated')
-    search_fields = ('product__name', 'user__username', 'user__full_name', 'rating')

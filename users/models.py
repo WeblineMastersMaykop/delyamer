@@ -11,11 +11,17 @@ class User(AbstractUser):
     city = models.CharField('Населенный пункт', max_length=100, null=True, blank=True)
     address = models.CharField('Адрес', max_length=250, null=True, blank=True)
     phone = models.CharField('Телефон', max_length=20, null=True, blank=True)
+    new_email = models.EmailField('Временная эл. почта', max_length=250, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Все пользователи'
         verbose_name_plural = 'Все пользователи'
 
+    def get_active_orders(self):
+        return self.orders.all().exclude(status='finished').select_related('delivery')
+
+    def get_finished_orders(self):
+        return self.orders.filter(status='finished').select_related('delivery')
 
 class UserGroup(Group):
     class Meta:
