@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+<title>Корзина</title>
+<meta name="description" content="Корзина товаров">
+<meta name="keywords" content="корзина">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container pb-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            <li class="breadcrumb-item active">Корзина</li>
+        </ol>
+
+        <h1 class="h3 mb-4">Корзина</h1>
+        <form action="{% url 'order_add' %}" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-8">
+                    {% for item in cart %}
+                    <div class="cart-item position-relative bg-white p-3 p-sm-4 mb-4 cart-item-{{ item.offer_id }}">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="cart-item-product">
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-3 col-4">
+                                            <div class="bg-img" style="background-image: url({{ item.image_url }})"></div>
+                                        </div>
+
+                                        <div class="col-md-8 col-sm-9 col-8">
+                                            <a href="{{ item.url }}" title="" class="d-inline-block text-decoration-none mb-2">{{ item.name }}</a>
+                                            {% if item.color %}
+                                            <div class="smallest mb-1"><span class="text-muted mr-1">Цвет:</span><span>{{ item.color }}</span></div>
+                                            {% endif %}
+                                            {% if item.size %}
+                                            <div class="smallest mb-1"><span class="text-muted mr-1">Размер:</span><span>{{ item.size }}</span></div>
+                                            {% endif %}
+                                            {% if item.cup %}
+                                            <div class="smallest mb-1"><span class="text-muted mr-1">Чашка:</span><span>{{ item.cup }}</span></div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <span class="d-block small product-item-option-name mb-md-3 mb-2 pt-md-1">Количество:</span>
+                                <input class="form-control-sm" data-offer-id="{{ item.offer_id }}" type="number" value="{{ item.quantity }}" min="1" max="{{ item.stock }}" step="1"/>
+                            </div>
+
+                            <div class="col-md-4 col-6">
+                                <div class="text-right">
+                                    <span class="d-block small mb-md-3 mb-1 pt-md-1">Цена:</span>
+                                    <span><span class="number h6 mb-0 mr-1 offer-cost">{% widthratio item.price 1 item.quantity %}</span><span class="smallest">₽</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cart-item-btns small">
+                            <a href="#" data-offer-id="{{ item.offer_id }}" title="" class="text-decoration-none text-muted mr-4 remove-from-cart"><i class="far fa-trash-alt mr-2"></i>Удалить</a>
+                            {% if user.is_authenticated %}
+                            <a href="#" data-offer-id="{{ item.offer_id }}" title="" class="text-decoration-none text-muted add-favorite"><i class="far fa-heart mr-2"></i>Добавить в желаемое</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="bg-white px-sm-4 px-3 pt-sm-4 pt-3 pb-3">
+                        <form action="" method="POST" id="order-form">
+                            <h2 class="h6 mb-4">Доставка</h2>
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="form-label-group form-label-group-sm smaller mb-4">
+                                        {{ order_form.postcode }}
+                                        <label>Почтовый индекс</label>
+
+                                        <div class="invalid-feedback">
+                                            Это обязательное поле
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="form-label-group form-label-group-sm smaller mb-4">
+                                        {{ order_form.country }}
+                                        <label>Страна</label>
+
+                                        <div class="invalid-feedback">
+                                            Это обязательное поле
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="form-label-group form-label-group-sm smaller mb-4">
+                                        {{ order_form.region }}
+                                        <label>Регион</label>
+
+                                        <div class="invalid-feedback">
+                                            Это обязательное поле
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="form-label-group form-label-group-sm smaller mb-4">
+                                        {{ order_form.city }}
+                                        <label>Населённый пункт</label>
+
+                                        <div class="invalid-feedback">
+                                            Это обязательное поле
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="form-label-group form-label-group-sm smaller mb-4">
+                                        {{ order_form.address }}
+                                        <label>Адрес</label>
+
+                                        <div class="invalid-feedback">
+                                            Это обязательное поле
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="form-label-group form-label-group-sm smaller mb-4">
+                                        {{ order_form.phone }}
+                                        <label>Телефон</label>
+
+                                        <div class="invalid-feedback">
+                                            Это обязательное поле
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-8">
+                                    <div class="form-label-group form-label-group-sm smaller mb-4">
+                                        {{ order_form.full_name }}
+                                        <label>ФИО</label>
+
+                                        <div class="invalid-feedback">
+                                            Это обязательное поле
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-4">
+                                    <div class="form-label-group form-label-group-sm smaller mb-4">
+                                        {{ order_form.email }}
+                                        <label>Эл. почта</label>
+
+                                        <div class="invalid-feedback">
+                                            Это обязательное поле
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% for item in delivery_methods %}
+                            <div class="custom-control custom-radio mb-2">
+                                <input data-delivery-id="{{ item.id }}" type="radio" id="Radio{{ item.id }}" name="delivery" value="{{ item.id }}" class="custom-control-input change-delivery" {% if item.id == cart.delivery|first %}checked=""{% endif %}>
+                                <label class="custom-control-label" for="Radio{{ item.id }}">{{ item.name }}<span class="text-muted smaller ml-2">{% if item.info %}({{ item.info }}){% endif %}</span><span class="smallest text-muted ml-2">+{{ item.price }} ₽</span></label>
+                            </div>
+                            {% endfor %}
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="bg-white p-sm-4 p-3 sticky-top" style="top:76px">
+                        <form class="mb-4">
+                            <div class="form-group">
+                                <label class="small">Промокод</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control" placeholder="Промокод" aria-label="Промокод" aria-describedby="button-addon1" value="ЛЕТО2020">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-dark" type="button" id="button-addon1">Удалить<!--Применить--></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between smaller mb-1"><span class="font-500 mr-3">Товары на сумму:</span><span><span class="number font-500 mr-1" id="total-price">{{ cart.get_total_price }}</span><span class="smallest">₽</span></span></div>
+
+                            <div class="d-flex justify-content-between smaller mb-1"><span class="font-500 mr-3">Доставка:</span><span><span class="number font-500 mr-1" id="delivery-price">{{ cart.delivery.1 }}</span><span class="smallest">₽</span></span></div>
+                        </div>
+                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Скидка:</span><span class="text-danger"><span class="number mr-1">-{{ cart.get_sale }}</span><span class="smallest">₽</span></span></div>
+                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Нарастающая скидка:</span><span class="text-danger"><span class="number mr-1">-{{ cart.get_three_sales }}</span><span class="smallest">₽</span></span></div>
+                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Акция 3+1:</span><span class="text-danger"><span class="number mr-1">-2400</span><span class="smallest">₽</span></span></div>
+                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">-10% на всё:</span><span class="text-danger"><span class="number mr-1">-3200</span><span class="smallest">₽</span></span></div>
+                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Промокод:</span><span class="text-danger"><span class="number mr-1">-500</span><span class="smallest">₽</span></span></div>
+
+                        <div class="border-top border-bottom py-3 my-4">
+                            <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Вы сэкономите:</span><span class="text-danger"><span class="number mr-1">6100</span><span class="smallest">₽</span></span></div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center smaller mb-4"><span class="h6 mb-0 mr-3">Итого:</span><span><span class="number h5 mb-0 mr-1" id="total-price-with-sale">1111</span><span class="smallest">₽</span></span></div>
+
+                        <button title="" class="btn btn-primary w-100">Оплатить заказ<i class="fas fa-angle-right fa-xs ml-2"></i></button>
+
+                        <p class="text-muted smallest border-top mb-0 mt-4 pt-3">Нажимая кнопку "Оплатить зааказ", вы даёте согласие на <a href="/pages/personal-data/" target="_blank">обработку персональных данных</a></p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/bootstrap-input-spinner.js' %}"></script>
+{% endblock %}

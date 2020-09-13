@@ -1,0 +1,29 @@
+{% autoescape off %}
+    На сайте http://{{ domain }} новый заказ.
+    
+    Информация о заказе:
+
+    Заказ № {{ order.id }}
+    Дата/Время: {{ order.created }}
+
+    Пользователь: {% firstof order.user 'Не указано' %}
+    ФИО: {% firstof order.full_name 'Не указано' %}
+    E-mail: {% firstof order.email 'Не указано' %}
+    Телефон: {% firstof order.phone 'Не указано' %}
+    Индекс: {% firstof order.postcode 'Не указано' %}
+    Страна: {% firstof order.country 'Не указано' %}
+    Регион / Область: {% firstof order.region 'Не указано' %}
+    Город / Населённый пункт: {% firstof order.city 'Не указано' %}
+    Улица, дом, квартира / офис: {% firstof order.address 'Не указано' %}
+    
+    Способ доставки: {% firstof order.delivery 'Не указано' %}
+
+    Товары в заказе:
+    {% for item in order.items.all %}
+        {{ item.offer.product.name }} | {{ item.price }} руб. | {{ item.quantity }} шт. | {{ item.get_cost }} руб.
+    {% endfor %}
+
+    Итог: {{ order.get_total_price }} руб.
+    
+    Ссылка на сайт: http://{{ domain }}
+{% endautoescape %}

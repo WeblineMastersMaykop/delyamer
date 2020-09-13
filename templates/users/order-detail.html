@@ -47,7 +47,7 @@
                     <div class="p-md-4 p-3">
                         <div class="row">
                             <div class="col-xl-4 col-lg-5 col-md-2 col-sm-3 col-4">
-                                <div class="bg-img" style="background-image: url(data-images/product-card-image-1.jpg)"></div>
+                                <div class="bg-img" style="background-image: url({{ item.offer.get_image.image_small.url }})"></div>
                             </div>
 
                             <div class="col-xl-8 col-lg-7 col-md-10 col-sm-9 col-8">
@@ -66,7 +66,7 @@
                         <div class="media">
                             <div class="product-rating text-orange mr-4">
                                 {% for i in '12345'|make_list %}
-                                    {% if i <= item.review.rating %}
+                                    {% if i <= item.review.get_rating_display %}
                                     <i class="fas fa-star fa-xs"></i>
                                     {% else %}
                                     <i class="far fa-star fa-xs"></i>
@@ -85,30 +85,27 @@
                 <div class="col-lg-8">
                     <div class="px-md-4 px-3 pb-md-4 pb-3 pt-md-0 pt-lg-4 pt-2">
                         <h6 class="mb-3">Написать отзыв</h6>
-                        <form class="needs-validation" novalidate method="POST">
+                        <form class="needs-validation" method="POST" action="{{ order.get_absolute_url }}">
                             {% csrf_token %}
-                            # TODO остановился тут
                             <div class="d-flex align-items-center mb-2">
                                 <span class="mr-3 smaller">Оценка</span>
                                 <div class="rating">
-                                    <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="">5 stars</label>
-                                    <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="">4 stars</label>
-                                    <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="">3 stars</label>
-                                    <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="">2 stars</label>
-                                    <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="">1 star</label>
+                                    <input type="radio" id="star5-{{ item.id }}" name="rating" value="five" required><label for="star5-{{ item.id }}" title="">5 stars</label>
+                                    <input type="radio" id="star4-{{ item.id }}" name="rating" value="four" required><label for="star4-{{ item.id }}" title="">4 stars</label>
+                                    <input type="radio" id="star3-{{ item.id }}" name="rating" value="three" required><label for="star3-{{ item.id }}" title="">3 stars</label>
+                                    <input type="radio" id="star2-{{ item.id }}" name="rating" value="two" required><label for="star2-{{ item.id }}" title="">2 stars</label>
+                                    <input type="radio" id="star1-{{ item.id }}" name="rating" value="one" required><label for="star1-{{ item.id }}" title="">1 star</label>
                                 </div>
                             </div>
 
                             <div class="clearfix"></div>
 
                             <div class="form-label-group smaller mb-4">
-                                <textarea rows="2" class="form-control" placeholder="Отзыв" required></textarea>
+                                <textarea rows="2" name='text' class="form-control" placeholder="Отзыв" required></textarea>
                                 <label>Отзыв</label>
-
-                                <div class="invalid-feedback">
-                                    Это обязательное поле
-                                </div>
                             </div>
+
+                            <input type="hidden" name="order_item" value="{{ item.id }}">
 
                             <button class="btn btn-outline-dark btn-sm d-block" type="submit">Отправить отзыв</button>
 
@@ -134,7 +131,7 @@
                 <i class="far fa-credit-card"></i>
                 <div>
                     <span class="text-muted small d-block mb-1">Оплачено:</span>
-                    <span><span class="number h6 mb-0 mr-1">{{ order.total_price }}</span><span class="smallest">₽</span></span>
+                    <span><span class="number h6 mb-0 mr-1">{{ order.get_total_price }}</span><span class="smallest">₽</span></span>
                 </div>
             </div>
 
@@ -151,12 +148,12 @@
                 <div>
                     <span class="text-muted small d-block mb-1">Доставка:</span>
                     <span class="d-block mb-1">
-                        {{ order.delivery.name }}
+                        {% firstof order.delivery.name 'Не указано' %}
                         {% if order.delivery.info %}
                         <span class="text-muted smaller ml-2">({{ order.delivery.info }})</span>
                         {% endif %}
                     </span>
-                    <span class="smaller">{{ order.address }}</span>
+                    <span class="smaller">{% firstof order.address 'Не указано' %}</span>
                 </div>
             </div>
 

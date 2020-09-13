@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load tags %}
 
 {% block title %}
 <title>{% firstof category.seo_title category_name %}</title>
@@ -32,20 +33,37 @@
         <div class="d-lg-none offcanvas-filters navbar-expand-lg">
             <div class="container">
                 <div class="filters">
-                    <form id="small_filters" action="{% url 'products' %}" method="GET" onsubmit="submitSmallFilters();">
+                    <form id="small_filters" action="{% url 'products' %}" method="GET">
+                        {% if 'in_sale=1' in request.GET.urlencode %}
+                        <input type="hidden" name="in_sale" value="1">
+                        {% endif %}
+                        {% if 'is_new=1' in request.GET.urlencode %}
+                        <input type="hidden" name="is_new" value="1">
+                        {% endif %}
+                        {% if 'category' in request.GET.urlencode %}
+                        <input type="hidden" name="category" value="{{ request.GET.category }}">
+                        {% endif %}
+                        {% if 'ordering' in request.GET.urlencode %}
+                        <input type="hidden" name="ordering" value="{{ request.GET.ordering }}">
+                        {% endif %}
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Цена</h6>
-                            <div class="d-flex align-items-center justify-content-between justify-content-sm-start">
-                                <div class="range-input">
-                                    <span>от</span>
-                                    <input type="number"  min=0 name="price_min" class="form-control form-control-sm border-white" placeholder="" value="{{ price_min }}">
+                            <div class="filter-box filter-range">
+                                <div class="d-flex align-items-center justify-content-between justify-content-sm-start">
+                                    <div class="range-input">
+                                        <span>от</span>
+                                        <input type="number"  min=0 name="price_min" class="form-control form-control-sm border-white" placeholder="" value="{{ price_min }}">
+                                    </div>
+
+                                    <span class="px-2">-</span>
+
+                                    <div class="range-input">
+                                        <span>до</span>
+                                        <input type="number" min=0 name="price_max" class="form-control form-control-sm border-white" placeholder="" value="{{ price_max }}">
+                                    </div>
                                 </div>
-
-                                <span class="px-2">-</span>
-
-                                <div class="range-input">
-                                    <span>до</span>
-                                    <input type="number" min=0 name="price_max" class="form-control form-control-sm border-white" placeholder="" value="{{ price_max }}">
+                                <div class="filter-apply d-none">
+                                    <button class="btn btn-outline-dark smallest d-block py-0" type="submit">Показать</button>
                                 </div>
                             </div>
                         </div>
@@ -53,9 +71,14 @@
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Цвет</h6>
                             {% for color in colors %}
-                            <div class="custom-control custom-checkbox color-checkbox mb-1">
-                                <input type="checkbox" name="color" value="{{ color.id }}" class="custom-control-input" id="sopt3-{{ color.id }}" {% if color.checked %}checked{% endif %}>
-                                <label class="custom-control-label smaller" for="sopt3-{{ color.id }}"><span class="filter-tag" style="background-color: {{ color.color }};"></span>{{ color.name }}</label>
+                            <div class="filter-box">
+                                <div class="custom-control custom-checkbox color-checkbox mb-1">
+                                    <input type="checkbox" name="color" value="{{ color.id }}" class="custom-control-input" id="sopt3-{{ color.id }}" {% if color.checked %}checked{% endif %}>
+                                    <label class="custom-control-label smaller" for="sopt3-{{ color.id }}"><span class="filter-tag" style="background-color: {{ color.color }};"></span>{{ color.name }}</label>
+                                </div>
+                                <div class="filter-apply d-none">
+                                    <button class="btn btn-outline-dark smallest d-block py-0" type="submit">Показать</button>
+                                </div>
                             </div>
                             {% endfor %}
                         </div>
@@ -63,26 +86,39 @@
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Размер</h6>
                             {% for size in sizes %}
-                            <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" name="size" value="{{ size.id }}" class="custom-control-input" id="sopt1-{{ size.id }}" {% if size.checked %}checked{% endif %}>
-                                <label class="custom-control-label smaller" for="sopt1-{{ size.id }}">{{ size.name }}</label>
+                            <div class="filter-box">
+                                <div class="custom-control custom-checkbox mb-1">
+                                    <input type="checkbox" name="size" value="{{ size.id }}" class="custom-control-input" id="sopt1-{{ size.id }}" {% if size.checked %}checked{% endif %}>
+                                    <label class="custom-control-label smaller" for="sopt1-{{ size.id }}">{{ size.name }}</label>
+                                </div>
+                                <div class="filter-apply d-none">
+                                    <button class="btn btn-outline-dark smallest d-block py-0" type="submit">Показать</button>
+                                </div>
                             </div>
                             {% endfor %}
                         </div>
 
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Пуш-ап</h6>
-                            <div class="custom-control custom-radio mb-1">
-                                <input type="radio" name="pushup" value="1" class="custom-control-input" id="sopt2-1" {% if pushup == 1 %}checked{% endif %}>
-                                <label class="custom-control-label smaller" for="sopt2-1">Есть</label>
+                            <div class="filter-box">
+                                <div class="custom-control custom-radio mb-1">
+                                    <input type="radio" name="pushup" value="1" class="custom-control-input" id="sopt2-1" {% if pushup == 1 %}checked{% endif %}>
+                                    <label class="custom-control-label smaller" for="sopt2-1">Есть</label>
+                                </div>
+                                <div class="filter-apply d-none">
+                                    <button class="btn btn-outline-dark smallest d-block py-0" type="submit">Показать</button>
+                                </div>
                             </div>
-
-                            <div class="custom-control custom-radio mb-1">
-                                <input type="radio" name="pushup" value="0" class="custom-control-input" id="sopt2-2" {% if pushup == 0 %}checked{% endif %}>
-                                <label class="custom-control-label smaller" for="sopt2-2">Нет</label>
+                            <div class="filter-box">
+                                <div class="custom-control custom-radio mb-1">
+                                    <input type="radio" name="pushup" value="0" class="custom-control-input" id="sopt2-2" {% if pushup == 0 %}checked{% endif %}>
+                                    <label class="custom-control-label smaller" for="sopt2-2">Нет</label>
+                                </div>
+                                <div class="filter-apply d-none">
+                                    <button class="btn btn-outline-dark smallest d-block py-0" type="submit">Показать</button>
+                                </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-success">Применить</button>
                     </form>
                 </div>
             </div>
@@ -91,30 +127,47 @@
         <div class="row">
             <div class="col-lg-3 d-none d-lg-block">
                 <ul class="lz-menu mb-4 pb-4 border-bottom">
-                    <li><a href="{% url 'products' %}?in_sale=1" class="font-500"><i class="fas fa-percentage mr-2"></i>Распродажа</a></li>
-                    <li><a href="{% url 'products' %}?is_new=1" class="font-500"><i class="fas fa-fire-alt mr-2"></i>Новинки</a></li>
+                    <li {% if 'in_sale=1' in request.GET.urlencode %}class="active"{% endif %}><a href="{% url 'products' %}?in_sale=1" class="font-500"><i class="fas fa-percentage mr-2"></i>Распродажа</a></li>
+                    <li {% if 'is_new=1' in request.GET.urlencode %}class="active"{% endif %}><a href="{% url 'products' %}?is_new=1" class="font-500"><i class="fas fa-fire-alt mr-2"></i>Новинки</a></li>
                     {% for category_item in categories %}
                         <li class="{% if category_item.slug == category_slug %}active{% endif %}">
-                            <a href="{{ category_item.get_absolute_url }}">{{ category_item.name }}<span>{{ category_item.get_products|length }}</span></a>
+                            <a href="{{ request.GET.urlencode|change_category:category_item.slug }}">{{ category_item.name }}<span>{{ category_item.get_products|length }}</span></a>
                         </li>
                     {% endfor %}
                 </ul>
 
                 <div class="filters">
-                    <form id="big_filters" action="{% url 'products' %}" method="GET" onsubmit="submitBigFilters();">
+                    <form id="big_filters" action="{% url 'products' %}" method="GET">
+                        {% if 'in_sale=1' in request.GET.urlencode %}
+                        <input type="hidden" name="in_sale" value="1">
+                        {% endif %}
+                        {% if 'is_new=1' in request.GET.urlencode %}
+                        <input type="hidden" name="is_new" value="1">
+                        {% endif %}
+                        {% if 'category' in request.GET.urlencode %}
+                        <input type="hidden" name="category" value="{{ request.GET.category }}">
+                        {% endif %}
+                        {% if 'ordering' in request.GET.urlencode %}
+                        <input type="hidden" name="ordering" value="{{ request.GET.ordering }}">
+                        {% endif %}
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Цена</h6>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="range-input">
-                                    <span>от</span>
-                                    <input type="number" name="price_min" min=0 class="form-control form-control-sm border-white" placeholder="" value="{{ price_min }}">
+                            <div class="filter-box filter-range">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="range-input">
+                                        <span>от</span>
+                                        <input type="number" name="price_min" min=0 class="form-control form-control-sm border-white" placeholder="" value="{{ price_min }}">
+                                    </div>
+
+                                    <span class="px-2">-</span>
+
+                                    <div class="range-input">
+                                        <span>до</span>
+                                        <input type="number" name="price_max" min=0 class="form-control form-control-sm border-white" placeholder="" value="{{ price_max }}">
+                                    </div>
                                 </div>
-
-                                <span class="px-2">-</span>
-
-                                <div class="range-input">
-                                    <span>до</span>
-                                    <input type="number" name="price_max" min=0 class="form-control form-control-sm border-white" placeholder="" value="{{ price_max }}">
+                                <div class="filter-apply d-none">
+                                    <button class="btn btn-outline-dark smallest d-block py-0" type="submit">Показать</button>
                                 </div>
                             </div>
                         </div>
@@ -122,9 +175,14 @@
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Цвет</h6>
                             {% for color in colors %}
-                            <div class="custom-control custom-checkbox color-checkbox mb-1">
-                                <input type="checkbox" name="color" value="{{ color.id }}" class="custom-control-input" id="bopt3-{{ color.id }}" {% if color.checked %}checked{% endif %}>
-                                <label class="custom-control-label smaller" for="bopt3-{{ color.id }}"><span class="filter-tag" style="background-color: {{ color.color }};"></span>{{ color.name }}</label>
+                            <div class="filter-box">
+                                <div class="custom-control custom-checkbox color-checkbox mb-1">
+                                    <input type="checkbox" name="color" value="{{ color.id }}" class="custom-control-input" id="bopt3-{{ color.id }}" {% if color.checked %}checked{% endif %}>
+                                    <label class="custom-control-label smaller" for="bopt3-{{ color.id }}"><span class="filter-tag" style="background-color: {{ color.color }};"></span>{{ color.name }}</label>
+                                </div>
+                                <div class="filter-apply d-none">
+                                    <button class="btn btn-outline-dark smallest d-block py-0" type="submit">Показать</button>
+                                </div>
                             </div>
                             {% endfor %}
                         </div>
@@ -132,26 +190,39 @@
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Размер</h6>
                             {% for size in sizes %}
-                            <div class="custom-control custom-checkbox mb-1">
-                                <input type="checkbox" name="size" value="{{ size.id }}" class="custom-control-input" id="bopt1-{{ size.id }}" {% if size.checked %}checked{% endif %}>
-                                <label class="custom-control-label smaller" for="bopt1-{{ size.id }}">{{ size.name }}</label>
+                            <div class="filter-box">
+                                <div class="custom-control custom-checkbox mb-1">
+                                    <input type="checkbox" name="size" value="{{ size.id }}" class="custom-control-input" id="bopt1-{{ size.id }}" {% if size.checked %}checked{% endif %}>
+                                    <label class="custom-control-label smaller" for="bopt1-{{ size.id }}">{{ size.name }}</label>
+                                </div>
+                                <div class="filter-apply d-none">
+                                    <button class="btn btn-outline-dark smallest d-block py-0" type="submit">Показать</button>
+                                </div>
                             </div>
                             {% endfor %}
                         </div>
 
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Пуш-ап</h6>
-                            <div class="custom-control custom-radio mb-1">
-                                <input type="radio" name="pushup" value="1" class="custom-control-input" id="bopt2-1" {% if pushup == 1 %}checked{% endif %}>
-                                <label class="custom-control-label smaller" for="bopt2-1">Есть</label>
+                            <div class="filter-box">
+                                <div class="custom-control custom-radio mb-1">
+                                    <input type="radio" name="pushup" value="1" class="custom-control-input" id="bopt2-1" {% if pushup == 1 %}checked{% endif %}>
+                                    <label class="custom-control-label smaller" for="bopt2-1">Есть</label>
+                                </div>
+                                <div class="filter-apply d-none">
+                                    <button class="btn btn-outline-dark smallest d-block py-0" type="submit">Показать</button>
+                                </div>
                             </div>
-
-                            <div class="custom-control custom-radio mb-1">
-                                <input type="radio" name="pushup" value="0" class="custom-control-input" id="bopt2-2" {% if pushup == 0 %}checked{% endif %}>
-                                <label class="custom-control-label smaller" for="bopt2-2">Нет</label>
+                            <div class="filter-box">
+                                <div class="custom-control custom-radio mb-1">
+                                    <input type="radio" name="pushup" value="0" class="custom-control-input" id="bopt2-2" {% if pushup == 0 %}checked{% endif %}>
+                                    <label class="custom-control-label smaller" for="bopt2-2">Нет</label>
+                                </div>
+                                <div class="filter-apply d-none">
+                                    <button class="btn btn-outline-dark smallest d-block py-0" type="submit">Показать</button>
+                                </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-success">Применить</button>
                     </form>
                 </div>
             </div>
@@ -161,7 +232,7 @@
                     {% for offer in page_object.object_list %}
                     <div class="col-lg-4 col-md-4 col-sm-6">
                         <div class="product-card mb-5">
-                            <div class="bg-img mb-2" {% if offer.get_image %}style="background-image: url({{ offer.get_image.image.url }})"{% endif %}>
+                            <div class="bg-img mb-2" {% if offer.get_image %}style="background-image: url({{ offer.get_image.image_medium.url }})"{% endif %}>
                                 <div class="d-flex status-badges">
                                     {% if offer.product.is_new %}
                                     <span class="badge badge-success">NEW</span>
@@ -188,19 +259,30 @@
                                 <div><span class="number font-500 mr-1">{{ offer.product.price }}</span><span class="smaller">₽</span></div>
                                 {% endif %}
 
+                                {% if offer.color %}
                                 <div class="color-tags pt-2">
                                     {% for color in offer.product.get_colors %}
                                     <span style="background-color: {{ color.color }};"></span>
                                     {% endfor %}
                                 </div>
+                                {% endif %}
 
                                 <div class="product-card-extra">
                                     <div class="product-card-extra-content">
+                                        {% if offer.size %}
                                         <span class="d-block small text-muted">
                                             {% if offer.product.get_sizes %}
                                                 Размеры: {{ offer.product.get_sizes|join:", " }}
                                             {% endif %}
                                         </span>
+                                        {% endif %}
+                                        <!-- {% if offer.cup %}
+                                        <span class="d-block small text-muted">
+                                            {% if offer.product.get_cups %}
+                                                Чашки: {{ offer.product.get_cups|join:", " }}
+                                            {% endif %}
+                                        </span>
+                                        {% endif %} -->
                                     </div>
                                 </div>
                             </div>
@@ -216,23 +298,11 @@
 </main>
 
 <script>
-    function submitBigFilters(){
-        form = document.getElementById('big_filters');
-        ordering = document.getElementById('ordering');
-        form.append(ordering);
-    }
-
-    function submitSmallFilters(){
-        form = document.getElementById('small_filters');
-        ordering = document.getElementById('ordering');
-        form.append(ordering);
-    }
-
     function submitForm(){
-        form = document.getElementById('small_filters');
+        big_form = document.getElementById('big_filters');
         ordering = document.getElementById('ordering');
-        form.append(ordering);
-        form.submit();
+        big_form.append(ordering);
+        big_form.submit();
     }
 </script>
 {% endblock %}

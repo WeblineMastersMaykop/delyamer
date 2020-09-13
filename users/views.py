@@ -11,7 +11,7 @@ from users.forms import LoginForm, RegisterForm, UpdateForm, CustomPasswordChang
 from core.utils import send_mail
 from core.tokens import change_email_token, account_activation_token
 from core.models import MailFromString
-from orders.models import Order
+from orders.models import Order, Review, OrderItem
 
 
 User = get_user_model()
@@ -106,22 +106,14 @@ class UserActiveOdersView(LoginRequiredMixin, View):
 
     def get(self, request):
         user = request.user
-
-        context = {
-        }
-
-        return render(request, 'users/user-orders-active.html', context)
+        return render(request, 'users/user-orders-active.html')
 
 
 class UserFinishedOdersView(LoginRequiredMixin, View):
     login_url = '/'
 
     def get(self, request):
-
-        context = {
-        }
-
-        return render(request, 'users/user-orders-finished.html', context)
+        return render(request, 'users/user-orders-finished.html')
 
 
 class OrderDetailView(LoginRequiredMixin, View):
@@ -130,6 +122,28 @@ class OrderDetailView(LoginRequiredMixin, View):
     def get(self, request, order_id):
         order = get_object_or_404(Order.objects.select_related('delivery', 'user'), pk=order_id, user=request.user)
         order_items = order.items.all().select_related('review', 'offer', 'offer__product')
+
+        context = {
+            'order': order,
+            'order_items': order_items,
+        }
+
+        return render(request, 'users/order-detail.html', context)
+
+    def post(self, request, order_id):
+        order = get_object_or_404(Order.objects.select_related('delivery', 'user'), pk=order_id, user=request.user)
+        order_items = order.items.all().select_related('review', 'offer', 'offer__product')
+
+        text = request.POST.get('text')
+        rating = request.POST.get('rating')
+        order_item_id = request.POST.get('order_item')
+        order_item = get_object_or_404(OrderItem, pk=order_item_id)
+
+        review = Review.objects.create(
+            order_item=order_item,
+            rating=rating,
+            text=text
+        )
 
         context = {
             'order': order,

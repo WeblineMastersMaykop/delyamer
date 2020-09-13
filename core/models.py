@@ -1,4 +1,6 @@
 from django.db import models
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 
 
 class SEO(models.Model):
@@ -77,6 +79,7 @@ class TitleTag(models.Model):
 
 class Index(models.Model):
     phone = models.CharField('Телефон в шапке сайта', max_length=20)
+    banner = models.ForeignKey('Banner', on_delete=models.SET_NULL, verbose_name='Баннер', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Статические элементы'
@@ -84,3 +87,34 @@ class Index(models.Model):
 
     def __str__(self):
         return 'Статические элементы №{0}'.format(self.id)
+
+
+class Slide(models.Model):
+    main_text = models.CharField('Заголовок', max_length=250, null=True, blank=True)
+    sub_text = models.CharField('Описание', max_length=250, null=True, blank=True)
+    url = models.CharField('Ссылка', max_length=250, null=True, blank=True)
+    image = models.ImageField(upload_to='images/slides/', verbose_name='Изображение', null=True, blank=True)
+    image_big = ImageSpecField(source='image',
+                                 processors=[ResizeToFill(1116, 480)],
+                                 format='JPEG',
+                                 options={'quality': 90})
+
+    class Meta:
+        verbose_name = 'Слайд'
+        verbose_name_plural = 'Слайды'
+
+    def __str__(self):
+        return 'Слайд №{}'.format(self.id)
+
+
+class Banner(models.Model):
+    main_text = models.CharField('Заголовок', max_length=250)
+    sub_text = models.TextField('Описание')
+    url = models.CharField('Ссылка', max_length=250)
+
+    class Meta:
+        verbose_name = 'Баннер'
+        verbose_name_plural = 'Баннеры'
+
+    def __str__(self):
+        return 'Баннер №{}'.format(self.id)

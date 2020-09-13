@@ -22,7 +22,7 @@ class ReviewInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'phone', 'delivery', 'status', 'total_price', 'created', 'updated')
+    list_display = ('full_name', 'phone', 'delivery', 'status', 'created', 'updated')
     list_filter = ('status', 'delivery')
     search_fields = ('full_name', 'user__full_name', 'user__username')
     inlines = (OrderItemInline,)

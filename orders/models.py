@@ -39,7 +39,7 @@ class Order(models.Model):
     city = models.CharField('Населенный пункт', max_length=100, null=True, blank=True)
     address = models.CharField('Адрес', max_length=250, null=True, blank=True)
 
-    total_price = models.PositiveIntegerField('Итоговая стоимость', default=0)
+    # total_price = models.PositiveIntegerField('Итоговая стоимость', default=0)
     delivery = models.ForeignKey(DeliveryMethod, on_delete=models.SET_NULL, related_name='orders', verbose_name='Способ доставки', null=True, blank=True)
     status = models.CharField(max_length=100, choices=STATUS_CHOICES, verbose_name='Статус', default='new')
 
@@ -49,10 +49,16 @@ class Order(models.Model):
     def get_absolute_url(self):
         return reverse('order_detail', args=[self.id])
 
+    def get_total_price(self):
+        total_price = 0
+        for item in self.items.all():
+            total_price += item.get_cost()
+        return total_price
+
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Список заказов'
-        ordering = ('updated',)
+        ordering = ('-updated',)
 
     def __str__(self):
         return 'Заказ №{}'.format(self.id)

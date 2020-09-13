@@ -2,8 +2,9 @@ from pages.models import Page
 from contacts.models import Social, ContactInfo
 from pages.models import Page
 from core.models import Index, TitleTag
-from products.models import Category
+from products.models import Category, FavoriteProduct
 from users.forms import LoginForm, RegisterForm
+from core.cart import Cart
 
 
 def context_info(request):
@@ -24,10 +25,15 @@ def context_info(request):
     except:
         contact_info = ContactInfo.objects.none()
 
+    favorite_count = FavoriteProduct.objects.filter(user=request.user).count() if request.user.is_authenticated else 0
+
     login_form = LoginForm()
     register_form = RegisterForm()
 
+    cart = Cart(request)
+
     context = {
+        'cart': cart,
         'login_form': login_form,
         'register_form': register_form,
         'socials': socials,
@@ -36,6 +42,7 @@ def context_info(request):
         'whatsapp': whatsapp,
         'top_menu': top_menu,
         'index': index,
+        'favorite_count': favorite_count,
         'categories': categories,
         'seo_titles': seo_titles,
     }

@@ -31,3 +31,14 @@ def change_page(value, page):
     return '?{}'.format(get_request.urlencode())
 
 register.filter('change_page', change_page)
+
+
+@register.filter
+@stringfilter
+def change_category(value, category):
+    get_request = QueryDict(value, mutable=True)
+    get_request['category'] = category
+    get_request['page'] = 1
+    return '?{}'.format(get_request.urlencode())
+
+register.filter('change_category', change_category)

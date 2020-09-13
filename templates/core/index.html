@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
 <title>De'lyamer - Главная</title>
@@ -7,5 +8,382 @@
 {% endblock %}
 
 {% block content %}
+<main>
+    <div class="container">
+        {% if index.banner %}
+        <div class="alert alert-primary alert-dismissible fade text-center mb-4 p-4 show" role="alert">
+            <h4 class="text-uppercase text-danger mb-3">{{ index.banner.main_text }}</h4>
+            <p class="smaller mb-4">{{ index.banner.sub_text }}</p>
+            <a href="{{ index.banner.url }}" title="" class="btn btn-outline-dark px-3">Подробнее об этом</a>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+        <div id="Carousel" class="carousel sale-carousel mb-4 slide" data-ride="carousel">
+            <div class="carousel-inner bg-secondary">
+                {% for slide in slides %}
+                <div class="carousel-item bg-img {% if forloop.counter0 == 0 %}active{% endif %}" {% if slide.image_big %}style="background-image: url({{ slide.image_big.url }})"{% endif %}>
+                    <div class="carousel-caption d-flex align-items-end p-4 p-md-5">
+                        <div class="px-3">
+                            <a href="{% firstof slide.url '#' %}" title="" class="stretched-link">{{ slide.main_text|safe }}</a>
+                            <div class="pt-4">
+                                <p>{{ slide.sub_text|safe }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
 
+            <ol class="carousel-indicators">
+                {% for slide in slides %}
+                <li data-target="#Carousel" data-slide-to="{{ forloop.counter0 }}" class="{% if forloop.counter0 == 0 %}active{% endif %}"></li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+
+    <section class="pt-5 pb-4 bg-dark-light">
+        <div class="container mosaic">
+            <div class="row">
+
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mosaic-item mi-tall">
+                                <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-1.jpg' %})">
+                                    <a href="{% url 'products' %}?category=komplekty-nizhnego-belia" title="" class="stretched-link text-decoration-none">Комплекты нижнего белья</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="mosaic-item mb-4">
+                                        <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-2.jpg' %})">
+                                            <a href="{% url 'products' %}?category=biustgaltery" title="" class="stretched-link text-decoration-none">Бюстгалтеры</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <div class="mosaic-item mb-4">
+                                        <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-3.jpg' %})">
+                                            <a href="{% url 'products' %}?category=trusy" title="" class="stretched-link text-decoration-none">Трусы</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mosaic-item mb-4">
+                                <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-5.jpg' %})">
+                                    <a href="{% url 'products' %}?category=pizhamy" title="" class="stretched-link text-decoration-none">Пижамы</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="mosaic-item mb-4">
+                                <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-4.jpg' %})">
+                                    <a href="{% url 'products' %}?category=bodi" title="" class="stretched-link text-decoration-none">Боди</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-6">
+                            <div class="mosaic-item mb-4">
+                                <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-6.jpg' %})">
+                                    <a href="{% url 'products' %}?category=khalaty-peniuary" title="" class="stretched-link text-decoration-none">Халаты, пеньюары</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-9">
+                    <div class="row">
+                        <div class="col-lg-8 col-6">
+                            <div class="mosaic-item mb-4">
+                                <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-7.jpg' %})">
+                                    <a href="{% url 'products' %}?category=domashniaia-odezhda" title="" class="stretched-link text-decoration-none">Домашняя одежда</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 col-6">
+                            <div class="mosaic-item mb-4">
+                                <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-8.jpg' %})">
+                                    <a href="{% url 'products' %}?category=kolgotki-chulki" title="" class="stretched-link text-decoration-none">Чулки, колготки</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 col-6">
+                            <div class="mosaic-item mb-4">
+                                <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-9.jpg' %})">
+                                    <a href="{% url 'products' %}?category=aksessuary" title="" class="stretched-link text-decoration-none">Аксессуары</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-8 col-6">
+                            <div class="mosaic-item mb-4">
+                                <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-10.jpg' %})">
+                                    <a href="{% url 'products' %}?category=pliazhnaia-odezhda" title="" class="stretched-link text-decoration-none">Пляжная одежда</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="mosaic-item mi-tall mi-wide mb-4">
+                        <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-11.jpg' %})">
+                            <a href="{% url 'products' %}?category=kupalniki" title="" class="stretched-link text-decoration-none">Купальники</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pt-5">
+        <div class="container">
+            <div class="d-flex align-items-end mb-4">
+                <h2 class="h4 font-weight-normal mb-0 mr-4">Хиты продаж</h2>
+                <a href="{% url 'products' %}?is_bs=1" title="" class="d-block small text-decoration-none">Все предложения<i class="fas fa-long-arrow-alt-right fa-xs ml-2"></i></a>
+            </div>
+
+            <div class="owl-carousel carousel-products">
+                {% for product in bs_products %}
+                <div class="product-card">
+                    <div class="bg-img mb-2" style="background-image: url({{ product.main_offer.get_image.image_medium.url }})">
+                        <div class="d-flex status-badges">
+                            {% if product.is_new %}
+                            <span class="badge badge-success">NEW</span>
+                            {% endif %}
+                            {% if product.is_bs %}
+                            <span class="badge badge-info">ХИТ</span>
+                            {% endif %}
+                        </div>
+
+                        {% if product.main_offer.promotion_sale %}
+                        <span class="badge badge-danger sale-badge">-{{ product.main_offer.promotion_sale.sale }}%</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="product-card-caption">
+                        <a href="{{ product.get_absolute_url }}" title="" class="stretched-link text-decoration-none text-dark smaller">{{ product.name }}</a>
+
+                        {% if product.main_offer.promotion_sale %}
+                        <div>
+                            <div class="d-inline-block mr-2 text-muted small"><del><span class="number font-500 mr-1">{{ product.price }}</span><span class="small">₽</span></del></div>
+                            <div class="d-inline-block text-danger"><span class="number font-500 mr-1">{{ product.main_offer.price_with_sale }}</span><span class="smaller">₽</span></div>
+                        </div>
+                        {% else %}
+                        <div><span class="number font-500 mr-1">{{ product.price }}</span><span class="smaller">₽</span></div>
+                        {% endif %}
+
+                        
+                        {% if product.main_offer.color %}
+                        <div class="color-tags pt-2">
+                            {% for color in product.get_colors %}
+                            <span style="background-color: {{ color.color }};"></span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <div class="product-card-extra">
+                            <div class="product-card-extra-content">
+                                {% if product.main_offer.size %}
+                                <span class="d-block small text-muted">
+                                    {% if product.get_sizes %}
+                                        Размеры: {{ product.get_sizes|join:", " }}
+                                    {% endif %}
+                                </span>
+                                {% endif %}
+                                <!-- {% if product.main_offer.cup %}
+                                <span class="d-block small text-muted">
+                                    {% if product.get_cups %}
+                                        Чашки: {{ product.get_cups|join:", " }}
+                                    {% endif %}
+                                </span>
+                                {% endif %} -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="pb-5">
+        <div class="container">
+            <div class="d-flex align-items-end mb-4">
+                <h2 class="h4 font-weight-normal mb-0 mr-4">Новости и статьи</h2>
+                <a href="{% url 'news' %}" title="" class="d-block small text-decoration-none">Читать блог<i class="fas fa-long-arrow-alt-right fa-xs ml-2"></i></a>
+            </div>
+
+            <div class="row row-last-nomargin">
+                {% for item in index_news %}
+                <div class="col-lg-4">
+                    <div class="news-item row no-gutters mb-4">
+                        <div class="bg-img col-lg-12 col-3" style="background-image: url({{ item.image_small.url }})"></div>
+                        <div class="news-item-caption bg-white p-4 col-lg-12 col-9">
+                            <p class="text-uppercase smallest text-muted text-lg-center mb-2">{{ item.category.name }}</p>
+                            <a href="{{ item.get_absolute_url }}" title="" class="stretched-link d-block text-dark font-500 text-lg-center text-decoration-none mh-1 mb-lg-5">{{ item.title }}</a>
+                            <span class="d-lg-block d-none text-muted small font-500 text-center">читать<i class="fas fa-long-arrow-alt-right fa-xs ml-2"></i></span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="d-flex align-items-end mb-4">
+                <h2 class="h4 font-weight-normal mb-0 mr-4">Новинки</h2>
+                <a href="{% url 'products' %}?is_new=1" title="" class="d-block small text-decoration-none">Все предложения<i class="fas fa-long-arrow-alt-right fa-xs ml-2"></i></a>
+            </div>
+
+            <div class="owl-carousel carousel-products">
+                {% for product in bs_products %}
+                <div class="product-card">
+                    <div class="bg-img mb-2" style="background-image: url({{ product.main_offer.get_image.image_medium.url }})">
+                        <div class="d-flex status-badges">
+                            {% if product.is_new %}
+                            <span class="badge badge-success">NEW</span>
+                            {% endif %}
+                            {% if product.is_bs %}
+                            <span class="badge badge-info">ХИТ</span>
+                            {% endif %}
+                        </div>
+
+                        {% if product.main_offer.promotion_sale %}
+                        <span class="badge badge-danger sale-badge">-{{ product.main_offer.promotion_sale.sale }}%</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="product-card-caption">
+                        <a href="{{ product.get_absolute_url }}" title="" class="stretched-link text-decoration-none text-dark smaller">{{ product.name }}</a>
+
+                        {% if product.main_offer.promotion_sale %}
+                        <div>
+                            <div class="d-inline-block mr-2 text-muted small"><del><span class="number font-500 mr-1">{{ product.price }}</span><span class="small">₽</span></del></div>
+                            <div class="d-inline-block text-danger"><span class="number font-500 mr-1">{{ product.main_offer.price_with_sale }}</span><span class="smaller">₽</span></div>
+                        </div>
+                        {% else %}
+                        <div><span class="number font-500 mr-1">{{ product.price }}</span><span class="smaller">₽</span></div>
+                        {% endif %}
+
+                        
+                        {% if product.main_offer.color %}
+                        <div class="color-tags pt-2">
+                            {% for color in product.get_colors %}
+                            <span style="background-color: {{ color.color }};"></span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <div class="product-card-extra">
+                            <div class="product-card-extra-content">
+                                {% if product.main_offer.size %}
+                                <span class="d-block small text-muted">
+                                    {% if product.get_sizes %}
+                                        Размеры: {{ product.get_sizes|join:", " }}
+                                    {% endif %}
+                                </span>
+                                {% endif %}
+                                <!-- {% if product.main_offer.cup %}
+                                <span class="d-block small text-muted">
+                                    {% if product.get_cups %}
+                                        Чашки: {{ product.get_cups|join:", " }}
+                                    {% endif %}
+                                </span>
+                                {% endif %} -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-light-primary py-5">
+        <div class="container">
+            <div class="d-flex align-items-end mb-4">
+                <h2 class="h4 font-weight-normal mb-0 mr-4">Мы в Instagram</h2>
+                <a href="https://www.instagram.com/delyamer/" title="" class="d-block smaller text-decoration-none font-weight-bold">@delyamer</a>
+            </div>
+            <!-- <div class="row row-last-4">
+                <script src="https://apps.elfsight.com/p/platform.js" defer></script>
+                <div class="elfsight-app-2f5832ba-25e7-470d-9cb9-ec3e29de87ab"></div>
+            </div> -->
+
+            <div class="row row-last-4">
+                <div class="col-md-3 col-6">
+                    <div class="instagram-post">
+                        <div class="bg-img" style="background-image: url({%  static 'data-images/instagram-post-1.jpg' %})"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="instagram-post">
+                        <div class="bg-img" style="background-image: url({%  static 'data-images/instagram-post-2.jpg' %})"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="instagram-post">
+                        <div class="bg-img" style="background-image: url({%  static 'data-images/instagram-post-3.jpg' %})"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="instagram-post">
+                        <div class="bg-img" style="background-image: url({%  static 'data-images/instagram-post-4.jpg' %})"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="instagram-post">
+                        <div class="bg-img" style="background-image: url({%  static 'data-images/instagram-post-5.jpg' %})"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="instagram-post">
+                        <div class="bg-img" style="background-image: url({%  static 'data-images/instagram-post-6.jpg' %})"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="instagram-post">
+                        <div class="bg-img" style="background-image: url({%  static 'data-images/instagram-post-7.jpg' %})"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-6">
+                    <div class="instagram-post">
+                        <div class="bg-img" style="background-image: url({%  static 'data-images/instagram-post-8.jpg' %})"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
 {% endblock %}

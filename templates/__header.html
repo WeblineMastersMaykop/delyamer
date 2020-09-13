@@ -128,9 +128,10 @@
             <a href="#" title="" class="nav-link text-dark text-decoration-none font-500 smaller mr-4 px-2 py-2" data-toggle="modal" data-target="#SignInModal">Войти</a>
             {% endif %}
 
-            <a href="favourites.html" title="" class="nav-link badged mr-4 px-2 py-2"><img src="{% static 'images/heart.svg' %}" alt="" height="18"><span class="badge badge-pill badge-primary">2</span></a>
-
-            <a href="cart.html" title="" class="nav-link badged mr-5 px-2 py-2"><img src="{% static 'images/shopping-bag.svg' %}" alt="" height="18"><span class="badge badge-pill badge-primary">0</span></a>
+            {% if user.is_authenticated %}
+            <a href="{% url 'favorite_products' %}" title="" class="nav-link badged mr-4 px-2 py-2"><img src="{% static 'images/heart.svg' %}" alt="" height="18"><span class="badge badge-pill badge-primary" id="favorite-len">{{ favorite_count }}</span></a>
+            {% endif %}
+            <a href="{% url 'cart' %}" title="" class="nav-link badged mr-5 px-2 py-2"><img src="{% static 'images/shopping-bag.svg' %}" alt="" height="18"><span class="badge badge-pill badge-primary" id="cart-len">{{ cart|length }}</span></a>
 
             <form action="search.html" class="search-box">
                 <div class="">

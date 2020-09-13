@@ -66,12 +66,14 @@ def sync_1c():
 
             for color_key in product_key:
                 # Создание и изменение цветов
-                color, created = Color.objects.update_or_create(
-                    code_1c=color_key.attrib['Code'] or None,
-                    defaults={
-                        'name': color_key.attrib['Name'] or 'Без цвета'
-                    },
-                )
+                color = None
+                if color_key.attrib['Name']:
+                    color, created = Color.objects.update_or_create(
+                        code_1c=color_key.attrib['Code'],
+                        defaults={
+                            'name': color_key.attrib['Name'].capitalize()
+                        },
+                    )
 
                 if color_key.attrib['Picture']:
                     product_image = ProductImage.objects.create(
@@ -82,13 +84,17 @@ def sync_1c():
 
                 for parametrs_key in color_key:
                     # Создание и изменение размеров
-                    size, created = Size.objects.get_or_create(
-                        name=parametrs_key.attrib['Size'] or 'Без размера'
-                    )
+                    size = None
+                    if parametrs_key.attrib['Size']:
+                        size, created = Size.objects.get_or_create(
+                            name=parametrs_key.attrib['Size']
+                        )
                     # Создание и изменение чашек
-                    cup, created = Cup.objects.get_or_create(
-                        name=parametrs_key.attrib['Cup'] or 'Без чашки'
-                    )
+                    cup = None
+                    if parametrs_key.attrib['Cup']:
+                        cup, created = Cup.objects.get_or_create(
+                            name=parametrs_key.attrib['Cup']
+                        )
 
                     # Считаю сколько осталось на складе
                     stock = 0

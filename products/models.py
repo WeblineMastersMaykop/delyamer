@@ -1,13 +1,16 @@
 from django.db import models
 from django.urls import reverse
 from uuid import uuid1
-from math import ceil
 from colorfield.fields import ColorField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from core.models import SEO, Position
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
 
 
 class Category(SEO, Position):
@@ -77,7 +80,7 @@ class Cup(models.Model):
 
 
 class Product(SEO):
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, related_name='products', verbose_name='Категория', null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='products', verbose_name='Категория')
     code_1c = models.CharField('Код 1с', max_length=100, unique=True)
     name = models.CharField('Название', max_length=250)
     vendor_code = models.CharField('Артикул', max_length=20, null=True, blank=True)
@@ -97,34 +100,48 @@ class Product(SEO):
     def get_absolute_url(self):
         return reverse('product', args=[self.slug])
 
-    def get_colors(self):
-        return set(offer.color for offer in self.offers.filter(is_active=True).exclude(color__name='Без цвета').select_related('color'))
+    def get_colors(self, *args, **kwargs):
+        size_id = kwargs.get('size_id')
+        cup_id = kwargs.get('cup_id')
+        offers = self.offers.filter(is_active=True).select_related('color', 'size', 'cup')
 
-    def get_sizes(self):
-        return set(offer.size for offer in self.offers.filter(is_active=True).exclude(size__name='Без размера').select_related('size'))
+        if size_id:
+            offers = offers.filter(size__id=size_id)
+        if cup_id:
+            offers = offers.filter(cup__id=cup_id)
 
-    # def main_offer(self):
-    #     main_offer = self.offers.filter(is_active=True).select_related('promotion_sale').order_by('promotions_promotionsale.sale').last()
+        return set(offer.color for offer in offers if offer.color is not None)
 
-    #     if not main_offer:
-    #         main_offer = self.offers.first()
-    #     return main_offer
+    def get_sizes(self, *args, **kwargs):
+        color_id = kwargs.get('color_id')
+        cup_id = kwargs.get('cup_id')
+        offers = self.offers.filter(is_active=True).select_related('color', 'size', 'cup')
 
-    # def get_sales(self):
-    #     for offer in self.offers.filter(is_active=True).prefetch_related('promotions'):
-    #         for promotion in offer.promotions.filter(promotion_type='type4', type4_sale__gt=0):
-    #             yield promotion.type4_sale
+        if cup_id:
+            offers = offers.filter(cup__id=cup_id)
+        if color_id:
+            offers = offers.filter(color__id=color_id)
 
-    # def get_main_offer(self):
-    #     main_offer = self.offers.first()
-    #     for offer in self.offers.filter(is_active=True).exclude(id=main_offer.id).prefetch_related('promotions'):
-    #         [promotion for promotion in offer.promotions.filter(promotion_type='type4', type4_sale__gt=0)]
+        return set(offer.size for offer in offers if offer.size is not None)
 
-    # def price_with_max_sale(self):
-    #     sales = set(self.get_sales())
-    #     if sales:
-    #         print(self.price, ceil(self.price * (100 - max(sales)) / 100), max(sales))
-    #         return ceil(self.price * (100 - max(sales)) / 100)
+    def get_cups(self, *args, **kwargs):
+        size_id = kwargs.get('size_id')
+        color_id = kwargs.get('color_id')
+        offers = self.offers.filter(is_active=True).select_related('color', 'size', 'cup')
+
+        if size_id:
+            offers = offers.filter(size__id=size_id)
+        if color_id:
+            offers = offers.filter(color__id=color_id)
+
+        return set(offer.cup for offer in offers if offer.cup is not None)
+
+    def main_offer(self):
+        main_offer = self.offers.filter(is_active=True).select_related('promotion_sale', 'color', 'size', 'cup').order_by('promotion_sale__sale').last()
+
+        if not main_offer:
+            main_offer = self.offers.filter(is_active=True).select_related('color', 'size', 'cup').first()
+        return main_offer
 
     def __str__(self):
         return self.name
@@ -132,9 +149,9 @@ class Product(SEO):
 
 class Offer(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='offers', verbose_name='Товар')
-    color = models.ForeignKey(Color, on_delete=models.CASCADE, related_name='offers', verbose_name='Цвет')
-    cup = models.ForeignKey(Cup, on_delete=models.CASCADE, related_name='offers', verbose_name='Чашка')
-    size = models.ForeignKey(Size, on_delete=models.CASCADE, related_name='offers', verbose_name='Размер')
+    color = models.ForeignKey(Color, on_delete=models.CASCADE, related_name='offers', verbose_name='Цвет', null=True, blank=True)
+    cup = models.ForeignKey(Cup, on_delete=models.CASCADE, related_name='offers', verbose_name='Чашка', null=True, blank=True)
+    size = models.ForeignKey(Size, on_delete=models.CASCADE, related_name='offers', verbose_name='Размер', null=True, blank=True)
     stock = models.PositiveIntegerField('На складе', default=0)
     is_active = models.BooleanField('Показывать на сайте', default=True)
     created = models.DateField('Дата создания', auto_now_add=True)
@@ -157,18 +174,18 @@ class Offer(models.Model):
     def get_image(self):
         return ProductImage.objects.filter(product=self.product, color=self.color).first()
 
-    # def get_min_price(self):
-    #     sales = set()
-    #     for promotion in self.promotions.filter(promotion_type='type4', type4_sale__gt=0):
-    #         yield promotion.type4_sale
+    def get_price(self):
+        if self.promotion_sale:
+            return self.product.price * (100 - self.promotion_sale.sale) // 100
+        return self.product.price
 
     def __str__(self):
-        return '{} - {} - {} - {} - {}'.format(self.product.category.name, self.product.name, self.color.name, self.size.name, self.cup.name)
+        return '{} - {} - {} - {} - {}'.format(self.product.category, self.product, self.color, self.size, self.cup)
 
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images', verbose_name='Товар')
-    color = models.ForeignKey(Color, on_delete=models.CASCADE, related_name='images', verbose_name='Цвет')
+    color = models.ForeignKey(Color, on_delete=models.CASCADE, related_name='images', verbose_name='Цвет', null=True, blank=True)
 
     def get_picture_url(self, filename):
         ext = filename.split('.')[-1]
@@ -188,7 +205,7 @@ class ProductImage(models.Model):
                                  options={'quality': 90})
 
     image_small = ImageSpecField(source='image',
-                                 processors=[ResizeToFill(150, 110)],
+                                 processors=[ResizeToFill(150, 130)],
                                  format='JPEG',
                                  options={'quality': 90})
 
@@ -204,3 +221,28 @@ class ProductImage(models.Model):
 @receiver(pre_delete, sender=ProductImage)
 def product_image_delete(sender, instance, **kwargs):
     instance.image.delete(False)
+
+
+class SimilarProduct(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='similars', verbose_name='Товар')
+    sim_product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Похожий товар')
+
+    class Meta:
+        verbose_name = 'Похожий товар'
+        verbose_name_plural = 'Похожие товары товара'
+
+    def __str__(self):
+        return self.sim_product.name
+
+
+class FavoriteProduct(models.Model):
+    offer = models.ForeignKey(Offer, on_delete=models.CASCADE, related_name='favorites', verbose_name='Вариант товара')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites', verbose_name='Пользователь')
+
+    class Meta:
+        verbose_name = 'Избранный товар'
+        verbose_name_plural = 'Избранные товары'
+        unique_together = ('offer', 'user')
+
+    def __str__(self):
+        return self.user.full_name

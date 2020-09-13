@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Заказ оформлен</title>
+<meta name="description" content="Заказ оформлен">
+<meta name="keywords" content="Заказ оформлен">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container pb-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            <li class="breadcrumb-item active">Заказ оформлен</li>
+        </ol>
+
+        <h1 class="h3 mb-4">Заказ оформлен и оплачен<i class="far fa-check-circle text-secondary ml-3"></i></h1>
+
+        <div class="bg-white cart-success-details p-md-5 p-sm-4 p-3">
+            <div class="d-flex mb-4">
+                <i class="fas fa-hashtag"></i>
+                <div>
+                    <span class="text-muted small d-block mb-1">Номер заказа:</span>
+                    <a href="{% if user.is_authenticated %}{{ order.get_absolute_url }}{% endif %}" title="" class="h6 text-decoration-none">{{ order.id }}</a>
+                </div>
+            </div>
+
+            <div class="d-flex mb-4">
+                <i class="far fa-credit-card"></i>
+                <div>
+                    <span class="text-muted small d-block mb-1">Оплачено:</span>
+                    <span><span class="number h6 mb-0 mr-1">{{ order.get_total_price }}</span><span class="smallest">₽</span></span>
+                </div>
+            </div>
+
+            <div class="d-flex mb-4">
+                <i class="fas fa-map-marker-alt"></i>
+                <div>
+                    <span class="text-muted small d-block mb-1">Доставка:</span>
+                    <span class="d-block mb-1">{{ order.delivery.name }}<span class="text-muted smaller ml-2">{% if order.delivery.info %}({{ order.delivery.info }}){% endif %}</span></span>
+                    <span class="smaller">{{ order.address }}</span>
+                </div>
+            </div>
+
+            <div class="d-flex mb-4">
+                <i class="far fa-user-circle"></i>
+                <div>
+                    <span class="text-muted small d-block mb-1">Получатель:</span>
+                    <span class="d-block mb-1">{{ order.full_name }}</span>
+                    <span class="smaller">{{ order.phone }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+{% endblock %}

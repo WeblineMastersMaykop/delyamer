@@ -1,6 +1,6 @@
 from django.contrib import admin
 from adminsortable2.admin import SortableAdminMixin
-from products.models import Color, Size, Category, Product, Offer, ProductImage, Cup
+from products.models import Color, Size, Category, Product, Offer, ProductImage, Cup, SimilarProduct, FavoriteProduct
 
 
 @admin.register(Category)
@@ -45,6 +45,20 @@ class OfferInline(admin.StackedInline):
     classes = ('grp-collapse grp-closed',)
 
 
+class SimilarProductInline(admin.TabularInline):
+    model = SimilarProduct
+    fk_name = 'product'
+    extra = 0
+    autocomplete_fields = ('sim_product',)
+    classes = ('grp-collapse grp-closed',)
+
+
+class FavoriteProductInline(admin.TabularInline):
+    model = FavoriteProduct
+    extra = 0
+    classes = ('grp-collapse grp-closed',)
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     fieldsets = (
@@ -62,7 +76,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('name', 'code_1c', 'vendor_code', 'category__name')
     list_filter = ('is_active', 'is_new', 'is_bs', 'category', 'pushup')
     prepopulated_fields = {'slug': ('name','code_1c')}
-    inlines = (OfferInline, ProductImageInline)
+    inlines = (OfferInline, ProductImageInline, SimilarProductInline)
 
 
 @admin.register(Offer)
@@ -79,3 +93,4 @@ class OfferAdmin(admin.ModelAdmin):
     list_display = ('product', 'color', 'size', 'cup', 'stock', 'is_active', 'created', 'updated')
     list_editable = ('is_active',)
     search_fields = ('product__name', 'color__name', 'size__name', 'cup__name', 'product__category__name')
+    inlines = (FavoriteProductInline,)

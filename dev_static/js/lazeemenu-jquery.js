@@ -17,7 +17,6 @@
 
         self.$el.addClass('lz-menu');
         self.$el.find('> li').each(function(idx) {
-            console.log('foo', $(this));
             var sub = $(this);
 
             // Append arrows

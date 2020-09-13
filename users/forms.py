@@ -12,8 +12,8 @@ User = get_user_model()
 
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Эл. почта'}))
-    password = forms.CharField(strip=False, widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль'}))
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Эл. почта', 'autocomplete': 'off'}))
+    password = forms.CharField(strip=False, widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль', 'autocomplete': 'off'}))
     remember_me = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': 'custom-control-input', 'id': 'CheckKeepSignIn'}))
 
 
@@ -22,9 +22,9 @@ class RegisterForm(UserCreationForm):
         model = User
         fields = ('username',)
 
-    username = forms.CharField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Эл. почта'}))
-    password1 = forms.CharField(strip=False, widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль'}))
-    password2 = forms.CharField(strip=False, widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Повторите пароль'}))
+    username = forms.CharField(widget=forms.EmailInput(attrs={'id':'username1', 'class': 'form-control', 'placeholder': 'Эл. почта', 'autocomplete': 'off'}))
+    password1 = forms.CharField(strip=False, widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль', 'autocomplete': 'off'}))
+    password2 = forms.CharField(strip=False, widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Повторите пароль', 'autocomplete': 'off'}))
 
 
 class UpdateForm(forms.ModelForm):

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Оплата не прошла</title>
+<meta name="description" content="Оплата не прошла">
+<meta name="keywords" content="Оплата не прошла">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container pb-5">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            <li class="breadcrumb-item active">Оплата не прошла</li>
+        </ol>
+
+        <h1 class="h3 mb-4">Ошибка</h1>
+
+        <div class="bg-white cart-success-details p-md-5 p-sm-4 p-3">
+            <div class="d-flex">
+                <span class="text-muted small d-block mb-1">Оплата не прошла. Попробуйте снова.</span>
+            </div>
+        </div>
+    </div>
+
+</main>
+{% endblock %}
