@@ -19,8 +19,9 @@
 
             <div class="col-lg-4 col-auto">
                 <div class="d-flex justify-content-end align-items-end flex-lg-column">
-                    <a href="https://api.whatsapp.com/send?phone=+79094702111" target="_blank" title="" class="text-dark text-decoration-none whatsapp-link" role="button"><i class="fab fa-whatsapp mr-1 mr-sm-2"></i><span class="smaller">Написать в WhatsApp</span></a>
-
+                    {% if whatsapp %}
+                    <a href="https://api.whatsapp.com/send?phone=+{{ whatsapp.link|only_digits }}" target="_blank" title="" class="text-dark text-decoration-none whatsapp-link" role="button"><i class="fab fa-whatsapp mr-1 mr-sm-2"></i><span class="smaller">Написать в WhatsApp</span></a>
+                    {% endif %}
                     <div class="socials d-none d-sm-block pt-lg-1 pl-4 pl-lg-0">
                         <ul class="list-unstyled list-inline m-0">
                             {% for item in socials %}

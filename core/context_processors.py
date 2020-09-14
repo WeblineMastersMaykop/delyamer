@@ -8,6 +8,9 @@ from core.cart import Cart
 
 
 def context_info(request):
+    if 'admin' in request.META['PATH_INFO']:
+        return {}
+
     socials = Social.objects.all()
     drop_pages = Page.objects.filter(is_active=True, action='dropdown')
     top_menu = Page.objects.filter(is_active=True, parent=None)
