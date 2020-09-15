@@ -3,7 +3,8 @@ from products.models import Offer, Color, Size, Cup, Product, Category
 
 
 class PromoCode(models.Model):
-    code = models.CharField('Промокод', max_length=30)
+    code = models.CharField('Промокод', max_length=30, unique=True)
+    sale = models.PositiveIntegerField('Скидка', default=0)
 
     class Meta:
         verbose_name = 'Промокод'

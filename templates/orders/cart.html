@@ -177,30 +177,36 @@
                             <div class="form-group">
                                 <label class="small">Промокод</label>
                                 <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control" placeholder="Промокод" aria-label="Промокод" aria-describedby="button-addon1" value="ЛЕТО2020">
+                                    <input type="text" class="form-control" placeholder="Промокод" id="input-promocode" aria-label="Промокод" value="{% if cart.promocode %}{{ cart.promocode.code }}{% endif %}">
                                     <div class="input-group-append">
-                                        <button class="btn btn-dark" type="button" id="button-addon1">Удалить<!--Применить--></button>
+                                        {% if cart.promocode %}
+                                        <button class="btn btn-dark" type="button" id="remove-promocode">Удалить</button>
+                                        <button class="btn btn-dark d-none" type="button" id="add-promocode">Применить</button>
+                                        {% else %}
+                                        <button class="btn btn-dark d-none" type="button" id="remove-promocode">Удалить</button>
+                                        <button class="btn btn-dark" type="button" id="add-promocode">Применить</button>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
                         </form>
 
                         <div class="mb-3">
-                            <div class="d-flex justify-content-between smaller mb-1"><span class="font-500 mr-3">Товары на сумму:</span><span><span class="number font-500 mr-1" id="total-price">{{ cart.get_total_price }}</span><span class="smallest">₽</span></span></div>
+                            <div class="d-flex justify-content-between smaller mb-1"><span class="font-500 mr-3">Товары на сумму:</span><span><span class="number font-500 mr-1" id="total_price">{{ cart.get_total_price }}</span><span class="smallest">₽</span></span></div>
 
-                            <div class="d-flex justify-content-between smaller mb-1"><span class="font-500 mr-3">Доставка:</span><span><span class="number font-500 mr-1" id="delivery-price">{{ cart.delivery.1 }}</span><span class="smallest">₽</span></span></div>
+                            <div class="d-flex justify-content-between smaller mb-1"><span class="font-500 mr-3">Доставка:</span><span><span class="number font-500 mr-1" id="delivery_price">{{ cart.delivery.1 }}</span><span class="smallest">₽</span></span></div>
                         </div>
-                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Скидка:</span><span class="text-danger"><span class="number mr-1">-{{ cart.get_sale }}</span><span class="smallest">₽</span></span></div>
-                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Нарастающая скидка:</span><span class="text-danger"><span class="number mr-1">-{{ cart.get_three_sales }}</span><span class="smallest">₽</span></span></div>
-                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Акция 3+1:</span><span class="text-danger"><span class="number mr-1">-2400</span><span class="smallest">₽</span></span></div>
-                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">-10% на всё:</span><span class="text-danger"><span class="number mr-1">-3200</span><span class="smallest">₽</span></span></div>
-                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Промокод:</span><span class="text-danger"><span class="number mr-1">-500</span><span class="smallest">₽</span></span></div>
+                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Скидка:</span><span class="text-danger"><span class="number mr-1" id="promotion_sale">-{{ cart.get_sale }}</span><span class="smallest">₽</span></span></div>
+                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Нарастающая скидка:</span><span class="text-danger"><span class="number mr-1" id="promotion_three_sales">-{{ cart.get_three_sales }}</span><span class="smallest">₽</span></span></div>
+                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Товар в подарок:</span><span class="text-danger"><span class="number mr-1" id="promotion_sum_present">-{{ cart.get_sum_present }}</span><span class="smallest">₽</span></span></div>
+                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Акция N+1:</span><span class="text-danger"><span class="number mr-1" id="promotion_min_present">-{{ cart.get_min_present }}</span><span class="smallest">₽</span></span></div>
+                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Промокод:</span><span class="text-danger"><span class="number mr-1" id="promocode">-{{ cart.get_promocode_price }}</span><span class="smallest">₽</span></span></div>
 
                         <div class="border-top border-bottom py-3 my-4">
-                            <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Вы сэкономите:</span><span class="text-danger"><span class="number mr-1">6100</span><span class="smallest">₽</span></span></div>
+                            <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Вы сэкономите:</span><span class="text-danger"><span class="number mr-1" id="total_sales">{{ cart.get_total_sale|add:cart.get_promocode_price }}</span><span class="smallest">₽</span></span></div>
                         </div>
 
-                        <div class="d-flex justify-content-between align-items-center smaller mb-4"><span class="h6 mb-0 mr-3">Итого:</span><span><span class="number h5 mb-0 mr-1" id="total-price-with-sale">1111</span><span class="smallest">₽</span></span></div>
+                        <div class="d-flex justify-content-between align-items-center smaller mb-4"><span class="h6 mb-0 mr-3">Итого:</span><span><span class="number h5 mb-0 mr-1" id="total_price_with_sale">{{ cart.get_total_price_with_sales }}</span><span class="smallest">₽</span></span></div>
 
                         <button title="" class="btn btn-primary w-100">Оплатить заказ<i class="fas fa-angle-right fa-xs ml-2"></i></button>
 

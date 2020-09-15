@@ -1,7 +1,8 @@
 from django.urls import path
 from orders.views import (
     CartView, AddToCartView, RemoveFromCartView, ChangeQuantityView,
-    OrderOneClickAddView, ChangeDeliveryView, OrderAddView, OrderDoneView, OrderFailView
+    OrderOneClickAddView, ChangeDeliveryView, OrderAddView, OrderDoneView,
+    OrderFailView, AddPromocodeView, RemovePromocodeView
 )
 
 
@@ -15,4 +16,6 @@ urlpatterns = [
     path('change-delivery/', ChangeDeliveryView.as_view(), name='change_delivey'),
     path('remove-from-cart/', RemoveFromCartView.as_view(), name='remove_from_cart'),
     path('change-quantity/', ChangeQuantityView.as_view(), name='change_quantity'),
+    path('add-promocode/', AddPromocodeView.as_view(), name='add_promocde'),
+    path('remove-promocode/', RemovePromocodeView.as_view(), name='remove_promocde'),
 ]

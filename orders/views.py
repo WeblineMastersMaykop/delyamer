@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.http import JsonResponse
-from core.utils import send_order_mail, order_pay_response
+from core.utils import send_order_mail, order_pay_response, get_cart_info
 from core.models import MailToString
 from products.models import Offer, Product
 from orders.models import Order, OrderItem, DeliveryMethod
@@ -29,9 +29,11 @@ class ChangeDeliveryView(View):
         delivery_id = request.GET.get('delivery')
         delivery = get_object_or_404(DeliveryMethod, pk=delivery_id)
         cart.change_delivery(delivery)
+        cart_info = get_cart_info(cart)
 
         context = {
             'price': delivery.price,
+            'cart_info': cart_info,
         }
         return JsonResponse(context)
 
@@ -65,9 +67,11 @@ class RemoveFromCartView(View):
         offer_id = request.GET.get('offer')
         offer = get_object_or_404(Offer, pk=offer_id)
         cart.remove(offer)
+        cart_info = get_cart_info(cart)
 
         context = {
             'cart_len': len(cart),
+            'cart_info': cart_info,
         }
         return JsonResponse(context)
 
@@ -81,11 +85,37 @@ class ChangeQuantityView(View):
 
         offer = get_object_or_404(Offer, pk=offer_id)
         cart.change_quantity(offer, int(quantity))
+        cart_info = get_cart_info(cart)
 
         context = {
+            'cart_info': cart_info,
             'cart_len': len(cart),
             'cost': cart.get_cost(offer_id),
-            'total_price': cart.get_total_price()
+        }
+        return JsonResponse(context)
+
+
+class AddPromocodeView(View):
+    def get(self, request):
+        code = request.GET.get('promocode')
+        cart = Cart(request)
+        promocode = cart.set_promocode(code)
+        cart_info = get_cart_info(cart)
+
+        context = {
+            'cart_info': cart_info,
+        }
+        return JsonResponse(context)
+
+
+class RemovePromocodeView(View):
+    def get(self, request):
+        cart = Cart(request)
+        promocode = cart.set_promocode(None)
+        cart_info = get_cart_info(cart)
+
+        context = {
+            'cart_info': cart_info,
         }
         return JsonResponse(context)
 

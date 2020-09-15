@@ -3,6 +3,49 @@ $(document).ready(function() {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     }
 
+    function updateCart(data) {
+        $('#promotion_sale').html('-' + numberWithSpaces(data.cart_info.promotion_sale));
+        $('#promotion_sum_present').html('-' + numberWithSpaces(data.cart_info.promotion_sum_present));
+        $('#promotion_three_sales').html('-' + numberWithSpaces(data.cart_info.promotion_three_sales));
+        $('#promotion_min_present').html('-' + numberWithSpaces(data.cart_info.promotion_min_present));
+        $('#total_price_with_sale').html(numberWithSpaces(data.cart_info.total_price_with_sale));
+        $('#total_sales').html(numberWithSpaces(data.cart_info.total_sales));
+        $('#total_price').html(numberWithSpaces(data.cart_info.total_price));
+        $('#promocode').html(numberWithSpaces('-' + data.cart_info.promocode_price));
+        $('#input-promocode').val(data.cart_info.promocode);
+    }
+
+    $('#add-promocode').click(function() {
+        promocode = $('#input-promocode').val();
+
+        data = {
+            promocode: promocode,
+        }
+
+        $.ajax({
+            type: "GET",
+            url: '/orders/add-promocode/',
+            data: data,
+            success: function(data) {
+                $('#add-promocode').addClass('d-none');
+                $('#remove-promocode').removeClass('d-none');
+                updateCart(data);
+            }
+        });
+    });
+
+    $('#remove-promocode').click(function() {
+        $.ajax({
+            type: "GET",
+            url: '/orders/remove-promocode/',
+            success: function(data) {
+                $('#remove-promocode').addClass('d-none');
+                $('#add-promocode').removeClass('d-none');
+                updateCart(data);
+            }
+        });
+    });
+
     $('input[name="delivery"]').change(function() {
         input = $(this);
         delivery = input.data('delivery-id');
@@ -16,7 +59,8 @@ $(document).ready(function() {
             url: '/orders/change-delivery/',
             data: data,
             success: function(data) {
-                $('#delivery-price').html(data.price);
+                $('#delivery_price').html(data.price);
+                updateCart(data);
             }
         });
     });
@@ -135,8 +179,8 @@ $(document).ready(function() {
             data: data,
             success: function(data) {
                 $('.cart-item-' + offer).addClass('d-none');
-                // $('.total-price').html(data.total_price + '<i class="fas fa-ruble-sign fa-xs ml-1"></i>');
                 $('#cart-len').html(data.cart_len);
+                updateCart(data);
             }
         });
     });
@@ -157,8 +201,8 @@ $(document).ready(function() {
             data: data,
             success: function(data) {
                 $('.cart-item-' + offer + ' .offer-cost').html(numberWithSpaces(data.cost));
-                $('#total-price').html(numberWithSpaces(data.total_price));
                 $('#cart-len').html(data.cart_len);
+                updateCart(data);
             }
         });
     }

@@ -64,3 +64,23 @@ def order_pay_response(request, order, total_price):
     r_text = json.loads(r.text)
 
     return r_text.get('formUrl')
+
+
+def get_cart_info(cart):
+    cart.update_sales()
+    total_price = cart.get_total_price()
+    total_price_with_sale = cart.get_total_price_with_sales()
+    promocode_price = cart.get_promocode_price() if cart.promocode else 0
+
+    info = {
+        'total_price_with_sale': total_price_with_sale,
+        'total_price': total_price,
+        'total_sales': cart.total_sale + promocode_price,
+        'promotion_min_present': cart.promotion_min_present,
+        'promotion_sale': cart.promotion_sale,
+        'promotion_sum_present': cart.promotion_sum_present,
+        'promotion_three_sales': cart.promotion_three_sales,
+        'promocode': cart.promocode.code if cart.promocode else '',
+        'promocode_price': promocode_price,
+    }
+    return info

@@ -8,5 +8,3 @@ media/
 db.sqlite3
 static/
 *.log
-mysql.cnf
-settings.py
