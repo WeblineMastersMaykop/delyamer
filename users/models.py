@@ -23,6 +23,9 @@ class User(AbstractUser):
     def get_finished_orders(self):
         return self.orders.filter(status='finished').select_related('delivery')
 
+    def get_favorites_offers(self):
+        return [favorive.offer.id for favorite in self.favorites.select_related('offer').all()]
+
 class UserGroup(Group):
     class Meta:
         verbose_name = 'Группа'

@@ -28,15 +28,23 @@
 
                                 <div class="col-lg-8 col-sm-9 col-8">
                                     <a href="{{ item.offer.product.get_absolute_url }}" title="" class="d-inline-block text-decoration-none mb-2">{{ item.offer.product.name }}</a>
-                                    <div class="smallest mb-1"><span class="text-muted mr-1">Цвет:</span><span>{{ item.offer.color }}</span></div>
-                                    <div class="smallest mb-1"><span class="text-muted mr-1">Размер:</span><span>{{ item.offer.size }}</span></div>
-                                    <div class="smallest mb-1"><span class="text-muted mr-1">Цена:</span>
+                                    {% if item.color %}
+                                    <div class="smallest mb-1"><span class="text-muted mr-1">Цвет:</span><span>{{ item.color }}</span></div>
+                                    {% endif %}
+                                    {% if item.size %}
+                                    <div class="smallest mb-1"><span class="text-muted mr-1">Размер:</span><span>{{ item.size }}</span></div>
+                                    {% endif %}
+                                    {% if item.cup %}
+                                    <div class="smallest mb-1"><span class="text-muted mr-1">Чашка:</span><span>{{ item.cup }}</span></div>
+                                    {% endif %}
+                                    <div class="smallest mb-1">
+                                        <span class="text-muted mr-1">Цена:</span>
                                         {% if item.offer.stock %}
                                             {% if item.offer.promotion_sale %}
-                                            <div>
+                                            <span>
                                                 <div class="d-inline-block mr-2 text-muted"><del><span class="number mr-1">{{ item.offer.product.price }}</span><span class="small">₽</span></del></div>
                                                 <div class="d-inline-block text-danger"><span class="number h6 mr-1">{{ item.offer.get_price }}</span><span class="smaller">₽</span></div>
-                                            </div>
+                                            </span>
                                             {% else %}
                                             <span class="number h6 mb-0 mr-1">{{ item.offer.product.price }}</span><span class="smallest">₽</span>
                                             {% endif %}

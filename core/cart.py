@@ -155,14 +155,15 @@ class Cart:
         return self.total_sale
 
     def get_total_price_with_sales(self):
-        result = self.total_price - self.total_sale + self.delivery[1]
+        result = self.total_price - self.total_sale
         if self.promocode:
             result = math.ceil(result * (100 - self.promocode.sale ) / 100)
+        result += self.delivery[1]
         return result
 
     def get_promocode_price(self):
         self.get_total_sale()
-        total_price = self.total_price - self.total_sale + self.delivery[1]
+        total_price = self.total_price - self.total_sale
         result = 0
 
         if self.promocode:
@@ -185,4 +186,6 @@ class Cart:
 
     def clear(self):
         del self.session['cart']
+        del self.session['promocode']
+        del self.session['delivery']
         self.session.modified = True

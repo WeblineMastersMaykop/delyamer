@@ -22,10 +22,9 @@ class DeliveryMethod(models.Model):
 class Order(models.Model):
     STATUS_CHOICES = (
         ('new', 'Новый'),
-        ('shops', 'Магазины'),
-        ('products', 'Каталог'),
-        ('news', 'Новости'),
-        ('contacts', 'Контакты'),
+        ('paid', 'Оплачен'),
+        ('error', 'Ошибка оплаты'),
+        ('shipped', 'Отгружен'),
         ('finished', 'Завершён'),
     )
 
@@ -39,7 +38,8 @@ class Order(models.Model):
     city = models.CharField('Населенный пункт', max_length=100, null=True, blank=True)
     address = models.CharField('Адрес', max_length=250, null=True, blank=True)
 
-    # total_price = models.PositiveIntegerField('Итоговая стоимость', default=0)
+    total_price = models.PositiveIntegerField('Итоговая стоимость', default=0)
+    total_price_with_sale = models.PositiveIntegerField('Итоговая стоимость со скидкой', default=0)
     delivery = models.ForeignKey(DeliveryMethod, on_delete=models.SET_NULL, related_name='orders', verbose_name='Способ доставки', null=True, blank=True)
     status = models.CharField(max_length=100, choices=STATUS_CHOICES, verbose_name='Статус', default='new')
 

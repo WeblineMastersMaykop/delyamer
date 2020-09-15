@@ -117,6 +117,7 @@ $(document).ready(function() {
             data: data,
             success: function(data) {
                 button.addClass('d-none');
+                button.removeClass('d-inline-block');
                 favorite_len = $('#favorite-len').text();
                 $('#favorite-len').html(parseInt(favorite_len) + 1);
             }

@@ -165,11 +165,14 @@ class OrderAddView(View):
     def post(self, request):
         order_form = OrderForm(request.POST)
         cart = Cart(request)
+        cart_info = get_cart_info(cart)
         user = request.user
 
         if order_form.is_valid():
             order = order_form.save(commit=False)
             order.user = user if user.is_authenticated else None
+            order.total_price = cart_info['total_price']
+            order.total_price_with_sale = cart_info['total_price_with_sale']
             order.save()
 
             for item in cart:
@@ -184,7 +187,7 @@ class OrderAddView(View):
                     quantity=item['quantity']
                 )
 
-            form_url = order_pay_response(request, order, cart.get_total_price_with_sales())
+            form_url = order_pay_response(request, order, cart_info['total_price_with_sale'])
             return redirect(form_url)
 
         delivery_methods = DeliveryMethod.objects.all()
@@ -199,6 +202,9 @@ class OrderAddView(View):
 class OrderDoneView(View):
     def get(self, request, order_id):
         order = Order.objects.get(pk=order_id)
+        order.status = 'paid'
+        order.save()
+
         cart = Cart(request)
         cart.clear()
 
@@ -211,7 +217,7 @@ class OrderDoneView(View):
 
 
 class OrderFailView(View):
-    def get(self, request):
+    def get(self, request, order_id):
 
         context = {
         }

@@ -109,20 +109,25 @@
                     {% endif %}
                 </div>
 
+                {% if main_offer.stock %}
                 <div class="d-md-flex align-items-center mb-4">
                     {% if main_offer.id|stringformat:"i" in cart.cart %}
-                    <a href="#" id="in-cart" class="btn btn-outline-dark px-xl-4 px-3 py-2 mr-4 mb-3">В корзине</a>
+                    <a href="{% url 'cart' %}" id="in-cart" class="btn btn-outline-dark px-xl-4 px-3 py-2 mr-4 mb-3">В корзине</a>
                     <a href="#" id="add-to-cart" class="btn btn-primary px-xl-4 px-3 py-2 mr-4 mb-3 d-none"><img src="{% static 'images/shopping-bag.svg' %}" alt="" height="16" class="mr-3 mb-1">Добавить в корзину</a>
                     {% else %}
-                    <a href="#" id="in-cart" class="btn btn-outline-dark px-xl-4 px-3 py-2 mr-4 mb-3 d-none">В корзине</a>
+                    <a href="{% url 'cart' %}" id="in-cart" class="btn btn-outline-dark px-xl-4 px-3 py-2 mr-4 mb-3 d-none">В корзине</a>
                     <a href="#" id="add-to-cart" class="btn btn-primary px-xl-4 px-3 py-2 mr-4 mb-3"><img src="{% static 'images/shopping-bag.svg' %}" alt="" height="16" class="mr-3 mb-1">Добавить в корзину</a>
                     {% endif %}
                     <a href="#" class="btn btn-outline-dark px-xl-5 px-3 py-2 mr-4 mb-3" data-toggle="modal" data-target="#OneClickOrderModal">Купить в 1 клик</a>
                 </div>
-
+                {% endif %}
                 <div class="row mb-3">
                     <div class="col-sm-6 mb-3 mb-sm-0">
-                        <a href="#" title="" class="d-inline-block text-decoration-none smaller mb-2"><i class="fas fa-heart mr-2"></i>Добавить в желаемое</a>
+                        {% if user.is_authenticated %}
+                            {% if main_offer.id not in user.get_favorites_offers %}
+                            <a href="#" data-offer-id="{{ main_offer.id }}" title="" class="d-inline-block text-decoration-none smaller mb-2 add-favorite"><i class="fas fa-heart mr-2"></i>Добавить в желаемое</a>
+                            {% endif %}
+                        {% endif %}
                         <div class="clearfix"></div>
                         <a href="#" title="" class="d-inline-block text-decoration-none smaller text-dark mb-2" data-toggle="modal" data-target="#SizesTableModal"><i class="fas fa-ruler mr-2"></i>Таблица размеров</a>
                     </div>
