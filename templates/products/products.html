@@ -99,6 +99,21 @@
                         </div>
 
                         <div class="mb-4">
+                            <h6 class="mb-2 pb-1 smaller">Чашка</h6>
+                            {% for cup in cups %}
+                            <div class="filter-box">
+                                <div class="custom-control custom-checkbox mb-1">
+                                    <input type="checkbox" name="cup" value="{{ cup.id }}" class="custom-control-input" id="sopt4-{{ cup.id }}" {% if cup.checked %}checked{% endif %}>
+                                    <label class="custom-control-label smaller" for="sopt4-{{ cup.id }}">{{ cup.name }}</label>
+                                </div>
+                                <div class="filter-apply d-none">
+                                    <button class="btn btn-outline-dark smallest d-block py-0" type="submit">Показать</button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Пуш-ап</h6>
                             <div class="filter-box">
                                 <div class="custom-control custom-radio mb-1">
@@ -194,6 +209,21 @@
                                 <div class="custom-control custom-checkbox mb-1">
                                     <input type="checkbox" name="size" value="{{ size.id }}" class="custom-control-input" id="bopt1-{{ size.id }}" {% if size.checked %}checked{% endif %}>
                                     <label class="custom-control-label smaller" for="bopt1-{{ size.id }}">{{ size.name }}</label>
+                                </div>
+                                <div class="filter-apply d-none">
+                                    <button class="btn btn-outline-dark smallest d-block py-0" type="submit">Показать</button>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="mb-2 pb-1 smaller">Чашка</h6>
+                            {% for cup in cups %}
+                            <div class="filter-box">
+                                <div class="custom-control custom-checkbox mb-1">
+                                    <input type="checkbox" name="cup" value="{{ cup.id }}" class="custom-control-input" id="bopt4-{{ cup.id }}" {% if cup.checked %}checked{% endif %}>
+                                    <label class="custom-control-label smaller" for="bopt4-{{ cup.id }}">{{ cup.name }}</label>
                                 </div>
                                 <div class="filter-apply d-none">
                                     <button class="btn btn-outline-dark smallest d-block py-0" type="submit">Показать</button>
