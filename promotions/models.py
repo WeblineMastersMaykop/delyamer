@@ -17,14 +17,15 @@ class PromoCode(models.Model):
 class PromotionSumPresent(models.Model):
     total_price = models.PositiveIntegerField('При покупке от суммы')
     price = models.PositiveIntegerField('В подарок не больше')
+    text = models.CharField('Текст акции', max_length=100)
 
     class Meta:
         verbose_name = 'Акция'
-        verbose_name_plural = 'При покупке от определенной суммы, один товар ценой не больше X в подарок'
+        verbose_name_plural = 'От X руб. товар не больше Y в подарок'
         unique_together = ('total_price', 'price')
 
     def __str__(self):
-        return 'При покупке от {} руб. один товар ценой не больше {} руб. в подарок'.format(self.total_price, self.price)
+        return 'От {} руб. товар не больше {} руб. в подарок'.format(self.total_price, self.price)
 
 
 class PromotionThreeSales(models.Model):
@@ -34,13 +35,14 @@ class PromotionThreeSales(models.Model):
     sale2 = models.PositiveIntegerField('Скидка 2')
     price3 = models.PositiveIntegerField('Сумма 3')
     sale3 = models.PositiveIntegerField('Скидка 3')
+    text = models.CharField('Текст акции', max_length=100)
 
     class Meta:
         verbose_name = 'Акция'
-        verbose_name_plural = 'При покупке на сумму X скидка %, хх - % +, ххх - % ++'
+        verbose_name_plural = 'От X руб. скидка %, XX - %, XXX - %'
 
     def __str__(self):
-        return 'При покупке на сумму {} руб. скидка {}%; {} руб. - {}%; {} руб. - {}%'.format(
+        return '{} руб. - {}; {} руб. - {}; {} руб. - {}'.format(
                     self.price1, self.sale1,
                     self.price2, self.sale2,
                     self.price3, self.sale3,
@@ -49,21 +51,23 @@ class PromotionThreeSales(models.Model):
 
 class PromotionMinPresent(models.Model):
     nmb = models.PositiveIntegerField('Количество товаров')
+    text = models.CharField('Текст акции', max_length=100)
 
     class Meta:
         verbose_name = 'Акция'
-        verbose_name_plural = 'При покупке N товаров, товар с наименьшей стоимостью в подарок'
+        verbose_name_plural = 'Акция N + 1'
 
     def __str__(self):
-        return 'При покупке {} товаров, товар с наименьшей стоимостью в подарок'.format(self.nmb)
+        return 'Акция {} + 1'.format(self.nmb)
 
 
 class PromotionSale(models.Model):
     sale = models.PositiveIntegerField('Скидка')
+    text = models.CharField('Текст акции', max_length=100)
 
     class Meta:
         verbose_name = 'Акция'
-        verbose_name_plural = 'Скидка N% на все товары'
+        verbose_name_plural = 'Скидка N%'
 
     def __str__(self):
-        return 'Скидка {}% на все товары'.format(self.sale)
+        return 'Скидка {}'.format(self.sale)

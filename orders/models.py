@@ -24,6 +24,7 @@ class Order(models.Model):
         ('new', 'Новый'),
         ('paid', 'Оплачен'),
         ('error', 'Ошибка оплаты'),
+        ('canceled', 'Отменен'),
         ('shipped', 'Отгружен'),
         ('finished', 'Завершён'),
     )
@@ -41,7 +42,9 @@ class Order(models.Model):
     total_price = models.PositiveIntegerField('Итоговая стоимость', default=0)
     total_price_with_sale = models.PositiveIntegerField('Итоговая стоимость со скидкой', default=0)
     delivery = models.ForeignKey(DeliveryMethod, on_delete=models.SET_NULL, related_name='orders', verbose_name='Способ доставки', null=True, blank=True)
+    track_number = models.CharField(max_length=50, verbose_name='Трек номер', null=True, blank=True)
     status = models.CharField(max_length=100, choices=STATUS_CHOICES, verbose_name='Статус', default='new')
+    sync_1c = models.BooleanField('Выгружено в 1С', default=False)
 
     created = models.DateTimeField('Создано', auto_now_add=True)
     updated = models.DateTimeField('Изменено', auto_now=True)
@@ -49,16 +52,10 @@ class Order(models.Model):
     def get_absolute_url(self):
         return reverse('order_detail', args=[self.id])
 
-    def get_total_price(self):
-        total_price = 0
-        for item in self.items.all():
-            total_price += item.get_cost()
-        return total_price
-
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Список заказов'
-        ordering = ('-updated',)
+        ordering = ('-created',)
 
     def __str__(self):
         return 'Заказ №{}'.format(self.id)
@@ -68,7 +65,9 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Заказ', related_name='items')
     offer = models.ForeignKey('products.Offer', on_delete=models.CASCADE, verbose_name='Товар')
     price = models.PositiveIntegerField('Цена')
-    quantity = models.PositiveIntegerField('Количество')
+    quantity = models.PositiveIntegerField('Количество', default=1)
+    discount = models.PositiveIntegerField('Сумма скидки', default=0)
+    total_price_with_sale = models.PositiveIntegerField('Итоговая сумма по строке')
 
     class Meta:
         verbose_name = 'Товар в заказе'
@@ -76,9 +75,6 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return '{} -- Заказ №{}'.format(self.offer, self.order.id)
-
-    def get_cost(self):
-        return self.price * self.quantity
 
 
 class Review(models.Model):

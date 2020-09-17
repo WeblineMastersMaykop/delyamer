@@ -16,210 +16,245 @@
         </ol>
 
         <h1 class="h3 mb-4">Корзина</h1>
-        <form action="{% url 'order_add' %}" method="POST">
-            {% csrf_token %}
-            <div class="row">
-                <div class="col-lg-8">
-                    {% for item in cart %}
-                    <div class="cart-item position-relative bg-white p-3 p-sm-4 mb-4 cart-item-{{ item.offer_id }}">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <div class="cart-item-product">
-                                    <div class="row">
-                                        <div class="col-md-4 col-sm-3 col-4">
-                                            <div class="bg-img" style="background-image: url({{ item.image_url }})"></div>
-                                        </div>
-
-                                        <div class="col-md-8 col-sm-9 col-8">
-                                            <a href="{{ item.url }}" title="" class="d-inline-block text-decoration-none mb-2">{{ item.name }}</a>
-                                            {% if item.color %}
-                                            <div class="smallest mb-1"><span class="text-muted mr-1">Цвет:</span><span>{{ item.color }}</span></div>
-                                            {% endif %}
-                                            {% if item.size %}
-                                            <div class="smallest mb-1"><span class="text-muted mr-1">Размер:</span><span>{{ item.size }}</span></div>
-                                            {% endif %}
-                                            {% if item.cup %}
-                                            <div class="smallest mb-1"><span class="text-muted mr-1">Чашка:</span><span>{{ item.cup }}</span></div>
-                                            {% endif %}
-                                        </div>
+        <div class="row">
+            <div class="col-lg-8">
+                {% for item in cart %}
+                <div class="cart-item position-relative bg-white p-3 p-sm-4 mb-4 cart-item-{{ item.id }}" id="cart-item-{{ forloop.counter0 }}">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="cart-item-product">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-3 col-4">
+                                        <div class="bg-img" style="background-image: url({{ item.image_url }})"></div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <span class="d-block small product-item-option-name mb-md-3 mb-2 pt-md-1">Количество:</span>
-                                <input class="form-control-sm" data-offer-id="{{ item.offer_id }}" type="number" value="{{ item.quantity }}" min="1" max="{{ item.stock }}" step="1"/>
-                            </div>
 
-                            <div class="col-md-4 col-6">
-                                <div class="text-right">
-                                    <span class="d-block small mb-md-3 mb-1 pt-md-1">Цена:</span>
-                                    <span><span class="number h6 mb-0 mr-1 offer-cost">{% widthratio item.price 1 item.quantity %}</span><span class="smallest">₽</span></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="cart-item-btns small">
-                            <a href="#" data-offer-id="{{ item.offer_id }}" title="" class="text-decoration-none text-muted mr-4 remove-from-cart"><i class="far fa-trash-alt mr-2"></i>Удалить</a>
-                            {% if user.is_authenticated %}
-                                {% if item.offer_id not in user.get_favorites_offers %}
-                                <a href="#" data-offer-id="{{ item.offer_id }}" title="" class="text-decoration-none text-muted add-favorite"><i class="far fa-heart mr-2"></i>Добавить в желаемое</a>
-                                {% endif %}
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% endfor %}
-
-                    <div class="bg-white px-sm-4 px-3 pt-sm-4 pt-3 pb-3">
-                        <form action="" method="POST" id="order-form">
-                            <h2 class="h6 mb-4">Доставка</h2>
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="form-label-group form-label-group-sm smaller mb-4">
-                                        {{ order_form.postcode }}
-                                        <label>Почтовый индекс</label>
-
-                                        <div class="invalid-feedback">
-                                            Это обязательное поле
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4">
-                                    <div class="form-label-group form-label-group-sm smaller mb-4">
-                                        {{ order_form.country }}
-                                        <label>Страна</label>
-
-                                        <div class="invalid-feedback">
-                                            Это обязательное поле
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4">
-                                    <div class="form-label-group form-label-group-sm smaller mb-4">
-                                        {{ order_form.region }}
-                                        <label>Регион</label>
-
-                                        <div class="invalid-feedback">
-                                            Это обязательное поле
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4">
-                                    <div class="form-label-group form-label-group-sm smaller mb-4">
-                                        {{ order_form.city }}
-                                        <label>Населённый пункт</label>
-
-                                        <div class="invalid-feedback">
-                                            Это обязательное поле
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4">
-                                    <div class="form-label-group form-label-group-sm smaller mb-4">
-                                        {{ order_form.address }}
-                                        <label>Адрес</label>
-
-                                        <div class="invalid-feedback">
-                                            Это обязательное поле
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4">
-                                    <div class="form-label-group form-label-group-sm smaller mb-4">
-                                        {{ order_form.phone }}
-                                        <label>Телефон</label>
-
-                                        <div class="invalid-feedback">
-                                            Это обязательное поле
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-8">
-                                    <div class="form-label-group form-label-group-sm smaller mb-4">
-                                        {{ order_form.full_name }}
-                                        <label>ФИО</label>
-
-                                        <div class="invalid-feedback">
-                                            Это обязательное поле
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="col-lg-4">
-                                    <div class="form-label-group form-label-group-sm smaller mb-4">
-                                        {{ order_form.email }}
-                                        <label>Эл. почта</label>
-
-                                        <div class="invalid-feedback">
-                                            Это обязательное поле
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {% for item in delivery_methods %}
-                            <div class="custom-control custom-radio mb-2">
-                                <input data-delivery-id="{{ item.id }}" type="radio" id="Radio{{ item.id }}" name="delivery" value="{{ item.id }}" class="custom-control-input change-delivery" {% if item.id == cart.delivery|first %}checked=""{% endif %}>
-                                <label class="custom-control-label" for="Radio{{ item.id }}">{{ item.name }}<span class="text-muted smaller ml-2">{% if item.info %}({{ item.info }}){% endif %}</span><span class="smallest text-muted ml-2">+{{ item.price }} ₽</span></label>
-                            </div>
-                            {% endfor %}
-                        </form>
-                    </div>
-                </div>
-
-                <div class="col-lg-4">
-                    <div class="bg-white p-sm-4 p-3 sticky-top" style="top:76px">
-                        <form class="mb-4">
-                            <div class="form-group">
-                                <label class="small">Промокод</label>
-                                <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control" placeholder="Промокод" id="input-promocode" aria-label="Промокод" value="{% if cart.promocode %}{{ cart.promocode.code }}{% endif %}">
-                                    <div class="input-group-append">
-                                        {% if cart.promocode %}
-                                        <button class="btn btn-dark" type="button" id="remove-promocode">Удалить</button>
-                                        <button class="btn btn-dark d-none" type="button" id="add-promocode">Применить</button>
-                                        {% else %}
-                                        <button class="btn btn-dark d-none" type="button" id="remove-promocode">Удалить</button>
-                                        <button class="btn btn-dark" type="button" id="add-promocode">Применить</button>
+                                    <div class="col-md-8 col-sm-9 col-8">
+                                        <a href="{{ item.url }}" title="" class="d-inline-block text-decoration-none mb-2">{{ item.name }}</a>
+                                        {% if item.color %}
+                                        <div class="smallest mb-1"><span class="text-muted mr-1">Цвет:</span><span>{{ item.color }}</span></div>
+                                        {% endif %}
+                                        {% if item.size %}
+                                        <div class="smallest mb-1"><span class="text-muted mr-1">Размер:</span><span>{{ item.size }}</span></div>
+                                        {% endif %}
+                                        {% if item.cup %}
+                                        <div class="smallest mb-1"><span class="text-muted mr-1">Чашка:</span><span>{{ item.cup }}</span></div>
                                         {% endif %}
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <span class="d-block small product-item-option-name mb-md-3 mb-2 pt-md-1">Количество:</span>
+                            <form action="{% url 'change_quantity' %}#cart-item-{{ forloop.counter0|add:"-2" }}" method="GET" class="change-quality">
+                                <input type="hidden" name="offer_id" value="{{ item.id }}">
+                                <input class="form-control-sm" name="quantity" type="number" value="{{ item.quantity }}" onclick="" min="1" max="{{ item.stock }}" step="1"/>
+                            </form>
+                        </div>
+
+                        <div class="col-md-4 col-6">
+                            <div class="text-right">
+                                <span class="d-block small mb-md-3 mb-1 pt-md-1">Цена:</span>
+                                {% if item.cost != item.cost_with_sale %}
+                                <span>
+                                    <div class="d-inline-block mr-2 text-muted"><del><span class="number mr-1">{{ item.cost }}</span><span class="small">₽</span></del></div>
+                                    <div class="d-inline-block text-danger"><span class="number h6 mr-1">{{ item.cost_with_sale }}</span><span class="smaller">₽</span></div>
+                                </span>
+                                {% else %}
+                                <span class="number h6 mb-0 mr-1">{{ item.cost }}</span><span class="smallest">₽</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if item.offer_promo_text %}
+                    <span class="d-block small pt-2 mb-2 mb-md-0 text-danger">
+                        <i class="fas fa-bookmark mr-2"></i>
+                        <span class="font-weight-bold mr-2">Акция:</span>
+                        <span>{{ item.offer_promo_text }}</span>
+                    </span>
+                    {% endif %}
+
+                    <div class="cart-item-btns small d-flex justify-content-start">
+                        <form action="{% url 'remove_from_cart' %}#cart-item-{{ forloop.counter0|add:"-2" }}" method="GET">
+                            <button type="submit" name="offer_id" value="{{ item.id }}" title="" class="border-0 text-muted bg-white"><i class="far fa-trash-alt mr-2"></i>Удалить</button>
                         </form>
-
-                        <div class="mb-3">
-                            <div class="d-flex justify-content-between smaller mb-1"><span class="font-500 mr-3">Товары на сумму:</span><span><span class="number font-500 mr-1" id="total_price">{{ cart.get_total_price }}</span><span class="smallest">₽</span></span></div>
-
-                            <div class="d-flex justify-content-between smaller mb-1"><span class="font-500 mr-3">Доставка:</span><span><span class="number font-500 mr-1" id="delivery_price">{{ cart.delivery.1 }}</span><span class="smallest">₽</span></span></div>
-                        </div>
-                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Скидка:</span><span class="text-danger"><span class="number mr-1" id="promotion_sale">-{{ cart.get_sale }}</span><span class="smallest">₽</span></span></div>
-                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Нарастающая скидка:</span><span class="text-danger"><span class="number mr-1" id="promotion_three_sales">-{{ cart.get_three_sales }}</span><span class="smallest">₽</span></span></div>
-                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Товар в подарок:</span><span class="text-danger"><span class="number mr-1" id="promotion_sum_present">-{{ cart.get_sum_present }}</span><span class="smallest">₽</span></span></div>
-                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Акция N+1:</span><span class="text-danger"><span class="number mr-1" id="promotion_min_present">-{{ cart.get_min_present }}</span><span class="smallest">₽</span></span></div>
-                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Промокод:</span><span class="text-danger"><span class="number mr-1" id="promocode">-{{ cart.get_promocode_price }}</span><span class="smallest">₽</span></span></div>
-
-                        <div class="border-top border-bottom py-3 my-4">
-                            <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Вы сэкономите:</span><span class="text-danger"><span class="number mr-1" id="total_sales">{{ cart.get_total_sale|add:cart.get_promocode_price }}</span><span class="smallest">₽</span></span></div>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center smaller mb-4"><span class="h6 mb-0 mr-3">Итого:</span><span><span class="number h5 mb-0 mr-1" id="total_price_with_sale">{{ cart.get_total_price_with_sales }}</span><span class="smallest">₽</span></span></div>
-                        {% if cart|length %}
-                        <button title="" class="btn btn-primary w-100">Оплатить заказ<i class="fas fa-angle-right fa-xs ml-2"></i></button>
+                        {% if user.is_authenticated %}
+                            {% if item.id not in user.get_favorites_offers %}
+                            <a href="#" data-offer-id="{{ item.id }}" title="" class="text-decoration-none text-muted ml-4 add-favorite"><i class="far fa-heart mr-2"></i>Добавить в желаемое</a>
+                            {% endif %}
                         {% endif %}
-                        <p class="text-muted smallest border-top mb-0 mt-4 pt-3">Нажимая кнопку "Оплатить зааказ", вы даёте согласие на <a href="/pages/personal-data/" target="_blank">обработку персональных данных</a></p>
                     </div>
                 </div>
+                {% endfor %}
+
+                <div class="bg-white px-sm-4 px-3 pt-sm-4 pt-3 pb-3">
+                    <form action="{% url 'order_add' %}" method="POST" id="order-form">
+                        {% csrf_token %}
+                        <h2 class="h6 mb-4">Доставка</h2>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ order_form.postcode }}
+                                    <label>Почтовый индекс</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ order_form.country }}
+                                    <label>Страна</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ order_form.region }}
+                                    <label>Регион</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ order_form.city }}
+                                    <label>Населённый пункт</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ order_form.address }}
+                                    <label>Адрес</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ order_form.phone }}
+                                    <label>Телефон</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-8">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ order_form.full_name }}
+                                    <label>ФИО</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ order_form.email }}
+                                    <label>Эл. почта</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <form action="{% url 'change_delivey' %}#delivery" method="GET" id="delivery">
+                        {% for item in delivery_methods %}
+                            <div class="custom-control custom-radio mb-2">
+                                <input data-delivery-id="{{ item.id }}" type="radio" id="Radio{{ item.id }}" name="delivery" value="{{ item.id }}" class="custom-control-input change-delivery" {% if item.id == cart.delivery|first %}checked=""{% endif %}>
+                                <label class="custom-control-label" for="Radio{{ item.id }}">{{ item.name }}<span class="text-muted smaller ml-2">{% if item.info %}({{ item.info }}){% endif %}</span><span class="smallest text-muted ml-2">+{{ item.price }} ₽</span></label>
+                            </div>
+                        {% endfor %}
+                    </form>
+                </div>
             </div>
-        </form>
+            <div class="col-lg-4">
+                <div class="bg-white p-sm-4 p-3 sticky-top" style="top:76px">
+                    <div class="mb-4">
+                        <div class="form-group">
+                            <label class="small">Промокод</label>
+                            {% if cart.promocode %}
+                            <form action="{% url 'remove_promocode' %}" method="GET">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control" placeholder="Промокод" aria-label="Промокод" value="{% if cart.promocode %}{{ cart.promocode.code }}{% endif %}">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-dark" type="submit">Удалить</button>
+                                    </div>
+                                </div>
+                            </form>
+                            {% else %}
+                            <form action="{% url 'add_promocode' %}" method="GET">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control" name="promocode" placeholder="Промокод" aria-label="Промокод" value="">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-dark" type="submit">Применить</button>
+                                    </div>
+                                </div>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between smaller mb-1"><span class="font-500 mr-3">Товары на сумму:</span><span><span class="number font-500 mr-1" id="total_price">{{ cart.offers_price }}</span><span class="smallest">₽</span></span></div>
+                        <div class="d-flex justify-content-between smaller mb-1"><span class="font-500 mr-3">Доставка:</span><span><span class="number font-500 mr-1" id="delivery_price">{{ cart.delivery.1 }}</span><span class="smallest">₽</span></span></div>
+                    </div>
+                    {% if cart.sum_sale %}
+                    <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Скидка:</span><span class="text-danger"><span class="number mr-1" id="promotion_sale">-{{ cart.sum_sale }}</span><span class="smallest">₽</span></span></div>
+                    {% endif %}
+                    {% if cart.sum_three_sales %}
+                    <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Нарастающая скидка:</span><span class="text-danger"><span class="number mr-1" id="promotion_three_sales">-{{ cart.sum_three_sales }}</span><span class="smallest">₽</span></span></div>
+                    {% endif %}
+                    {% if cart.sum_sum_present %}
+                    <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Товар в подарок:</span><span class="text-danger"><span class="number mr-1" id="promotion_sum_present">-{{ cart.sum_sum_present }}</span><span class="smallest">₽</span></span></div>
+                    {% endif %}
+                    {% if cart.sum_min_present %}
+                    <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Акция N+1:</span><span class="text-danger"><span class="number mr-1" id="promotion_min_present">-{{ cart.sum_min_present }}</span><span class="smallest">₽</span></span></div>
+                    {% endif %}
+                    {% if cart.sum_promocode %}
+                    <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Промокод:</span><span class="text-danger"><span class="number mr-1" id="promocode">-{{ cart.sum_promocode }}</span><span class="smallest">₽</span></span></div>
+                    {% endif %}
+
+                    {% if cart.get_total_sale %}
+                    <div class="border-top border-bottom py-3 my-4">
+                        <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Вы сэкономите:</span><span class="text-danger"><span class="number mr-1" id="total_sales">{{ cart.get_total_sale }}</span><span class="smallest">₽</span></span></div>
+                    </div>
+                    {% endif %}
+
+                    <div class="d-flex justify-content-between align-items-center smaller mb-4"><span class="h6 mb-0 mr-3">Итого:</span><span><span class="number h5 mb-0 mr-1" id="total_price_with_sale">{{ cart.get_total_price }}</span><span class="smallest">₽</span></span></div>
+                    {% if cart|length %}
+                    <button title="" class="btn btn-primary w-100" id="add-order">Оплатить заказ<i class="fas fa-angle-right fa-xs ml-2"></i></button>
+                    {% endif %}
+                    <p class="text-muted smallest border-top mb-0 mt-4 pt-3">Нажимая кнопку "Оплатить зааказ", вы даёте согласие на <a href="/pages/personal-data/" target="_blank">обработку персональных данных</a></p>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
-
 {% endblock %}
 
 {% block scripts %}

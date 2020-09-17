@@ -3,66 +3,15 @@ $(document).ready(function() {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     }
 
-    function updateCart(data) {
-        $('#promotion_sale').html('-' + numberWithSpaces(data.cart_info.promotion_sale));
-        $('#promotion_sum_present').html('-' + numberWithSpaces(data.cart_info.promotion_sum_present));
-        $('#promotion_three_sales').html('-' + numberWithSpaces(data.cart_info.promotion_three_sales));
-        $('#promotion_min_present').html('-' + numberWithSpaces(data.cart_info.promotion_min_present));
-        $('#total_price_with_sale').html(numberWithSpaces(data.cart_info.total_price_with_sale));
-        $('#total_sales').html(numberWithSpaces(data.cart_info.total_sales));
-        $('#total_price').html(numberWithSpaces(data.cart_info.total_price));
-        $('#promocode').html(numberWithSpaces('-' + data.cart_info.promocode_price));
-        $('#input-promocode').val(data.cart_info.promocode);
-    }
-
-    $('#add-promocode').click(function() {
-        promocode = $('#input-promocode').val();
-
-        data = {
-            promocode: promocode,
-        }
-
-        $.ajax({
-            type: "GET",
-            url: '/orders/add-promocode/',
-            data: data,
-            success: function(data) {
-                $('#add-promocode').addClass('d-none');
-                $('#remove-promocode').removeClass('d-none');
-                updateCart(data);
-            }
-        });
-    });
-
-    $('#remove-promocode').click(function() {
-        $.ajax({
-            type: "GET",
-            url: '/orders/remove-promocode/',
-            success: function(data) {
-                $('#remove-promocode').addClass('d-none');
-                $('#add-promocode').removeClass('d-none');
-                updateCart(data);
-            }
-        });
+    $('#add-order').click(function() {
+        order_form = $('#order-form');
+        delivery = $('input[name="delivery"]');
+        order_form.append(delivery);
+        order_form.submit();
     });
 
     $('input[name="delivery"]').change(function() {
-        input = $(this);
-        delivery = input.data('delivery-id');
-
-        data = {
-            delivery: delivery,
-        }
-
-        $.ajax({
-            type: "GET",
-            url: '/orders/change-delivery/',
-            data: data,
-            success: function(data) {
-                $('#delivery_price').html(data.price);
-                updateCart(data);
-            }
-        });
+        $(this).parents('form').submit();
     });
 
     $('#OneClickOrderModal button[type="submit"]').click(function(e) {
@@ -144,71 +93,11 @@ $(document).ready(function() {
         });
     });
 
-    $('#add-to-cart').click(function(e) {
-        e.preventDefault();
-
-        data = {
-            product: $('#ChangeOffer input[name="product"]').val(),
-            color: $('#ChangeOffer input[name="color"]:checked').val(),
-            size: $('#ChangeOffer input[name="size"]:checked').val(),
-            cup: $('#ChangeOffer input[name="cup"]:checked').val(),
-        }
-
-        $.ajax({
-            type: "GET",
-            url: '/orders/add-to-cart/',
-            data: data,
-            success: function(data) {
-                $('#cart-len').text(data.cart_len);
-                $('#add-to-cart').addClass('d-none');
-                $('#in-cart').removeClass('d-none');
-            }
-        });
-    });
-
-    $('.remove-from-cart').click(function(e) {
-        e.preventDefault();
-        offer = $(this).data('offer-id');
-
-        data = {
-            offer: offer,
-        }
-
-        $.ajax({
-            type: "GET",
-            url: '/orders/remove-from-cart/',
-            data: data,
-            success: function(data) {
-                $('.cart-item-' + offer).addClass('d-none');
-                $('#cart-len').html(data.cart_len);
-                updateCart(data);
-            }
-        });
-    });
-
     function change_quantity() {
-        quantity_input = $(this).parent().siblings('input');
-        offer = quantity_input.data('offer-id');
-        quantity = quantity_input.val();
-
-        data = {
-            offer: offer,
-            quantity: quantity,
-        }
-
-        $.ajax({
-            type: "GET",
-            url: '/orders/change-quantity/',
-            data: data,
-            success: function(data) {
-                $('.cart-item-' + offer + ' .offer-cost').html(numberWithSpaces(data.cost));
-                $('#cart-len').html(data.cart_len);
-                updateCart(data);
-            }
-        });
+        $(this).parents('form').submit();
     }
 
-    $('.product-item-number input').on('input', change_quantity);
+    $('.product-item-number input').on('blur', change_quantity);
     $('.product-item-number .input-group-append').on('click', change_quantity);
     $('.product-item-number .input-group-prepend').on('click', change_quantity);
 
@@ -317,12 +206,29 @@ $(document).ready(function() {
 
                 $('#offer-stock').html(data.offer_stock);
 
-                if (data.in_cart) {
-                    $('#add-to-cart').addClass('d-none');
-                    $('#in-cart').removeClass('d-none');
+                console.log(data.promo_text);
+                if (data.promo_text) {
+                    $('#promo-text').parent().addClass('d-block');
+                    $('#promo-text').parent().removeClass('d-none');
+                    $('#promo-text').html(data.promo_text);
                 } else {
-                    $('#add-to-cart').removeClass('d-none');
-                    $('#in-cart').addClass('d-none');
+                    $('#promo-text').parent().addClass('d-none');
+                    $('#promo-text').parent().removeClass('d-block');
+                }
+
+                if (data.offer_stock) {
+                    $('#product-buttons').addClass('d-md-flex');
+                    $('#product-buttons').removeClass('d-none');
+                    if (data.in_cart) {
+                        $('#add-to-cart').addClass('d-none');
+                        $('#in-cart').removeClass('d-none');
+                    } else {
+                        $('#add-to-cart').removeClass('d-none');
+                        $('#in-cart').addClass('d-none');
+                    }
+                } else {
+                    $('#product-buttons').addClass('d-none');
+                    $('#product-buttons').removeClass('d-md-flex');
                 }
 
                 image_id = $('#image-' + data.image_id).data('image_id');

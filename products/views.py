@@ -238,8 +238,6 @@ class ChangeOfferView(View):
         cup_id = request.GET.get('cup')
         btn_type = request.GET.get('btn_type')
 
-        print(color_id, size_id, cup_id)
-
         product = Product.objects.get(pk=product_id)
         sizes, colors, cups = [], [], []
 
@@ -278,9 +276,21 @@ class ChangeOfferView(View):
         cart = Cart(request)
         in_cart = 1 if str(offer.id) in cart.cart else 0
 
-        print(cups)
-        print(colors)
-        print(sizes)
+        offer_stock = 0
+        if offer.stock > 10:
+            offer_stock = 'Много'
+        elif offer.stock > 0 and offer.stock < 10:
+            offer_stock = 'Мало'
+
+        promo_text = None
+        if offer.promotion_sale:
+            promo_text = offer.promotion_sale.text
+        elif offer.promotion_min_present:
+            promo_text = offer.promotion_min_present.text
+        elif offer.promotion_sum_present:
+            promo_text = offer.promotion_sum_present.text
+        elif offer.promotion_three_sales:
+            promo_text = offer.promotion_three_sales.text
 
         context = {
             'success': True,
@@ -290,9 +300,10 @@ class ChangeOfferView(View):
             'cups': cups,
             'product_price': offer.product.price,
             'offer_price': offer.get_price(),
-            'offer_stock': 'Много' if offer.stock > 10 else 'Мало',
+            'offer_stock': offer_stock,
             'image_id': image_id,
             'in_cart': in_cart,
+            'promo_text': promo_text,
         }
         return JsonResponse(context)
 

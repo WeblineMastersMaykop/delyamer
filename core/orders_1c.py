@@ -1,0 +1,104 @@
+import xml.etree.ElementTree as ET
+from xml.dom import minidom
+import os.path
+import logging
+from datetime import datetime, timedelta
+from django.utils import timezone
+from orders.models import Order
+
+
+def sync_1c():
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    # logger_path = os.path.join(os.path.dirname(__file__), 'orders_1c.log')
+    logger_path = 'E:\\Goga\\PycharmProjects\\delyamer\\core\\orders_1c.log'
+    handler = logging.FileHandler(logger_path, 'a', 'utf-8')
+    handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s', datefmt='%d.%m.%y %H:%M:%S'))
+    logger.addHandler(handler)
+    logger.info('НАЧАЛО СКРИПТА')
+
+    current_datetime = timezone.now()
+    path = 'C:\\Users\\gurge\\Desktop\\sync\\orders'
+
+    old_orders = Order.objects.filter(status__in=('new', 'error'), created__lt=current_datetime-timedelta(days=1))
+    old_orders.update(status='canceled')
+
+    orders = Order.objects.filter(sync_1c=False, status='paid')
+    logger.info('Заказов для выгрузки: {}'.format(len(orders)))
+
+    if orders:
+        root = ET.Element('Orders')
+
+        for order in orders:
+            order_key = ET.SubElement(
+                root,
+                'Order',
+                attrib={
+                    'ID': str(order.id),
+                    'Date': order.created.strftime('%d:%m:%Y %H:%M:%S'),
+                    'Amount': str(order.total_price_with_sale),
+                    'AmountWithSale': str(order.total_price_with_sale),
+                    'Delivery': str(order.delivery) if order.delivery else '',
+                    'TrackNumber': order.track_number or '',
+                }
+            )
+
+            user_key = ET.SubElement(
+                order_key,
+                'Customer',
+                attrib={
+                    'ID': str(order.user.id) if order.user else '',
+                    'Name': order.full_name,
+                    'Tel': order.phone,
+                    'Email': order.email,
+                    'Postcode': order.postcode,
+                    'Country': order.country,
+                    'Region': order.region,
+                    'City': order.city,
+                    'Address': order.address,
+                }
+            )
+
+            payment_key = ET.SubElement(
+                order_key,
+                'Payment',
+                attrib={
+                    'Amount': str(order.total_price_with_sale),
+                    'Method': 'Картой онлайн',
+                }
+            )
+
+            items_key = ET.SubElement(order_key, 'Products')
+
+            for item in order.items.all().select_related('offer', 'offer__product'):
+                product_key = ET.SubElement(
+                items_key,
+                'Product',
+                attrib={
+                    'Code': item.offer.product.code_1c,
+                    'Name': item.offer.product.name,
+                    'Color': item.offer.color.name if item.offer.color else '',
+                    'Size': item.offer.size.name if item.offer.size else '',
+                    'Cup': item.offer.cup.name if item.offer.cup else '',
+                    'Count': str(item.quantity),
+                    'Price': str(item.price),
+                    'Discount': str(item.discount),
+                    'Amount': str(item.total_price_with_sale),
+                    'Method': 'Картой онлайн',
+                }
+            )
+
+        rough_string = ET.tostring(root, 'utf-8')
+        reparsed = minidom.parseString(rough_string)
+        pretty_xml = reparsed.toprettyxml()
+
+        file_name = current_datetime.strftime('%d%m%Y%H%M') + '.xml'
+        with open(os.path.join(path, file_name), 'w', encoding='utf=8') as f:
+            f.write(pretty_xml)
+
+        # orders.update(sync_1c=True)
+
+    logger.info('КОНЕЦ СКРИПТА\n')
+
+
+sync_1c()

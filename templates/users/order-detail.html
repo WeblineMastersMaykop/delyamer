@@ -52,10 +52,17 @@
 
                             <div class="col-xl-8 col-lg-7 col-md-10 col-sm-9 col-8">
                                 <a href="{{ item.offer.product.get_absolute_url }}" title="" class="d-inline-block text-decoration-none mb-2">{{ item.offer.product.name }}</a>
+                                {% if item.offer.color %}
                                 <div class="smallest mb-1"><span class="text-muted mr-1">Цвет:</span><span>{{ item.offer.color }}</span></div>
+                                {% endif %}
+                                {% if item.offer.size %}
                                 <div class="smallest mb-1"><span class="text-muted mr-1">Размер:</span><span>{{ item.offer.size }}</span></div>
+                                {% endif %}
+                                {% if item.offer.cup %}
+                                <div class="smallest mb-1"><span class="text-muted mr-1">Чашка:</span><span>{{ item.offer.cup }}</span></div>
+                                {% endif %}
                                 <div class="smallest mb-1"><span class="text-muted mr-1">Количество:</span><span>{{ item.quantity }}</span></div>
-                                <div class="smallest mb-1"><span class="text-muted mr-1">Цена:</span><span class="number font-weight-bold mb-0 mr-1">{{ item.price }}</span><span class="smallest">₽</span></div>
+                                <div class="smallest mb-1"><span class="text-muted mr-1">Цена:</span><span class="number font-weight-bold mb-0 mr-1">{{ item.total_price_with_sale }}</span><span class="smallest">₽</span></div>
                             </div>
                         </div>
                     </div>
@@ -154,6 +161,14 @@
                         {% endif %}
                     </span>
                     <span class="smaller">{% firstof order.address 'Не указано' %}</span>
+                </div>
+            </div>
+
+            <div class="d-flex mb-4">
+                <i class="fas fa-route"></i>
+                <div>
+                    <span class="text-muted small d-block mb-1">Трек-номер:</span>
+                    <span class="d-block font-500">{% firstof order.track_number 'формируется' %}</span>
                 </div>
             </div>
 

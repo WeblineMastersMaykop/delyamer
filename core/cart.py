@@ -1,3 +1,6 @@
+from django.core.serializers.json import DjangoJSONEncoder
+from django.core.serializers import serialize
+
 import math
 from products.models import Offer, FavoriteProduct
 from promotions.models import PromotionSumPresent, PromotionThreeSales, PromotionMinPresent, PromotionSale, PromoCode
@@ -7,6 +10,7 @@ from orders.models import DeliveryMethod
 class Cart:
     def __init__(self, request):
         self.session = request.session
+
         cart = self.session.get('cart')
         if not cart:
             cart = self.session['cart'] = {}
@@ -24,155 +28,148 @@ class Cart:
         else:
             self.promocode = self.session['promocode'] = None
 
-    def change_delivery(self, delivery_method):
-        self.delivery = (delivery_method.id, delivery_method.price)
-        self.session['delivery'] = self.delivery
-        self.session.modified = True
+        self.sum_sale = 0
+        self.sum_three_sales = 0
+        self.sum_sum_present = 0
+        self.sum_min_present = 0
+        self.sum_promocode = 0
 
-    def add(self, offer):
-        self.cart[str(offer.id)] = {
-            'quantity': 1,
-            'offer_id': offer.id,
-        }
-        self.save()
-
-    def change_quantity(self, offer, quantity):
-        self.cart[str(offer.id)]['quantity'] = quantity
-        self.save()
-
-    def remove(self, offer):
-        offer_id = str(offer.id)
-        if offer_id in self.cart:
-            del self.cart[offer_id]
-            self.save()
+    def __len__(self):
+        return sum(int(item) for item in self.cart.values())
 
     def save(self):
         self.session['cart'] = self.cart
         self.session.modified = True
 
+    def clear(self):
+        del self.session['cart']
+        del self.session['promocode']
+        del self.session['delivery']
+        self.session.modified = True
+
+    def add(self, offer_id):
+        offer_id = str(offer_id)
+        self.cart[offer_id] = '1'
+        self.save()
+
+    def change_quantity(self, offer_id, quantity):
+        offer_id = str(offer_id)
+        if self.cart.get(offer_id):
+            self.cart[offer_id] = str(quantity)
+            self.save()
+
+    def remove(self, offer_id):
+        offer_id = str(offer_id)
+        self.cart.pop(offer_id, None)
+        self.save()
+
     def __iter__(self):
+        self.sales = PromotionSale.objects.all()
+        self.three_sales = PromotionThreeSales.objects.all()
+        self.min_present_sales = PromotionMinPresent.objects.all()
+        self.sum_present_sales = PromotionSumPresent.objects.all()
+        self.promocodes = PromoCode.objects.all()
+        self.min_present = True
+        self.sum_present = True
+
+        for offer in self.offers:
+            price = offer.product.price
+            price_with_sale, has_present, sum_sale, sum_sum_present, sum_three_sales, sum_min_present, sum_promocode = self.offer_price(offer)
+            quantity = int(self.cart[str(offer.id)])
+            cost = price * quantity
+            cost_with_sale = price_with_sale * quantity - has_present * price_with_sale
+
+            self.sum_sale += sum_sale * quantity
+            self.sum_three_sales += sum_three_sales * quantity
+            self.sum_sum_present += sum_sum_present
+            self.sum_min_present += sum_min_present
+            self.sum_promocode += sum_promocode * quantity
+
+            offer_promo = offer.promotion_three_sales or offer.promotion_sale or offer.promotion_sum_present or offer.promotion_min_present
+            offer_promo_text = offer_promo.text if offer_promo else None
+
+            item = {
+                'offer_promo_text': offer_promo_text,
+                'offer': offer,
+                'id': offer.id,
+                'quantity': quantity,
+                'price': price,
+                'price_with_sale': price_with_sale,
+                'cost': cost,
+                'cost_with_sale': cost_with_sale,
+                'has_present': has_present,
+                'name': offer.product.name,
+                'color': offer.color.name if offer.color else None,
+                'size': offer.size.name if offer.size else None,
+                'cup': offer.cup.name if offer.cup else None,
+                'url': offer.product.get_absolute_url(),
+                'stock': offer.stock,
+                'image_url': offer.get_image().image_small.url,
+            }
+            yield item
+
+    @property
+    def offers_price(self):
+        result = 0
+        if self.offers:
+            result = sum(offer.product.price * int(self.cart[str(offer.id)]) for offer in self.offers)
+        return result
+
+    @property
+    def offers(self):
         offer_ids = self.cart.keys()
-        offers = Offer.objects.filter(id__in=offer_ids)
-
-        for offer in offers:
-            offer_price = offer.get_price()
-            offer_id = str(offer.id)
-            self.cart[offer_id]['price'] = offer.product.price
-            self.cart[offer_id]['name'] = offer.product.name
-            self.cart[offer_id]['color'] = offer.color.name if offer.color else None
-            self.cart[offer_id]['size'] = offer.size.name if offer.size else None
-            self.cart[offer_id]['cup'] = offer.cup.name if offer.cup else None
-            self.cart[offer_id]['url'] = offer.product.get_absolute_url()
-            self.cart[offer_id]['stock'] = offer.stock
-            self.cart[offer_id]['image_url'] = offer.get_image().image_small.url
-            self.cart[offer_id]['promotion_sale'] = offer.promotion_sale.id if offer.promotion_sale else -1
-            self.cart[offer_id]['promotion_sum_present'] = offer.promotion_sum_present.id if offer.promotion_sum_present else -1
-            self.cart[offer_id]['promotion_three_sales'] = offer.promotion_three_sales.id if offer.promotion_three_sales else -1
-            self.cart[offer_id]['promotion_min_present'] = offer.promotion_min_present.id if offer.promotion_min_present else -1
-            self.session.modified = True
-            yield self.cart[offer_id]
-
-    def __len__(self):
-        return len(self.cart)
-
-    def get_total_price(self):
-        self.total_price = sum(int(item['price']) * int(item['quantity']) for item in self.cart.values())
-        return self.total_price
-
-    def get_sale(self):
-        pr_sales = PromotionSale.objects.all()
-        result = 0
-
-        for pr in pr_sales:
-            for item in self.cart.values():
-                if int(item['promotion_sale']) == pr.id:
-                    result += math.ceil(self.get_cost(str(item['offer_id'])) * pr.sale / 100)
-        self.promotion_sale = result
-        return self.promotion_sale
-
-    def get_three_sales(self):
-        pr_three_sales = PromotionThreeSales.objects.all()
-        total_price = self.get_total_price()
-        result = 0
-
-        for pr in pr_three_sales:
-            if total_price >= pr.price3:
-                for item in self.cart.values():
-                    if int(item['promotion_three_sales']) == pr.id:
-                        result += math.ceil(self.get_cost(str(item['offer_id'])) * pr.sale3 / 100)
-            elif total_price >= pr.price2:
-                for item in self.cart.values():
-                    if int(item['promotion_three_sales']) == pr.id:
-                        result += math.ceil(self.get_cost(str(item['offer_id'])) * pr.sale2 / 100)
-            elif total_price >= pr.price1:
-                for item in self.cart.values():
-                    if int(item['promotion_three_sales']) == pr.id:
-                        result += math.ceil(self.get_cost(str(item['offer_id'])) * pr.sale1 / 100)
-        self.promotion_three_sales = result
-        return self.promotion_three_sales
-
-    def get_sum_present(self):
-        pr_sum_present = PromotionSumPresent.objects.all()
-        total_price = self.get_total_price()
-        values = set()
-
-        for pr in pr_sum_present:
-            if total_price >= pr.total_price:
-                for item in self.cart.values():
-                    offer_price = int(item['price'])
-                    if int(item['promotion_sum_present']) == pr.id and offer_price <= pr.price:
-                        values.add(offer_price)
-
-        result = min(values) if values else 0
-        self.promotion_sum_present = result
-        return self.promotion_sum_present
-
-    def get_min_present(self):
-        pr_min_present = PromotionMinPresent.objects.all()
-        values = set()
-        cart_len = sum(int(item['quantity']) for item in self.cart.values())
-
-        for pr in pr_min_present:
-            if cart_len >= pr.nmb:
-                for item in self.cart.values():
-                    if int(item['promotion_min_present']) == pr.id:
-                        values.add(int(item['price']))
-
-        result = min(values) if values else 0
-        self.promotion_min_present = result
-        return self.promotion_min_present
-
-    def update_sales(self):
-        self.get_sale()
-        self.get_sum_present()
-        self.get_three_sales()
-        self.get_min_present()
-        self.get_total_sale()
+        return Offer.objects.filter(id__in=offer_ids, is_active=True, stock__gt=0).select_related(
+            'product', 'size', 'color', 'cup', 'promotion_sum_present',
+            'promotion_three_sales', 'promotion_min_present', 'promotion_sale'
+        ).order_by('product__price')
 
     def get_total_sale(self):
-        self.total_sale = self.promotion_sale + self.promotion_sum_present \
-                          + self.promotion_three_sales + self.promotion_min_present
-        return self.total_sale
+        return self.sum_sale + self.sum_three_sales \
+               + self.sum_sum_present + self.sum_min_present + self.sum_promocode
 
-    def get_total_price_with_sales(self):
-        result = self.total_price - self.total_sale
+    def get_total_price(self):
+        return self.offers_price + self.delivery[1] - self.get_total_sale()
+
+    def offer_price(self, offer):
+        price = offer.product.price
+        has_present = False
+        sum_sale = 0
+        sum_three_sales = 0
+        sum_sum_present = 0
+        sum_min_present = 0
+        sum_promocode = 0
+
+        if offer.promotion_sale:
+            sum_sale = offer.product.price * offer.promotion_sale.sale // 100
+            price =  offer.product.price - sum_sale
+        elif offer.promotion_three_sales:
+            sale = 0
+            if self.offers_price >= offer.promotion_three_sales.price3:
+                sale = offer.promotion_three_sales.sale3
+            elif self.offers_price >= offer.promotion_three_sales.price2:
+                sale = offer.promotion_three_sales.sale2
+            elif self.offers_price >= offer.promotion_three_sales.price1:
+                sale = offer.promotion_three_sales.sale1
+            sum_three_sales = offer.product.price * sale // 100
+            price = offer.product.price - sum_three_sales
+        elif offer.promotion_min_present:
+            if (len(self.cart) >= offer.promotion_min_present.nmb and
+                self.min_present):
+                sum_min_present = price
+                has_present = True
+                self.min_present = False
+        elif offer.promotion_sum_present:
+            if (self.offers_price >= offer.promotion_sum_present.total_price and
+                price <= offer.promotion_sum_present.price and self.sum_present):
+                    sum_sum_present = price
+                    has_present = True
+                    self.sum_present = False
+
         if self.promocode:
-            result = math.ceil(result * (100 - self.promocode.sale ) / 100)
-        result += self.delivery[1]
-        return result
+            sum_promocode = price * self.promocode.sale // 100
+            price = price - sum_promocode
 
-    def get_promocode_price(self):
-        self.get_total_sale()
-        total_price = self.total_price - self.total_sale
-        result = 0
-
-        if self.promocode:
-            result = self.promocode.sale * total_price // 100
-        return result
-
-    def get_cost(self, offer_id):
-        offer_info = self.cart[offer_id]
-        return int(offer_info['price']) * int(offer_info['quantity'])
+        return price, has_present, sum_sale, sum_sum_present, sum_three_sales, sum_min_present, sum_promocode
 
     def set_promocode(self, code):
         promocode = PromoCode.objects.filter(code=code)
@@ -184,8 +181,7 @@ class Cart:
         self.session.modified = True
         return self.promocode
 
-    def clear(self):
-        del self.session['cart']
-        del self.session['promocode']
-        del self.session['delivery']
+    def change_delivery(self, delivery_method):
+        self.delivery = (delivery_method.id, delivery_method.price)
+        self.session['delivery'] = self.delivery
         self.session.modified = True

@@ -28,14 +28,14 @@
 
                                 <div class="col-lg-8 col-sm-9 col-8">
                                     <a href="{{ item.offer.product.get_absolute_url }}" title="" class="d-inline-block text-decoration-none mb-2">{{ item.offer.product.name }}</a>
-                                    {% if item.color %}
-                                    <div class="smallest mb-1"><span class="text-muted mr-1">Цвет:</span><span>{{ item.color }}</span></div>
+                                    {% if item.offer.color %}
+                                    <div class="smallest mb-1"><span class="text-muted mr-1">Цвет:</span><span>{{ item.offer.color }}</span></div>
                                     {% endif %}
-                                    {% if item.size %}
-                                    <div class="smallest mb-1"><span class="text-muted mr-1">Размер:</span><span>{{ item.size }}</span></div>
+                                    {% if item.offer.size %}
+                                    <div class="smallest mb-1"><span class="text-muted mr-1">Размер:</span><span>{{ item.offer.size }}</span></div>
                                     {% endif %}
-                                    {% if item.cup %}
-                                    <div class="smallest mb-1"><span class="text-muted mr-1">Чашка:</span><span>{{ item.cup }}</span></div>
+                                    {% if item.offer.cup %}
+                                    <div class="smallest mb-1"><span class="text-muted mr-1">Чашка:</span><span>{{ item.offer.cup }}</span></div>
                                     {% endif %}
                                     <div class="smallest mb-1">
                                         <span class="text-muted mr-1">Цена:</span>
@@ -64,6 +64,31 @@
                             </div>
                         </div>
                     </div>
+                    {% if item.offer.promotion_sale %}
+                    <span class="d-block small pt-2 mb-2 mb-md-0 text-danger">
+                        <i class="fas fa-bookmark mr-2"></i>
+                        <span class="font-weight-bold mr-2">Акция:</span>
+                        <span>{{ item.offer.promotion_sale.text }}</span>
+                    </span>
+                    {% elif item.offer.promotion_sum_present %}
+                    <span class="d-block small pt-2 mb-2 mb-md-0 text-danger">
+                        <i class="fas fa-bookmark mr-2"></i>
+                        <span class="font-weight-bold mr-2">Акция:</span>
+                        <span>{{ item.offer.promotion_sum_present.text }}</span>
+                    </span>
+                    {% elif item.offer.promotion_three_sales %}
+                    <span class="d-block small pt-2 mb-2 mb-md-0 text-danger">
+                        <i class="fas fa-bookmark mr-2"></i>
+                        <span class="font-weight-bold mr-2">Акция:</span>
+                        <span>{{ item.offer.promotion_three_sales.text }}</span>
+                    </span>
+                    {% elif item.offer.promotion_min_present %}
+                    <span class="d-block small pt-2 mb-2 mb-md-0 text-danger">
+                        <i class="fas fa-bookmark mr-2"></i>
+                        <span class="font-weight-bold mr-2">Акция:</span>
+                        <span>{{ item.offer.promotion_min_present.text }}</span>
+                    </span>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}

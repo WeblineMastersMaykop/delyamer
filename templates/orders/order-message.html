@@ -20,10 +20,11 @@
 
     Товары в заказе:
     {% for item in order.items.all %}
-        {{ item.offer.product.name }} | {{ item.price }} руб. | {{ item.quantity }} шт. | {{ item.get_cost }} руб.
+        Название: {{ item.offer.product.name }} | Цена: {{ item.price }} руб. | {{ item.quantity }} шт. | Скидка: {{ item.discount }} | Итог по строке: {{ item.total_price_with_sale }} руб.
     {% endfor %}
 
-    Итог: {{ order.get_total_price }} руб.
+    Итог: {{ order.total_price }} руб.
+    Итог со скидкой: {{ order.total_price_with_sale }} руб.
     
     Ссылка на сайт: http://{{ domain }}
 {% endautoescape %}

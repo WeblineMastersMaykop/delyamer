@@ -134,23 +134,27 @@ class OrderDetailView(LoginRequiredMixin, View):
         order = get_object_or_404(Order.objects.select_related('delivery', 'user'), pk=order_id, user=request.user)
         order_items = order.items.all().select_related('review', 'offer', 'offer__product')
 
-        text = request.POST.get('text')
-        rating = request.POST.get('rating')
-        order_item_id = request.POST.get('order_item')
-        order_item = get_object_or_404(OrderItem, pk=order_item_id)
+        try:
+            text = request.POST.get('text')
+            rating = request.POST.get('rating')
+            order_item_id = request.POST.get('order_item')
+            order_item = get_object_or_404(OrderItem, pk=order_item_id)
 
-        review = Review.objects.create(
-            order_item=order_item,
-            rating=rating,
-            text=text
-        )
+            review = Review.objects.create(
+                order_item=order_item,
+                rating=rating,
+                text=text
+            )
 
-        context = {
-            'order': order,
-            'order_items': order_items,
-        }
+            context = {
+                'order': order,
+                'order_items': order_items,
+            }
+        except Exception as e:
+            print(e)
+            render(request, 'users/order-detail.html', context)
 
-        return render(request, 'users/order-detail.html', context)
+        return redirect(request.META.get('HTTP_REFERER'))
 
 
 class ProfileView(LoginRequiredMixin, View):

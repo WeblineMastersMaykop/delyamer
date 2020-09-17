@@ -63,64 +63,88 @@
                     <span class="bg-dark-light font-500 text-muted px-3 py-1">Нет в наличии</span>
                     {% endif %}
                 </div>
-
-                <div class="pb-3" id="ChangeOffer">
-                    <input type="hidden" name="product" value="{{ product.id }}">
-                    {% if colors %}
-                    <div class="d-flex mb-3">
-                        <span class="d-block smaller product-item-option-name">Цвет:</span>
-
-                        <div class="btn-group-sm btn-group-toggle product-color-select" id="product-color-select" data-toggle="buttons">
-                            {% for color in colors %}
-                            <label class="btn {% if main_offer.color == color %}active{% endif %}" style="background-color: {{ color.color }};">
-                                <input type="radio" name="color" value="{{ color.id }}" autocomplete="off" {% if main_offer.color == color %}checked{% endif %}>
-                            </label>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endif %}
-                    {% if sizes %}
-                    <div class="d-flex mb-3">
-                        <span class="d-block smaller pt-1 product-item-option-name">Размер:</span>
-
-                        <div class="btn-group-sm btn-group-toggle product-size-select" id="product-size-select" data-toggle="buttons">
-                            {% for size in sizes %}
-                            <label class="btn {% if main_offer.size == size %}active{% endif %}">
-                                <input type="radio" name="size" value="{{ size.id }}" autocomplete="off" {% if main_offer.size == size %}checked{% endif %}>
-                                {{ size }}
-                            </label>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endif %}
-                    {% if cups %}
-                    <div class="d-flex mb-3">
-                        <span class="d-block smaller pt-1 product-item-option-name">Чашка:</span>
-
-                        <div class="btn-group-sm btn-group-toggle product-size-select" id="product-cup-select" data-toggle="buttons">
-                            {% for cup in cups %}
-                            <label class="btn {% if main_offer.cup == cup %}active{% endif %}">
-                                <input type="radio" name="cup" value="{{ cup.id }}" autocomplete="off" {% if main_offer.cup == cup %}checked{% endif %}>
-                                {{ cup }}
-                            </label>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-
-                {% if main_offer.stock %}
-                <div class="d-md-flex align-items-center mb-4">
-                    {% if main_offer.id|stringformat:"i" in cart.cart %}
-                    <a href="{% url 'cart' %}" id="in-cart" class="btn btn-outline-dark px-xl-4 px-3 py-2 mr-4 mb-3">В корзине</a>
-                    <a href="#" id="add-to-cart" class="btn btn-primary px-xl-4 px-3 py-2 mr-4 mb-3 d-none"><img src="{% static 'images/shopping-bag.svg' %}" alt="" height="16" class="mr-3 mb-1">Добавить в корзину</a>
-                    {% else %}
-                    <a href="{% url 'cart' %}" id="in-cart" class="btn btn-outline-dark px-xl-4 px-3 py-2 mr-4 mb-3 d-none">В корзине</a>
-                    <a href="#" id="add-to-cart" class="btn btn-primary px-xl-4 px-3 py-2 mr-4 mb-3"><img src="{% static 'images/shopping-bag.svg' %}" alt="" height="16" class="mr-3 mb-1">Добавить в корзину</a>
-                    {% endif %}
-                    <a href="#" class="btn btn-outline-dark px-xl-5 px-3 py-2 mr-4 mb-3" data-toggle="modal" data-target="#OneClickOrderModal">Купить в 1 клик</a>
-                </div>
+                {% if main_offer.promotion_sale %}
+                <span class="d-block small pb-4 text-danger">
+                    <i class="fas fa-bookmark mr-2"></i>
+                    <span class="font-weight-bold mr-2">Акция:</span>
+                    <span id="promo-text">{{ main_offer.promotion_sale.text }}</span>
+                </span>
+                {% elif main_offer.promotion_sum_present %}
+                <span class="d-block small pb-4 text-danger">
+                    <i class="fas fa-bookmark mr-2"></i>
+                    <span class="font-weight-bold mr-2">Акция:</span>
+                    <span id="promo-text">{{ main_offer.promotion_sum_present.text }}</span>
+                </span>
+                {% elif main_offer.promotion_three_sales %}
+                <span class="d-block small pb-4 text-danger">
+                    <i class="fas fa-bookmark mr-2"></i>
+                    <span class="font-weight-bold mr-2">Акция:</span>
+                    <span id="promo-text">{{ main_offer.promotion_three_sales.text }}</span>
+                </span>
+                {% elif main_offer.promotion_min_present %}
+                <span class="d-block small pb-4 text-danger">
+                    <i class="fas fa-bookmark mr-2"></i>
+                    <span class="font-weight-bold mr-2">Акция:</span>
+                    <span id="promo-text">{{ main_offer.promotion_min_present.text }}</span>
+                </span>
                 {% endif %}
+                <form action="{% url 'add_to_cart' %}" method="GET">
+                    <div class="pb-3" id="ChangeOffer">
+                        <input type="hidden" name="product" value="{{ product.id }}">
+                        {% if colors %}
+                        <div class="d-flex mb-3">
+                            <span class="d-block smaller product-item-option-name">Цвет:</span>
+
+                            <div class="btn-group-sm btn-group-toggle product-color-select" id="product-color-select" data-toggle="buttons">
+                                {% for color in colors %}
+                                <label class="btn {% if main_offer.color == color %}active{% endif %}" style="background-color: {{ color.color }};">
+                                    <input type="radio" name="color" value="{{ color.id }}" autocomplete="off" {% if main_offer.color == color %}checked{% endif %}>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if sizes %}
+                        <div class="d-flex mb-3">
+                            <span class="d-block smaller pt-1 product-item-option-name">Размер:</span>
+
+                            <div class="btn-group-sm btn-group-toggle product-size-select" id="product-size-select" data-toggle="buttons">
+                                {% for size in sizes %}
+                                <label class="btn {% if main_offer.size == size %}active{% endif %}">
+                                    <input type="radio" name="size" value="{{ size.id }}" autocomplete="off" {% if main_offer.size == size %}checked{% endif %}>
+                                    {{ size }}
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if cups %}
+                        <div class="d-flex mb-3">
+                            <span class="d-block smaller pt-1 product-item-option-name">Чашка:</span>
+
+                            <div class="btn-group-sm btn-group-toggle product-size-select" id="product-cup-select" data-toggle="buttons">
+                                {% for cup in cups %}
+                                <label class="btn {% if main_offer.cup == cup %}active{% endif %}">
+                                    <input type="radio" name="cup" value="{{ cup.id }}" autocomplete="off" {% if main_offer.cup == cup %}checked{% endif %}>
+                                    {{ cup }}
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="{% if main_offer.stock %}d-md-flex{% else %}d-none{% endif %} align-items-center mb-4" id="product-buttons">
+                        {% if main_offer.id|stringformat:"i" in cart.cart %}
+                        <a href="{% url 'cart' %}" id="in-cart" class="btn btn-outline-dark px-xl-4 px-3 py-2 mr-4 mb-3">В корзине</a>
+                        <button id="add-to-cart" type="submit" class="btn btn-primary px-xl-4 px-3 py-2 mr-4 mb-3 d-none"><img src="{% static 'images/shopping-bag.svg' %}" alt="" height="16" class="mr-3 mb-1">Добавить в корзину</button>
+                        {% else %}
+                        <a href="{% url 'cart' %}" id="in-cart" class="btn btn-outline-dark px-xl-4 px-3 py-2 mr-4 mb-3 d-none">В корзине</a>
+                        <button id="add-to-cart" type="submit" class="btn btn-primary px-xl-4 px-3 py-2 mr-4 mb-3"><img src="{% static 'images/shopping-bag.svg' %}" alt="" height="16" class="mr-3 mb-1">Добавить в корзину</button>
+                        {% endif %}
+                        <a href="#" class="btn btn-outline-dark px-xl-5 px-3 py-2 mr-4 mb-3" data-toggle="modal" data-target="#OneClickOrderModal">Купить в 1 клик</a>
+                    </div>
+                </form>
                 <div class="row mb-3">
                     <div class="col-sm-6 mb-3 mb-sm-0">
                         {% if user.is_authenticated %}
@@ -136,7 +160,13 @@
                         <div class="d-flex mb-2 smaller">
                             <span class="mr-2 text-muted">На складе:</span>
                             <span id="offer-stock" class="font-500">
-                                {% if main_offer.stock > 10 %}Много{% else %}Мало{% endif %}
+                                {% if main_offer.stock > 10 %}
+                                Много
+                                {% elif main_offer.stock <= 0 %}
+                                0
+                                {% else %}
+                                Мало
+                                {% endif %}
                             </span>
                         </div>
 
@@ -229,7 +259,13 @@
                     </div>
 
                     {% if similar.sim_product.main_offer.promotion_sale %}
-                    <span class="badge badge-danger sale-badge">-{{ similar.sim_product.main_offer.promotion_sale.sale }}%</span>
+                    <span class="badge badge-danger sale-badge">{{ similar.sim_product.main_offer.promotion_sale.text }}</span>
+                    {% elif similar.sim_product.main_offer.promotion_sum_present %}
+                    <span class="badge badge-dark sale-badge">{{ similar.sim_product.main_offer.promotion_sum_present.text }}</span>
+                    {% elif similar.sim_product.main_offer.promotion_three_sales %}
+                    <span class="badge badge-dark sale-badge">{{ similar.sim_product.main_offer.promotion_three_sales.text }}</span>
+                    {% elif similar.sim_product.main_offer.promotion_min_present %}
+                    <span class="badge badge-dark sale-badge">{{ similar.sim_product.main_offer.promotion_min_present.text }}</span>
                     {% endif %}
                 </div>
 

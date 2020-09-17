@@ -50,37 +50,17 @@ def send_order_mail(request, order):
     email.send()
 
 
-def order_pay_response(request, order, total_price):
+def order_pay_response(request, order):
     auth_data = {
         'userName': 'delyamer-api',
         'password': 'delyamer',
         'orderNumber': order.id,
         'returnUrl': 'http://{}{}{}/'.format(get_current_site(request).domain, '/orders/done/', order.id),
         'failUrl': 'http://{}{}{}/'.format(get_current_site(request).domain, '/orders/fail/', order.id),
-        'amount': total_price * 100
+        'amount': order.total_price_with_sale * 100
     }
 
     r = requests.post('https://3dsec.sberbank.ru/payment/rest/register.do', data=auth_data)
     r_text = json.loads(r.text)
 
     return r_text.get('formUrl')
-
-
-def get_cart_info(cart):
-    cart.update_sales()
-    total_price = cart.get_total_price()
-    total_price_with_sale = cart.get_total_price_with_sales()
-    promocode_price = cart.get_promocode_price() if cart.promocode else 0
-
-    info = {
-        'total_price_with_sale': total_price_with_sale,
-        'total_price': total_price,
-        'total_sales': cart.total_sale + promocode_price,
-        'promotion_min_present': cart.promotion_min_present,
-        'promotion_sale': cart.promotion_sale,
-        'promotion_sum_present': cart.promotion_sum_present,
-        'promotion_three_sales': cart.promotion_three_sales,
-        'promocode': cart.promocode.code if cart.promocode else '',
-        'promocode_price': promocode_price,
-    }
-    return info

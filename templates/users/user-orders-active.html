@@ -58,6 +58,10 @@
                                 <span class="text-muted smaller ml-2">({{ order.delivery.info }})</span>
                                 {% endif %}
                             </span>
+                            <span class="d-block smaller font-500 mb-3">
+                                <span class="text-muted small text-nowrap mr-2">Трек-номер:</span>
+                                {% firstof order.track_number 'формируется' %}
+                            </span>
                             <span class="d-inline-block small px-2 py-1 rounded-lg bg-orange">{{ order.get_status_display }}</span>
                         </div>
 

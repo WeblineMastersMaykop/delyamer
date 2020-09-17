@@ -243,7 +243,13 @@
                                 </div>
 
                                 {% if offer.promotion_sale %}
-                                <span class="badge badge-danger sale-badge">-{{ offer.promotion_sale.sale }}%</span>
+                                <span class="badge badge-danger sale-badge">{{ offer.promotion_sale.text }}</span>
+                                {% elif offer.promotion_sum_present %}
+                                <span class="badge badge-dark sale-badge">{{ offer.promotion_sum_present.text }}</span>
+                                {% elif offer.promotion_three_sales %}
+                                <span class="badge badge-dark sale-badge">{{ offer.promotion_three_sales.text }}</span>
+                                {% elif offer.promotion_min_present %}
+                                <span class="badge badge-dark sale-badge">{{ offer.promotion_min_present.text }}</span>
                                 {% endif %}
                             </div>
 
@@ -276,13 +282,13 @@
                                             {% endif %}
                                         </span>
                                         {% endif %}
-                                        <!-- {% if offer.cup %}
+                                        {% if offer.cup %}
                                         <span class="d-block small text-muted">
                                             {% if offer.product.get_cups %}
                                                 Чашки: {{ offer.product.get_cups|join:", " }}
                                             {% endif %}
                                         </span>
-                                        {% endif %} -->
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
