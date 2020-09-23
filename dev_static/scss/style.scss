@@ -68,6 +68,16 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'Gotham Pro';
+    src: url('../fonts/GothamPro.eot');
+    src: url('../fonts/GothamPro.eot?#iefix') format('embedded-opentype'),
+        url('../fonts/GothamPro.woff') format('woff'),
+        url('../fonts/GothamPro.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 html {
     position: relative;
     min-height: 100%;
@@ -336,6 +346,15 @@ article {
     background-size: cover;
 }
 
+.btn-sber {
+    font-family: "Gotham Pro";
+
+    img {
+        margin-right: .75rem;
+        margin-top: -3px;
+    }
+}
+
 .whatsapp-link {
     padding-bottom: 1px;
 
@@ -415,7 +434,7 @@ article {
         &:hover {
             a {
                 background-color: $secondary;
-                box-shadow: 1rem 0 0 $secondary, 50, -1rem 0 0 $secondary, 50;
+                box-shadow: 1rem 0 0 $secondary, -1rem 0 0 $secondary;
                 transition: all .1s ease-out;
             }
         }
@@ -431,16 +450,19 @@ article {
         background-color: $light;
     }
 
-    .sale-badge {
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        padding: .5rem;
-    }
-
     .status-badges {
         position: absolute;
         top: 0;
+        left: 0;
+
+        .badge {
+            padding: .25rem .5rem;
+        }
+    }
+
+    .sale-badges {
+        position: absolute;
+        bottom: 0;
         left: 0;
 
         .badge {
@@ -1281,9 +1303,9 @@ ul.lz-menu {
         > {
             input {
                 position: absolute;
-//                top: -9999px;
+                //                top: -9999px;
                 clip: rect(0, 0, 0, 0);
-//                height: 0;
+                //                height: 0;
                 bottom: 0;
             }
 

@@ -22,11 +22,17 @@ class DeliveryMethod(models.Model):
 class Order(models.Model):
     STATUS_CHOICES = (
         ('new', 'Новый'),
+        ('paiding', 'Оплачивается'),
         ('paid', 'Оплачен'),
         ('error', 'Ошибка оплаты'),
         ('canceled', 'Отменен'),
         ('shipped', 'Отгружен'),
         ('finished', 'Завершён'),
+    )
+
+    PAY_CHOICES = (
+        ('credit', 'Кредит'),
+        ('online', 'Онлайн'),
     )
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='orders', verbose_name='Пользователь', null=True, blank=True)
@@ -44,6 +50,7 @@ class Order(models.Model):
     delivery = models.ForeignKey(DeliveryMethod, on_delete=models.SET_NULL, related_name='orders', verbose_name='Способ доставки', null=True, blank=True)
     track_number = models.CharField(max_length=50, verbose_name='Трек номер', null=True, blank=True)
     status = models.CharField(max_length=100, choices=STATUS_CHOICES, verbose_name='Статус', default='new')
+    pay_type = models.CharField(max_length=100, choices=PAY_CHOICES, verbose_name='Способ оплаты', null=True, blank=True)
     sync_1c = models.BooleanField('Выгружено в 1С', default=False)
 
     created = models.DateTimeField('Создано', auto_now_add=True)

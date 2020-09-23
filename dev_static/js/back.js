@@ -4,9 +4,26 @@ $(document).ready(function() {
     }
 
     $('#add-order').click(function() {
+        $(this).prop('disabled', true);
+
         order_form = $('#order-form');
         delivery = $('input[name="delivery"]');
+        pay_type = $('input[name="pay-type"]').val('online');
+
         order_form.append(delivery);
+        order_form.append(pay_type);
+        order_form.submit();
+    });
+
+    $('#add-order-credit').click(function() {
+        $(this).prop('disabled', true);
+
+        order_form = $('#order-form');
+        delivery = $('input[name="delivery"]');
+        pay_type = $('input[name="pay-type"]').val('credit');
+
+        order_form.append(delivery);
+        order_form.append(pay_type);
         order_form.submit();
     });
 

@@ -171,6 +171,6 @@ GRAPPELLI_ADMIN_TITLE = "DE'LYAMER"
 AUTH_USER_MODEL = 'users.User'
 
 CRONJOBS = [
-    ('0 2 * * *', 'core.offers_1c.sync_1c'),
-    ('0 1 * * *', 'core.orders_1c.sync_1c'),
+    ('30 */1 * * *', 'core.offers_1c.sync_1c'),
+    ('30 */2 * * *', 'core.orders_1c.sync_1c'),
 ]

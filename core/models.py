@@ -118,3 +118,18 @@ class Banner(models.Model):
 
     def __str__(self):
         return 'Баннер №{}'.format(self.id)
+
+
+class InstagramPhotos(models.Model):
+    image = models.ImageField(upload_to='images/instagram/', verbose_name='Изображение')
+    image_small = ImageSpecField(source='image',
+                                 processors=[ResizeToFill(261, 261)],
+                                 format='JPEG',
+                                 options={'quality': 90})
+
+    class Meta:
+        verbose_name = 'Изображение Instagram'
+        verbose_name_plural = 'Изображения Instagram'
+
+    def __str__(self):
+        return 'Изображение №{}'.format(self.id)

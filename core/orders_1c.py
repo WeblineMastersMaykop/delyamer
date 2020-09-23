@@ -20,7 +20,7 @@ def sync_1c():
     current_datetime = timezone.now()
     path = 'C:\\Users\\gurge\\Desktop\\sync\\orders'
 
-    old_orders = Order.objects.filter(status__in=('new', 'error'), created__lt=current_datetime-timedelta(days=1))
+    old_orders = Order.objects.filter(status__in=('new', 'error'), created__lt=current_datetime-timedelta(days=1)).exclude(pay_type='credit')
     old_orders.update(status='canceled')
 
     orders = Order.objects.filter(sync_1c=False, status='paid')
@@ -96,7 +96,7 @@ def sync_1c():
         with open(os.path.join(path, file_name), 'w', encoding='utf=8') as f:
             f.write(pretty_xml)
 
-        # orders.update(sync_1c=True)
+        orders.update(sync_1c=True)
 
     logger.info('КОНЕЦ СКРИПТА\n')
 

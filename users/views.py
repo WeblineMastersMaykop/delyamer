@@ -283,9 +283,10 @@ class DeleteUserView(View):
 class CustomPasswordResetView(PasswordResetView):
     form_class = CustomPasswordResetForm
     template_name = 'users/password-reset.html'
-    mail_from =  MailFromString.objects.first()
-    if mail_from:
-        from_email = mail_from.host_user
+    try:
+        from_email = MailFromString.objects.first().host_user
+    except Exception as e:
+        print(e)
 
 
 class CustomPasswordResetDoneView(PasswordResetDoneView):

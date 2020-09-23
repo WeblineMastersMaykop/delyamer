@@ -116,10 +116,6 @@ def sync_1c():
                     offers = offers.exclude(product=product, size=size, color=color, cup=cup)
 
             # Варианты товаров, которых нет в выгрузке делаю неактивными
-            # for offer in offers:
-            #     offer.is_active = False
-
-            # Offer.objects.bulk_update(offers, ['is_active'])
             offers.update(is_active=False)
 
         # Товары, которых нет в выгрузке делаю неактивными

@@ -247,7 +247,11 @@
 
                     <div class="d-flex justify-content-between align-items-center smaller mb-4"><span class="h6 mb-0 mr-3">Итого:</span><span><span class="number h5 mb-0 mr-1" id="total_price_with_sale">{{ cart.get_total_price }}</span><span class="smallest">₽</span></span></div>
                     {% if cart|length %}
-                    <button title="" class="btn btn-primary w-100" id="add-order">Оплатить заказ<i class="fas fa-angle-right fa-xs ml-2"></i></button>
+                    <input type="hidden" name="pay-type">
+                    <button class="btn btn-primary w-100 py-2 mb-3" id="add-order">Оплатить заказ<i class="fas fa-angle-right fa-xs ml-2"></i></button>
+                    {% endif %}
+                    {% if cart.get_total_price >= 3000 and cart.get_total_price <= 300000 %}
+                    <button class="btn btn-sber w-100 py-2" id="add-order-credit"><img src="{% static 'images/sber-btn.svg' %}" alt="" height="18">Купить в кредит</button>
                     {% endif %}
                     <p class="text-muted smallest border-top mb-0 mt-4 pt-3">Нажимая кнопку "Оплатить зааказ", вы даёте согласие на <a href="/pages/personal-data/" target="_blank">обработку персональных данных</a></p>
                 </div>

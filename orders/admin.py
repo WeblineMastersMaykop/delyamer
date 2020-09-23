@@ -22,8 +22,8 @@ class ReviewInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'phone', 'delivery', 'status', 'total_price', 'total_price_with_sale', 'sync_1c', 'track_number', 'created', 'updated')
-    list_filter = ('status', 'delivery')
+    list_display = ('full_name', 'phone', 'delivery', 'status', 'pay_type', 'total_price', 'total_price_with_sale', 'sync_1c', 'track_number', 'created', 'updated')
+    list_filter = ('status', 'delivery', 'pay_type')
     list_editable = ('sync_1c',)
     search_fields = ('full_name', 'user__full_name', 'user__username')
     inlines = (OrderItemInline,)

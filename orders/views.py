@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.http import JsonResponse
-from core.utils import send_order_mail, order_pay_response
+from core.utils import send_order_mail, order_pay_response, order_pay_credit
 from core.models import MailToString
 from products.models import Offer, Product
 from orders.models import Order, OrderItem, DeliveryMethod
@@ -135,6 +135,7 @@ class OrderOneClickAddView(View):
 class OrderAddView(View):
     def post(self, request):
         order_form = OrderForm(request.POST)
+        pay_type = request.POST.get('pay-type')
 
         cart = Cart(request)
         user = request.user
@@ -183,13 +184,17 @@ class OrderAddView(View):
             order.total_price = cart.offers_price + cart.delivery[1]
             order.total_price_with_sale = cart.get_total_price()
             order.user = user if user.is_authenticated else None
+            order.pay_type = pay_type
             order.save()
 
             OrderItem.objects.bulk_create(order_items)
 
             Offer.objects.bulk_update(cart.offers, ['stock'])
 
-            form_url = order_pay_response(request, order)
+            if pay_type == 'online':
+                form_url = order_pay_response(request, order)
+            elif pay_type == 'credit':
+                form_url = order_pay_credit(request, order)
             return redirect(form_url)
 
         delivery_methods = DeliveryMethod.objects.all()
@@ -204,8 +209,9 @@ class OrderAddView(View):
 class OrderDoneView(View):
     def get(self, request, order_id):
         order = Order.objects.get(pk=order_id)
-        order.status = 'paid'
-        order.save()
+        if order.pay_type == 'online':
+            order.status = 'paid'
+            order.save()
 
         cart = Cart(request)
         cart.clear()

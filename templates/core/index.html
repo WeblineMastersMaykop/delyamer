@@ -341,59 +341,14 @@
                 <h2 class="h4 font-weight-normal mb-0 mr-4">Мы в Instagram</h2>
                 <a href="https://www.instagram.com/delyamer/" title="" class="d-block smaller text-decoration-none font-weight-bold">@delyamer</a>
             </div>
-            <!-- <div class="row row-last-4">
-                <script src="https://apps.elfsight.com/p/platform.js" defer></script>
-                <div class="elfsight-app-2f5832ba-25e7-470d-9cb9-ec3e29de87ab"></div>
-            </div> -->
-
             <div class="row row-last-4">
+                {% for item in insta_photos %}
                 <div class="col-md-3 col-6">
                     <div class="instagram-post">
-                        <div class="bg-img" style="background-image: url({%  static 'data-images/instagram-post-1.jpg' %})"></div>
+                        <div class="bg-img" style="background-image: url({{ item.image_small.url }})"></div>
                     </div>
                 </div>
-
-                <div class="col-md-3 col-6">
-                    <div class="instagram-post">
-                        <div class="bg-img" style="background-image: url({%  static 'data-images/instagram-post-2.jpg' %})"></div>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-6">
-                    <div class="instagram-post">
-                        <div class="bg-img" style="background-image: url({%  static 'data-images/instagram-post-3.jpg' %})"></div>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-6">
-                    <div class="instagram-post">
-                        <div class="bg-img" style="background-image: url({%  static 'data-images/instagram-post-4.jpg' %})"></div>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-6">
-                    <div class="instagram-post">
-                        <div class="bg-img" style="background-image: url({%  static 'data-images/instagram-post-5.jpg' %})"></div>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-6">
-                    <div class="instagram-post">
-                        <div class="bg-img" style="background-image: url({%  static 'data-images/instagram-post-6.jpg' %})"></div>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-6">
-                    <div class="instagram-post">
-                        <div class="bg-img" style="background-image: url({%  static 'data-images/instagram-post-7.jpg' %})"></div>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-6">
-                    <div class="instagram-post">
-                        <div class="bg-img" style="background-image: url({%  static 'data-images/instagram-post-8.jpg' %})"></div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </section>
