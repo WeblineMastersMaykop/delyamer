@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
+import os
 import os.path
 import logging
 from datetime import datetime, timedelta
@@ -10,15 +11,18 @@ from orders.models import Order
 def sync_1c():
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
-    # logger_path = os.path.join(os.path.dirname(__file__), 'orders_1c.log')
-    logger_path = 'E:\\Goga\\PycharmProjects\\delyamer\\core\\orders_1c.log'
+    logger_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'logs', 'orders_1c.log')
+    #logger_path = 'E:\\Goga\\PycharmProjects\\delyamer\\core\\orders_1c.log'
     handler = logging.FileHandler(logger_path, 'a', 'utf-8')
     handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s', datefmt='%d.%m.%y %H:%M:%S'))
     logger.addHandler(handler)
     logger.info('НАЧАЛО СКРИПТА')
 
     current_datetime = timezone.now()
-    path = 'C:\\Users\\gurge\\Desktop\\sync\\orders'
+    #path = 'C:\\Users\\gurge\\Desktop\\sync\\orders'
+    path = '/home/web/sites/delyamer/Yandex.Disk/Web/orders'
+    os.system('yandex-disk sync')
+    logger.info('Yandex Disk синхронизирован')
 
     old_orders = Order.objects.filter(status__in=('new', 'error'), created__lt=current_datetime-timedelta(days=1)).exclude(pay_type='credit')
     old_orders.update(status='canceled')
@@ -102,4 +106,4 @@ def sync_1c():
     logger.info('КОНЕЦ СКРИПТА\n')
 
 
-sync_1c()
+#sync_1c()

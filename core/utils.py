@@ -61,9 +61,11 @@ def order_pay_response(request, order):
         'failUrl': 'http://{}{}{}/'.format(get_current_site(request).domain, '/orders/fail/', order.id),
         'amount': order.total_price_with_sale * 100
     }
+    print(order_pay_response)
 
     r = requests.post('https://3dsec.sberbank.ru/payment/rest/register.do', data=data)
     r_text = json.loads(r.text)
+    print(r_text)
 
     return r_text.get('formUrl')
 
