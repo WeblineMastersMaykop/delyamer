@@ -34,7 +34,7 @@
         </ul>
 
         <div class="row">
-            {% for order in request.user.get_active_orders %}
+            {% for order in page_object.object_list %}
             <div class="col-lg-6">
                 <div class="profile-order-item position-relative bg-white mb-4 p-md-4 p-3 mh-3">
                     <div class="border-bottom mb-3 pb-3">
@@ -53,10 +53,7 @@
                     <div class="row">
                         <div class="col-md-5">
                             <span class="d-block smaller mb-3">
-                                {{ order.delivery.name }}
-                                {% if order.delivery.info %}
-                                <span class="text-muted smaller ml-2">({{ order.delivery.info }})</span>
-                                {% endif %}
+                                {{ order.get_delivery_display }}
                             </span>
                             <span class="d-block smaller font-500 mb-3">
                                 <span class="text-muted small text-nowrap mr-2">Трек-номер:</span>
@@ -79,7 +76,7 @@
             </div>
             {% endfor %}
         </div>
-
+        {% include '__pagination.html' %}
     </div>
 </main>
 {% endblock %}

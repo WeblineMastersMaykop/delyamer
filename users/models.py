@@ -18,10 +18,10 @@ class User(AbstractUser):
         verbose_name_plural = 'Все пользователи'
 
     def get_active_orders(self):
-        return self.orders.all().exclude(status='finished').select_related('delivery')
+        return self.orders.all().exclude(status='finished')
 
     def get_finished_orders(self):
-        return self.orders.filter(status='finished').select_related('delivery')
+        return self.orders.filter(status='finished')
 
     def get_favorites_offers(self):
         return [favorite.offer.id for favorite in self.favorites.select_related('offer').all()]

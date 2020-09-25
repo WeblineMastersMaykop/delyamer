@@ -7,16 +7,20 @@ User = get_user_model()
 
 
 class DeliveryMethod(models.Model):
-    name = models.CharField('Название', max_length=100)
+    DELIVERY_CHOICES = (
+        ('pochta', 'Почта России'),
+    )
+
+    name = models.CharField(max_length=100, choices=DELIVERY_CHOICES, verbose_name='Тип доставки', default='pochta')
     info = models.CharField('Доп. информация', max_length=100, null=True, blank=True)
-    price = models.PositiveIntegerField('Цена', null=True, blank=True)
+    price = models.PositiveIntegerField('Цена')
 
     class Meta:
-        verbose_name = 'Способ доставки'
-        verbose_name_plural = 'Способы доставки'
+        verbose_name = 'Цена доставки'
+        verbose_name_plural = 'Цены на доставку'
 
     def __str__(self):
-        return '{}{}'.format(self.name, ' -- ' + self.info if self.info else '')
+        return self.get_name_display()
 
 
 class Order(models.Model):
@@ -35,6 +39,11 @@ class Order(models.Model):
         ('online', 'Онлайн'),
     )
 
+    DELIVERY_CHOICES = (
+        ('cdek', 'СДЭК'),
+        ('pochta', 'Почта России'),
+    )
+
     user = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='orders', verbose_name='Пользователь', null=True, blank=True)
     full_name = models.CharField('ФИО', max_length=250)
     phone = models.CharField('Телефон', max_length=20)
@@ -47,7 +56,8 @@ class Order(models.Model):
 
     total_price = models.PositiveIntegerField('Итоговая стоимость', default=0)
     total_price_with_sale = models.PositiveIntegerField('Итоговая стоимость со скидкой', default=0)
-    delivery = models.ForeignKey(DeliveryMethod, on_delete=models.SET_NULL, related_name='orders', verbose_name='Способ доставки', null=True, blank=True)
+    delivery = models.CharField(max_length=100, choices=DELIVERY_CHOICES, verbose_name='Тип доставки', default='cdek', null=True, blank=True)
+    delivery_price = models.PositiveIntegerField(verbose_name='Сумма доставки', null=True, blank=True)
     track_number = models.CharField(max_length=50, verbose_name='Трек номер', null=True, blank=True)
     status = models.CharField(max_length=100, choices=STATUS_CHOICES, verbose_name='Статус', default='new')
     pay_type = models.CharField(max_length=100, choices=PAY_CHOICES, verbose_name='Способ оплаты', null=True, blank=True)

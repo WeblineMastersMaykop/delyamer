@@ -183,13 +183,16 @@
                         </div>
                     </form>
                     <form action="{% url 'change_delivey' %}#delivery" method="GET" id="delivery">
-                        {% for item in delivery_methods %}
-                            <div class="custom-control custom-radio mb-2">
-                                <input data-delivery-id="{{ item.id }}" type="radio" id="Radio{{ item.id }}" name="delivery" value="{{ item.id }}" class="custom-control-input change-delivery" {% if item.id == cart.delivery|first %}checked=""{% endif %}>
-                                <label class="custom-control-label" for="Radio{{ item.id }}">{{ item.name }}<span class="text-muted smaller ml-2">{% if item.info %}({{ item.info }}){% endif %}</span><span class="smallest text-muted ml-2">+{{ item.price }} ₽</span></label>
-                            </div>
-                        {% endfor %}
+                        <div class="custom-control custom-radio mb-2">
+                            <input type="radio" id="Radio1" name="delivery" value="cdek" class="custom-control-input change-delivery" required {% if cart.delivery.method == 'cdek' %}checked=""{% endif %}>
+                            <label class="custom-control-label" for="Radio1">СДЭК<span class="text-muted smaller ml-2"></span><span class="smallest text-muted ml-2"></span></label>
+                        </div>
+                        <div class="custom-control custom-radio mb-2">
+                            <input type="radio" id="Radio2" name="delivery" value="pochta" class="custom-control-input change-delivery" required {% if cart.delivery.method == 'pochta' %}checked=""{% endif %}>
+                            <label class="custom-control-label" for="Radio2">Почта России<span class="text-muted smaller ml-2"></span><span class="smallest text-muted ml-2"></span></label>
+                        </div>
                     </form>
+                    <div id="delivery-error"></div>
                 </div>
             </div>
             <div class="col-lg-4">
@@ -221,7 +224,7 @@
 
                     <div class="mb-3">
                         <div class="d-flex justify-content-between smaller mb-1"><span class="font-500 mr-3">Товары на сумму:</span><span><span class="number font-500 mr-1" id="total_price">{{ cart.offers_price }}</span><span class="smallest">₽</span></span></div>
-                        <div class="d-flex justify-content-between smaller mb-1"><span class="font-500 mr-3">Доставка:</span><span><span class="number font-500 mr-1" id="delivery_price">{{ cart.delivery.1 }}</span><span class="smallest">₽</span></span></div>
+                        <div class="d-flex justify-content-between smaller mb-1"><span class="font-500 mr-3">Доставка:</span><span><span class="number font-500 mr-1" id="delivery_price">{{ cart.delivery.price }}</span><span class="smallest">₽</span></span></div>
                     </div>
                     {% if cart.sum_sale %}
                     <div class="d-flex justify-content-between smaller mb-1"><span class="mr-3">Скидка:</span><span class="text-danger"><span class="number mr-1" id="promotion_sale">-{{ cart.sum_sale }}</span><span class="smallest">₽</span></span></div>
@@ -246,11 +249,11 @@
                     {% endif %}
 
                     <div class="d-flex justify-content-between align-items-center smaller mb-4"><span class="h6 mb-0 mr-3">Итого:</span><span><span class="number h5 mb-0 mr-1" id="total_price_with_sale">{{ cart.get_total_price }}</span><span class="smallest">₽</span></span></div>
-                    {% if cart|length %}
+                    {% if cart|length and cart.delivery.price %}
                     <input type="hidden" name="pay-type">
                     <button class="btn btn-primary w-100 py-2 mb-3" id="add-order">Оплатить заказ<i class="fas fa-angle-right fa-xs ml-2"></i></button>
                     {% endif %}
-                    {% if cart.get_total_price >= 3000 and cart.get_total_price <= 300000 %}
+                    {% if cart.get_total_price >= 3000 and cart.get_total_price <= 300000 and cart.delivery.price %}
                     <button class="btn btn-sber w-100 py-2" id="add-order-credit"><img src="{% static 'images/sber-btn.svg' %}" alt="" height="18">Купить в кредит</button>
                     {% endif %}
                     <p class="text-muted smallest border-top mb-0 mt-4 pt-3">Нажимая кнопку "Оплатить зааказ", вы даёте согласие на <a href="/pages/personal-data/" target="_blank">обработку персональных данных</a></p>

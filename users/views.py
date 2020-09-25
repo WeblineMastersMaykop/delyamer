@@ -12,6 +12,7 @@ from core.utils import send_mail
 from core.tokens import change_email_token, account_activation_token
 from core.models import MailFromString
 from orders.models import Order, Review, OrderItem
+from core.paginator import pagination
 
 
 User = get_user_model()
@@ -106,21 +107,43 @@ class UserActiveOdersView(LoginRequiredMixin, View):
 
     def get(self, request):
         user = request.user
-        return render(request, 'users/user-orders-active.html')
+        orders = user.get_active_orders()
+
+        page_number = request.GET.get('page', 1)
+        pag_res = pagination(orders, page_number, request.GET.copy())
+
+        context = {
+            'page_object': pag_res['page'],
+            'is_paginated': pag_res['is_paginated'],
+            'next_url': pag_res['next_url'],
+            'prev_url': pag_res['prev_url'],
+        }
+        return render(request, 'users/user-orders-active.html', context)
 
 
 class UserFinishedOdersView(LoginRequiredMixin, View):
     login_url = '/'
 
     def get(self, request):
-        return render(request, 'users/user-orders-finished.html')
+        user = request.user
+        orders = user.get_finished_orders()
+        page_number = request.GET.get('page', 1)
+        pag_res = pagination(orders, page_number, request.GET.copy())
+
+        context = {
+            'page_object': pag_res['page'],
+            'is_paginated': pag_res['is_paginated'],
+            'next_url': pag_res['next_url'],
+            'prev_url': pag_res['prev_url'],
+        }
+        return render(request, 'users/user-orders-finished.html', context)
 
 
 class OrderDetailView(LoginRequiredMixin, View):
     login_url = '/'
 
     def get(self, request, order_id):
-        order = get_object_or_404(Order.objects.select_related('delivery', 'user'), pk=order_id, user=request.user)
+        order = get_object_or_404(Order.objects.select_related('user'), pk=order_id, user=request.user)
         order_items = order.items.all().select_related('review', 'offer', 'offer__product')
 
         context = {
@@ -131,7 +154,7 @@ class OrderDetailView(LoginRequiredMixin, View):
         return render(request, 'users/order-detail.html', context)
 
     def post(self, request, order_id):
-        order = get_object_or_404(Order.objects.select_related('delivery', 'user'), pk=order_id, user=request.user)
+        order = get_object_or_404(Order.objects.select_related('user'), pk=order_id, user=request.user)
         order_items = order.items.all().select_related('review', 'offer', 'offer__product')
 
         try:

@@ -3,6 +3,13 @@ $(document).ready(function() {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     }
 
+    $('.search-input').on('keypress', function(e){
+        console.log(e.which);
+        if(e.which === 13) {
+            $(this).parents('.search-box').submit();
+        }
+    });
+
     $('#add-order').click(function() {
         $(this).prop('disabled', true);
 
@@ -28,7 +35,10 @@ $(document).ready(function() {
     });
 
     $('input[name="delivery"]').change(function() {
-        $(this).parents('form').submit();
+        form = $(this).parents('form');
+        postcode = $('#id_postcode');
+        postcode.clone().addClass('d-none').appendTo(form);
+        form.submit();
     });
 
     $('#OneClickOrderModal button[type="submit"]').click(function(e) {

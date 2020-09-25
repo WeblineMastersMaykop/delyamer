@@ -37,7 +37,7 @@
                 <i class="fas fa-map-marker-alt"></i>
                 <div>
                     <span class="text-muted small d-block mb-1">Доставка:</span>
-                    <span class="d-block mb-1">{{ order.delivery.name }}<span class="text-muted smaller ml-2">{% if order.delivery.info %}({{ order.delivery.info }}){% endif %}</span></span>
+                    <span class="d-block mb-1">{{ order.get_delivery_display }}<span class="text-muted smaller ml-2"></span></span>
                     <span class="smaller">{{ order.address }}</span>
                 </div>
             </div>

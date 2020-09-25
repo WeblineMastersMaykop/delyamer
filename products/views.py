@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import View
+from django.db.models import Q
 from django.http import JsonResponse
 from django.db.models import F, Case, When, Value, BooleanField
 from django.db.models.functions import Coalesce
@@ -27,6 +28,7 @@ class CategoriesView(View):
 
 class ProductsView(View):
     def get(self, request):
+        query = request.GET.get('query')
         category_slug = request.GET.get('category')
         is_new = request.GET.get('is_new')
         in_sale = request.GET.get('in_sale')
@@ -52,6 +54,13 @@ class ProductsView(View):
             offers = Offer.objects.filter(product__is_active=True, is_active=True).select_related(
                 'product', 'promotion_sale', 'color', 'size', 'cup').annotate(
                 price_with_sale=F('product__price') * (100 - Coalesce(F('promotion_sale__sale'), 0)) / 100)
+
+        if query:
+            offers = offers.filter(
+                Q(product__name__icontains=query) |
+                Q(product__vendor_code__icontains=query) |
+                Q(product__category__name__icontains=query)
+            ).distinct()
 
         try:
             is_bs = int(is_bs)
@@ -339,3 +348,17 @@ class AddFavoriteView(LoginRequiredMixin, View):
         )
 
         return JsonResponse({})
+
+
+class ProductsJsonView(View):
+    def get(self, request):
+        query = request.GET.get('query', '')
+
+        products = Product.objects.filter(
+            Q(name__icontains=query) |
+            Q(vendor_code__icontains=query) |
+            Q(category__name__icontains=query)
+        ).distinct()
+        search_list = [item.name for item in products]
+
+        return JsonResponse(search_list, safe=False)

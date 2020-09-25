@@ -26,10 +26,14 @@
                 <div class="carousel-item bg-img {% if forloop.counter0 == 0 %}active{% endif %}" {% if slide.image_big %}style="background-image: url({{ slide.image_big.url }})"{% endif %}>
                     <div class="carousel-caption d-flex align-items-end p-4 p-md-5">
                         <div class="px-3">
+                            {% if slide.main_text %}
                             <a href="{% firstof slide.url '#' %}" title="" class="stretched-link">{{ slide.main_text|safe }}</a>
+                            {% endif %}
+                            {% if slide.sub_text %}
                             <div class="pt-4">
                                 <p>{{ slide.sub_text|safe }}</p>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

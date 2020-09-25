@@ -1,10 +1,10 @@
 from django.contrib import admin
-from orders.models import DeliveryMethod, Order, OrderItem, Review
+from orders.models import Order, OrderItem, Review, DeliveryMethod
 
 
 @admin.register(DeliveryMethod)
 class DeliveryMethodAdmin(admin.ModelAdmin):
-    list_display = ('name', 'info', 'price')
+    list_display = ('name', 'price')
 
 
 class OrderItemInline(admin.TabularInline):
@@ -22,7 +22,7 @@ class ReviewInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'phone', 'delivery', 'status', 'pay_type', 'total_price', 'total_price_with_sale', 'sync_1c', 'track_number', 'created', 'updated')
+    list_display = ('full_name', 'phone', 'delivery', 'delivery_price', 'status', 'pay_type', 'total_price', 'total_price_with_sale', 'sync_1c', 'track_number', 'created', 'updated')
     list_filter = ('status', 'delivery', 'pay_type')
     list_editable = ('sync_1c',)
     search_fields = ('full_name', 'user__full_name', 'user__username')

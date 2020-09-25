@@ -212,11 +212,15 @@ $(document).ready(function(){
     var products = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.whitespace,
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: '../search-data.json'
+        prefetch: '/catalogue/products.json/?query=%QUERY',
+        remote: {
+            url: '/catalogue/products.json/?query=%QUERY',
+            wildcard: '%QUERY'
+        }
     });
 
     $('.typeahead').typeahead(null, {
-        name: 'search-data',
+        name: 'products',
         source: products
     });
 });

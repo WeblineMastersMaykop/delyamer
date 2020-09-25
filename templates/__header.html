@@ -134,9 +134,9 @@
             {% endif %}
             <a href="{% url 'cart' %}" title="" class="nav-link badged mr-5 px-2 py-2"><img src="{% static 'images/shopping-bag.svg' %}" alt="" height="18"><span class="badge badge-pill badge-primary" id="cart-len">{{ cart|length }}</span></a>
 
-            <form action="search.html" class="search-box">
+            <form action="{% url 'products' %}" class="search-box" method="GET">
                 <div class="">
-                    <input type="text" class="text search-input typeahead" placeholder="Найти..." />
+                    <input type="text" name="query" class="text search-input typeahead" placeholder="Найти..." />
                 </div>
             </form>
         </div>

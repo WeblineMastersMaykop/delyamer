@@ -38,7 +38,8 @@ def sync_1c():
                     'Date': order.created.strftime('%d:%m:%Y %H:%M:%S'),
                     'Amount': str(order.total_price_with_sale),
                     'AmountWithSale': str(order.total_price_with_sale),
-                    'Delivery': str(order.delivery) if order.delivery else '',
+                    'Delivery': str(order.get_delivery_display()) if order.delivery else '',
+                    'DeliveryPrice': str(order.delivery_price),
                     'TrackNumber': order.track_number or '',
                 }
             )

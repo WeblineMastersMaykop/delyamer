@@ -46,6 +46,9 @@
                         {% if 'ordering' in request.GET.urlencode %}
                         <input type="hidden" name="ordering" value="{{ request.GET.ordering }}">
                         {% endif %}
+                        {% if 'query' in request.GET.urlencode %}
+                        <input type="hidden" name="query" value="{{ request.GET.query }}">
+                        {% endif %}
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Цена</h6>
                             <div class="filter-box filter-range">
@@ -164,6 +167,9 @@
                         {% endif %}
                         {% if 'ordering' in request.GET.urlencode %}
                         <input type="hidden" name="ordering" value="{{ request.GET.ordering }}">
+                        {% endif %}
+                        {% if 'query' in request.GET.urlencode %}
+                        <input type="hidden" name="query" value="{{ request.GET.query }}">
                         {% endif %}
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Цена</h6>

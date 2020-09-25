@@ -1,7 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.http import JsonResponse
-from core.utils import send_order_mail, order_pay_response, order_pay_credit
+from core.utils import (
+    send_order_mail, order_pay_response, order_pay_credit,
+    calc_cdeck_delivery
+)
 from core.models import MailToString
 from products.models import Offer, Product
 from orders.models import Order, OrderItem, DeliveryMethod
@@ -11,12 +14,16 @@ from core.cart import Cart
 
 class CartView(View):
     def get(self, request):
-        delivery_methods = DeliveryMethod.objects.all()
+        cart = Cart(request)
+        postcode = cart.delivery['postcode']
+
         user = request.user
-        order_form = OrderForm(instance=user if user.is_authenticated else None)
+        if user.is_authenticated:
+            order_form = OrderForm(initial={'postcode': postcode or user.postcode}, instance=user)
+        else:
+            order_form = OrderForm(initial={'postcode': postcode})
 
         context = {
-            'delivery_methods': delivery_methods,
             'order_form': order_form,
         }
         return render(request, 'orders/cart.html', context)
@@ -25,10 +32,20 @@ class CartView(View):
 class ChangeDeliveryView(View):
     def get(self, request):
         cart = Cart(request)
+        delivery_method = request.GET.get('delivery')
+        postcode = request.GET.get('postcode')
 
-        delivery_id = request.GET.get('delivery')
-        delivery = get_object_or_404(DeliveryMethod, pk=delivery_id)
-        cart.change_delivery(delivery)
+        price = None
+        if delivery_method == 'cdek':
+            price = calc_cdeck_delivery(postcode)
+        elif delivery_method == 'pochta':
+            price = DeliveryMethod.objects.filter(name='pochta').first().price
+
+        if price is None:
+            cart.change_delivery(None, 0, None)
+            return redirect('cart')
+
+        cart.change_delivery(delivery_method, price, postcode)
         return redirect('cart')
 
 
@@ -181,7 +198,8 @@ class OrderAddView(View):
 
                 offer.stock -= int(item['quantity'])
 
-            order.total_price = cart.offers_price + cart.delivery[1]
+            order.delivery_price = int(cart.delivery['price'])
+            order.total_price = cart.offers_price + int(cart.delivery['price'])
             order.total_price_with_sale = cart.get_total_price()
             order.user = user if user.is_authenticated else None
             order.pay_type = pay_type
@@ -197,10 +215,7 @@ class OrderAddView(View):
                 form_url = order_pay_credit(request, order)
             return redirect(form_url)
 
-        delivery_methods = DeliveryMethod.objects.all()
-
         context = {
-            'delivery_methods': delivery_methods,
             'order_form': order_form,
         }
         return render(request, 'orders/cart.html', context)

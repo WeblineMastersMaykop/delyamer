@@ -91,8 +91,8 @@ def order_pay_credit(request, order):
             "value": 1,
             "measure": "шт."
         },
-        "itemAmount": order.delivery.price * 100,
-        "itemPrice": order.delivery.price * 100,
+        "itemAmount": order.delivery_price * 100,
+        "itemPrice": order.delivery_price * 100,
         "itemCode": 0,
     })
 
@@ -126,33 +126,33 @@ def order_pay_credit(request, order):
     payload_str = payload_str.replace("'", '"')
 
     r = requests.post("https://3dsec.sberbank.ru/sbercredit/register.do?{}".format(payload_str))
-    print(payload_str)
-    print(r.request.url)
     r_text = json.loads(r.text)
-    print(r_text)
 
     return r_text.get('formUrl')
 
 
-def calc_delivery():
+def calc_cdeck_delivery(receiver_postcode):
     data = {
         'version': '1.0',
         'dateExecute': date.today().strftime('%Y-%m-%d'),
         'authLogin': 'fPFWQzTQvGqRPLRkSIU2HOqFd7MnRPMZ',
         'secure': 'bgnQbfsRPJaUAGraihgtbc6j07PJJO60',
         'senderCityPostCode': '350000',
-        'receiverCityPostCode': '353900',
-        'tariffId': '137',
-        "goods": [
+        'receiverCityPostCode': receiver_postcode,
+        'tariffId': 137,
+        # 'tariffList': [
+        #     {'id': 136},
+        #     {'id': 137},
+        #     {'id': 139},
+        #     {'id': 233},
+        #     {'id': 234},
+        # ],
+        'goods': [
             {
-                "weight":"0.3",
-                "length":"10",
-                "width":"7",
-                "height":"5"
-            },
-            {
-                "weight":"0.1",
-                "volume":"0.1"
+                'weight': '0.5',
+                'length': '30',
+                'width': '20',
+                'height': '10'
             }
         ]
     }
@@ -160,10 +160,13 @@ def calc_delivery():
     r = requests.post('http://api.cdek.ru/calculator/calculate_price_by_json.php', json=data)
     r_text = json.loads(r.text)
 
-    print(r_text)
+    result = None
+    try:
+        result = r_text['result']['price']
+    except Exception as e:
+        print(e)
 
-
-# calc_delivery()
+    return result
 
 
 def get_insta_posts():

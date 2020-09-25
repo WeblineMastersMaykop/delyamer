@@ -1,5 +1,9 @@
 from django.urls import path
-from products.views import CategoriesView, ProductsView, ProductView, ChangeOfferView, FavoriteProductsView, RemoveFavoriteView, AddFavoriteView
+from products.views import (
+    CategoriesView, ProductsView, ProductView, ChangeOfferView,
+    FavoriteProductsView, RemoveFavoriteView, AddFavoriteView,
+    ProductsJsonView
+)
 
 
 urlpatterns = [
@@ -10,4 +14,5 @@ urlpatterns = [
     path('remove-favorite/', RemoveFavoriteView.as_view(), name='remove_favorite'),
     path('products/<product_slug>/', ProductView.as_view(), name='product'),
     path('change-offer/', ChangeOfferView.as_view(), name='change_offer'),
+    path('products.json/', ProductsJsonView.as_view(), name='products_json'),
 ]

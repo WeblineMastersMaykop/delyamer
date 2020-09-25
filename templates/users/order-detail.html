@@ -155,10 +155,7 @@
                 <div>
                     <span class="text-muted small d-block mb-1">Доставка:</span>
                     <span class="d-block mb-1">
-                        {% firstof order.delivery.name 'Не указано' %}
-                        {% if order.delivery.info %}
-                        <span class="text-muted smaller ml-2">({{ order.delivery.info }})</span>
-                        {% endif %}
+                        {% firstof order.get_delivery_display 'Не указано' %}
                     </span>
                     <span class="smaller">{% firstof order.address 'Не указано' %}</span>
                 </div>

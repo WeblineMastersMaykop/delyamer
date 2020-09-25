@@ -1,10 +1,5 @@
-from django.core.serializers.json import DjangoJSONEncoder
-from django.core.serializers import serialize
-
-import math
-from products.models import Offer, FavoriteProduct
+from products.models import Offer
 from promotions.models import PromotionSumPresent, PromotionThreeSales, PromotionMinPresent, PromotionSale, PromoCode
-from orders.models import DeliveryMethod
 
 
 class Cart:
@@ -18,8 +13,11 @@ class Cart:
 
         delivery = self.session.get('delivery')
         if not delivery:
-            delivery_method = DeliveryMethod.objects.first()
-            delivery = self.session['delivery'] = (delivery_method.id, delivery_method.price)
+            delivery = self.session['delivery'] = {
+                'method': None,
+                'price': 0,
+                'postcode': None
+            }
         self.delivery = delivery
 
         promocode = PromoCode.objects.filter(code=self.session.get('promocode'))
@@ -128,7 +126,7 @@ class Cart:
                + self.sum_sum_present + self.sum_min_present + self.sum_promocode
 
     def get_total_price(self):
-        return self.offers_price + self.delivery[1] - self.get_total_sale()
+        return self.offers_price + int(self.delivery['price']) - self.get_total_sale()
 
     def offer_price(self, offer):
         price = offer.product.price
@@ -181,7 +179,11 @@ class Cart:
         self.session.modified = True
         return self.promocode
 
-    def change_delivery(self, delivery_method):
-        self.delivery = (delivery_method.id, delivery_method.price)
+    def change_delivery(self, method, price, postcode):
+        self.delivery = {
+            'method': method,
+            'price': price,
+            'postcode': postcode
+        }
         self.session['delivery'] = self.delivery
         self.session.modified = True

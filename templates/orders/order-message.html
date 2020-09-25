@@ -16,7 +16,7 @@
     Город / Населённый пункт: {% firstof order.city 'Не указано' %}
     Улица, дом, квартира / офис: {% firstof order.address 'Не указано' %}
     
-    Способ доставки: {% firstof order.delivery 'Не указано' %}
+    Способ доставки: {% firstof order.get_delivery_display 'Не указано' %}
 
     Товары в заказе:
     {% for item in order.items.all %}
