@@ -10,14 +10,14 @@ from products.models import Offer, Product, Category, Color, Size, Cup, ProductI
 def sync_1c():
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
-    logger_path = os.path.join(os.path.dirname(__file__), 'offers_1c.log')
-    # logger_path = 'E:\\Goga\\PycharmProjects\\delyamer\\core\\offers_1c.log'
+    logger_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'logs', 'offers_1c.log')
     handler = logging.FileHandler(logger_path, 'a', 'utf-8')
     handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s', datefmt='%d.%m.%y %H:%M:%S'))
     logger.addHandler(handler)
     logger.info('НАЧАЛО СКРИПТА')
 
-    path = 'C:\\Users\\gurge\\Desktop\\sync'
+    #path = 'C:\\Users\\gurge\\Desktop\\sync'
+    path = '/home/web/sites/delyamer/Yandex.Disk/Web'
 
     try:
         tree = ET.parse(os.path.join(path, 'offers.xml'))
