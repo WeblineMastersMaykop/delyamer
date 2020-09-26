@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.http import JsonResponse
+from django.contrib import messages
 from core.utils import (
     send_order_mail, order_pay_response, order_pay_credit,
     calc_cdeck_delivery
@@ -16,6 +17,9 @@ class CartView(View):
     def get(self, request):
         cart = Cart(request)
         postcode = cart.delivery['postcode']
+
+        if not cart.delivery['price']:
+            messages.error(request, 'Неверный почтовый индекс')
 
         user = request.user
         if user.is_authenticated:
@@ -214,6 +218,8 @@ class OrderAddView(View):
             elif pay_type == 'credit':
                 form_url = order_pay_credit(request, order)
             return redirect(form_url)
+        else:
+            messages.error(request, 'Заполните все поля правильно')
 
         context = {
             'order_form': order_form,
