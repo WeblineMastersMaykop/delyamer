@@ -16,7 +16,14 @@ class Cart:
             delivery = self.session['delivery'] = {
                 'method': None,
                 'price': 0,
-                'postcode': None
+                'postcode': None,
+                'country': None,
+                'region': None,
+                'city': None,
+                'address': None,
+                'phone': None,
+                'full_name': None,
+                'email': None,
             }
         self.delivery = delivery
 
@@ -179,11 +186,18 @@ class Cart:
         self.session.modified = True
         return self.promocode
 
-    def change_delivery(self, method, price, postcode):
+    def change_delivery(self, method, price, get_data):
         self.delivery = {
             'method': method,
             'price': price,
-            'postcode': postcode
+            'postcode': get_data['postcode'],
+            'country': get_data['country'],
+            'region': get_data['region'],
+            'city': get_data['city'],
+            'address': get_data['address'],
+            'phone': get_data['phone'],
+            'full_name': get_data['full_name'],
+            'email': get_data['email'],
         }
         self.session['delivery'] = self.delivery
         self.session.modified = True

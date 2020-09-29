@@ -36,8 +36,16 @@ $(document).ready(function() {
 
     $('input[name="delivery"]').change(function() {
         form = $(this).parents('form');
-        postcode = $('#id_postcode');
-        postcode.clone().addClass('d-none').appendTo(form);
+
+        $('#id_postcode').clone().addClass('d-none').appendTo(form);
+        $('#id_country').clone().addClass('d-none').appendTo(form);
+        $('#id_region').clone().addClass('d-none').appendTo(form);
+        $('#id_city').clone().addClass('d-none').appendTo(form);
+        $('#id_address').clone().addClass('d-none').appendTo(form);
+        $('#id_phone').clone().addClass('d-none').appendTo(form);
+        $('#id_full_name').clone().addClass('d-none').appendTo(form);
+        $('#id_email').clone().addClass('d-none').appendTo(form);
+
         form.submit();
     });
 

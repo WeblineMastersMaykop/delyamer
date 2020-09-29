@@ -16,16 +16,28 @@ from core.cart import Cart
 class CartView(View):
     def get(self, request):
         cart = Cart(request)
-        postcode = cart.delivery['postcode']
 
         if not cart.delivery['price']:
             messages.error(request, 'Неверный почтовый индекс')
 
         user = request.user
+
+        initial = cart.delivery
         if user.is_authenticated:
-            order_form = OrderForm(initial={'postcode': postcode or user.postcode}, instance=user)
-        else:
-            order_form = OrderForm(initial={'postcode': postcode})
+            initial = {
+                'method': cart.delivery['method'],
+                'price': cart.delivery['price'],
+                'postcode': cart.delivery['postcode'] or user.postcode,
+                'country': cart.delivery['country'] or user.country,
+                'region': cart.delivery['region'] or user.region,
+                'city': cart.delivery['city'] or user.city,
+                'address': cart.delivery['address'] or user.address,
+                'phone': cart.delivery['phone'] or user.phone,
+                'full_name': cart.delivery['full_name'] or user.full_name,
+                'email': cart.delivery['email'] or user.email,
+            }
+
+        order_form = OrderForm(initial=initial)
 
         context = {
             'order_form': order_form,
@@ -45,11 +57,13 @@ class ChangeDeliveryView(View):
         elif delivery_method == 'pochta':
             price = DeliveryMethod.objects.filter(name='pochta').first().price
 
+        print(price)
+
         if price is None:
-            cart.change_delivery(None, 0, None)
+            cart.change_delivery(None, 0, request.GET)
             return redirect('cart')
 
-        cart.change_delivery(delivery_method, price, postcode)
+        cart.change_delivery(delivery_method, price, request.GET)
         return redirect('cart')
 
 
