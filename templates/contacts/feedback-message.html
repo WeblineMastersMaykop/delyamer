@@ -1,0 +1,11 @@
+{% autoescape off %}
+    На сайте http://{{ domain }} новое сообщение.
+    
+    Информация о заявке:
+
+    Имя: {{ name }}
+    E-mail или телефон: {{ email_or_phone }}
+    Сообщение: {{ text }}
+    
+    Ссылка на сайт: http://{{ domain }}
+{% endautoescape %}

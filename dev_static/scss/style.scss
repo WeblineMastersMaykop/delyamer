@@ -348,6 +348,7 @@ article {
 
 .btn-sber {
     font-family: "Gotham Pro";
+    font-size: 15px;
 
     img {
         margin-right: .75rem;
@@ -1417,6 +1418,30 @@ ul.lz-menu {
     }
 }
 
+.credit-info-list {
+    padding: 0;
+    list-style: none;
+
+    li {
+        margin-bottom: .25rem;
+
+        &:before {
+            content: "-";
+            margin-right: .5rem;
+        }
+    }
+}
+
+.sber-banner {
+    background-color: #00be64;
+
+    .sber-bg-img {
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: bottom center;
+    }
+}
+
 @include media-breakpoint-up(lg) {
     .photo-swipe {
         figure {
@@ -1546,6 +1571,10 @@ ul.lz-menu {
             left: auto!important;
             padding-top: 1rem;
         }
+    }
+
+    .sber-bg-img {
+        height: 300px;
     }
 }
 

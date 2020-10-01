@@ -53,7 +53,7 @@
                         <a href="https://api.whatsapp.com/send?phone=+{{ whatsapp.link|only_digits }}" target="_blank" title="" class="text-dark text-decoration-none whatsapp-link" role="button"><i class="fab fa-{{ whatsapp.short_name }} mr-1 mr-sm-2"></i><span class="smaller">Написать в WhatsApp</span></a>
                     {% endif %}
 
-                    <div class="socials pt-1">
+                    <div class="socials pt-1 mb-4">
                         <ul class="list-unstyled list-inline m-0">
                             {% for item in socials %}
                                 {% if item != whatsapp %}
@@ -64,10 +64,80 @@
                             {% endfor %}
                         </ul>
                     </div>
+                    <a href="" title="" class="btn btn-outline-dark px-4" data-toggle="modal" data-target="#MessageToManagerModal">Напишите нам</a>
                 </div>
             </div>
         </div>
 
     </div>
+
+    <div class="modal fade" id="MessageToManagerModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content overflow-hidden shadow bg-light">
+                <div class="modal-header">
+                    <h6 class="m-0 pt-1">Напишите нам</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body pt-3">
+
+                    <form class="needs-validation" novalidate action="{% url 'feedback' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-label-group smaller mb-4">
+                                    {{ fb_form.name }}
+                                    <label>Ваше имя</label>
+
+                                    <div class="invalid-feedback">
+                                        Проверьте верность почты
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="form-label-group smaller mb-4">
+                                    {{ fb_form.email_or_phone }}
+                                    <label>Телефон или E-mail</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-label-group smaller mb-4">
+                            {{ fb_form.text }}
+                            <label>Текст сообщения</label>
+                        </div>
+
+                        <button class="btn btn-outline-dark d-block px-4 mb-4" type="submit">Отправить</button>
+
+                        <div class="alert alert-secondary alert-dismissible small fade show mb-4 d-none" role="alert">
+                            <strong>Произошла ошибка! </strong>Обновите страницу и попробуйте ещё раз.
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <p class="text-muted smallest border-top mb-0 pt-3">Нажимая кнопку "Отправить", вы даёте согласие на <a href="/pages/personal-data/" target="_blank">обработку персональных данных</a></p>
+                    </form>
+
+                    <div class="form-success d-none align-items-center justify-content-center text-center p-4">
+                        <div>
+                            <i class="far fa-envelope fa-2x mb-3"></i>
+                            <h6>Спасибо за Ваше обращение.</h6>
+                            <p class="small">Мы ответим в ближайшее время по указанным Вами контактам.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 </main>
 {% endblock %}

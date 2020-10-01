@@ -49,6 +49,41 @@ $(document).ready(function() {
         form.submit();
     });
 
+    $('#MessageToManagerModal button[type="submit"]').on('click', function(e) {
+        e.preventDefault();
+        submit_button = $(this);
+
+        var form = submit_button[0].form;
+
+        if(form.checkValidity() === false) {
+            form.classList.add('was-validated');
+        } else {
+            submit_button.prop("disabled", true);
+
+            data = {
+                'csrfmiddlewaretoken': form.elements['csrfmiddlewaretoken'].value,
+                name: form.elements['name'].value,
+                email_or_phone: form.elements['email_or_phone'].value,
+                text: form.elements['text'].value,
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: $('#MessageToManagerModal form').attr('action'),
+                data: data,
+                success: function(data) {
+                    if (data.status) {
+                        $('#MessageToManagerModal .form-success').removeClass('d-none');
+                        $('#MessageToManagerModal .form-success').addClass('d-flex');
+                    } else {
+                        $('#MessageToManagerModal .alert-dismissible').removeClass('d-none');
+                    }
+                }
+            });
+        }
+
+    });
+
     $('#OneClickOrderModal button[type="submit"]').click(function(e) {
         e.preventDefault();
         submit_button = $(this);

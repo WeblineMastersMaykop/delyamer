@@ -1,5 +1,5 @@
 from django.contrib import admin
-from contacts.models import ContactInfo, Social, City, Shop
+from contacts.models import ContactInfo, Social, City, Shop, FeedBack
 
 
 @admin.register(ContactInfo)
@@ -18,3 +18,8 @@ class ShopAdmin(admin.ModelAdmin):
 
 
 admin.site.register(City)
+
+
+@admin.register(FeedBack)
+class FeedBackAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email_or_phone', 'created')

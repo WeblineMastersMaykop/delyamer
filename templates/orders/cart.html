@@ -259,14 +259,22 @@
                     {% endif %}
 
                     <div class="d-flex justify-content-between align-items-center smaller mb-4"><span class="h6 mb-0 mr-3">Итого:</span><span><span class="number h5 mb-0 mr-1" id="total_price_with_sale">{{ cart.get_total_price }}</span><span class="smallest">₽</span></span></div>
-                    {% if cart|length and cart.delivery.price %}
                     <input type="hidden" name="pay-type">
-                    <button class="btn btn-primary w-100 py-2 mb-3" id="add-order">Оплатить заказ<i class="fas fa-angle-right fa-xs ml-2"></i></button>
-                    {% endif %}
-                    {% if cart.get_total_price >= 3000 and cart.get_total_price <= 300000 and cart.delivery.price %}
-                    <button class="btn btn-sber w-100 py-2" id="add-order-credit"><img src="{% static 'images/sber-btn.svg' %}" alt="" height="18">Купить в кредит</button>
-                    {% endif %}
-                    <p class="text-muted smallest border-top mb-0 mt-4 pt-3">Нажимая кнопку "Оплатить зааказ", вы даёте согласие на <a href="/pages/personal-data/" target="_blank">обработку персональных данных</a></p>
+                    <button class="btn btn-primary w-100 py-2 mb-2" id="add-order" {% if not cart|length or not cart.delivery.price %}disabled{% endif %}>Оплатить заказ<i class="fas fa-angle-right fa-xs ml-2"></i></button>
+                    <hr>
+                    <button class="btn btn-sber w-100 py-2" id="add-order-credit" {% if cart.get_total_price < 3000 or cart.get_total_price > 300000 or not cart.delivery.price %}disabled{% endif %}><img src="{% static 'images/sber-btn.svg' %}" alt="" height="18">В кредит без переплаты</button>
+
+                    <span class="d-block smaller text-right pt-2">от<span class="ml-1 mr-1">1200</span>₽ в месяц</span>
+
+                    <ul class="text-muted smallest credit-info-list mb-0 pt-3">
+                        <li>Гражданство РФ</li>
+                        <li>Держатель дебетовой карты</li>
+                        <li>Возраст от 21 до 65 лет</li>
+                        <li>Наличие регистрации РФ</li>
+                        <li>Сумма кредита от 3 000 до 300 000 рублей</li>
+                        <li><a href="#" title="" target="_blank">Подробнее</a></li>
+                    </ul>
+                    <!-- <p class="text-muted smallest border-top mb-0 mt-4 pt-3">Нажимая кнопку "Оплатить зааказ", вы даёте согласие на <a href="/pages/personal-data/" target="_blank">обработку персональных данных</a></p> -->
                 </div>
             </div>
         </div>
