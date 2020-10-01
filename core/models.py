@@ -80,6 +80,7 @@ class TitleTag(models.Model):
 class Index(models.Model):
     phone = models.CharField('Телефон в шапке сайта', max_length=20)
     banner = models.ForeignKey('Banner', on_delete=models.SET_NULL, verbose_name='Баннер', null=True, blank=True)
+    sberbank_url = models.URLField('Ссылка на условия Сбербанка', max_length=250, default='https://pokupay.ru/credit_termsvy')
 
     class Meta:
         verbose_name = 'Статические элементы'
