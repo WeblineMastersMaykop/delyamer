@@ -11,7 +11,7 @@ from orders.models import Order
 def sync_1c():
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
-    logger_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'logs', 'orders_1c.log')
+    logger_path = os.path.join(os.path.dirname(__file__), 'logs', 'orders_1c.log')
     #logger_path = 'E:\\Goga\\PycharmProjects\\delyamer\\core\\orders_1c.log'
     handler = logging.FileHandler(logger_path, 'a', 'utf-8')
     handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s', datefmt='%d.%m.%y %H:%M:%S'))

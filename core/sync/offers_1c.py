@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 import os
 import os.path
-from sys import exit
+import sys
 import logging
 from slugify import slugify
 from django.core.files.images import ImageFile
@@ -11,7 +11,7 @@ from products.models import Offer, Product, Category, Color, Size, Cup, ProductI
 def sync_1c():
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
-    logger_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'logs', 'offers_1c.log')
+    logger_path = os.path.join(os.path.dirname(__file__), 'logs', 'offers_1c.log')
     handler = logging.FileHandler(logger_path, 'a', 'utf-8')
     handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s', datefmt='%d.%m.%y %H:%M:%S'))
     logger.addHandler(handler)
@@ -27,7 +27,7 @@ def sync_1c():
     except FileNotFoundError as e:
         logger.error('Файл offers.xml не найден')
         logger.info('КОНЕЦ СКРИПТА\n')
-        exit()
+        sys.exit()
 
     root = tree.getroot()
 

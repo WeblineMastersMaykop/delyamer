@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch.dispatcher import receiver
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 
@@ -134,3 +136,7 @@ class InstagramPhotos(models.Model):
 
     def __str__(self):
         return 'Изображение №{}'.format(self.id)
+
+@receiver(pre_delete, sender=InstagramPhotos)
+def instagram_image_delete(sender, instance, **kwargs):
+    instance.image.delete(False)
