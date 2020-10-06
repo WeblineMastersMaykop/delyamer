@@ -93,6 +93,8 @@ class Cart:
             offer_promo = offer.promotion_three_sales or offer.promotion_sale or offer.promotion_sum_present or offer.promotion_min_present
             offer_promo_text = offer_promo.text if offer_promo else None
 
+            image = offer.get_image()
+
             item = {
                 'offer_promo_text': offer_promo_text,
                 'offer': offer,
@@ -109,7 +111,7 @@ class Cart:
                 'cup': offer.cup.name if offer.cup else None,
                 'url': offer.product.get_absolute_url(),
                 'stock': offer.stock,
-                'image_url': offer.get_image().image_small.url,
+                'image_url': image.image_small.url if image else None,
             }
             yield item
 
