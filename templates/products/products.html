@@ -71,13 +71,24 @@
                             </div>
                         </div>
 
+                        {% if colors %}
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Цвет</h6>
                             {% for color in colors %}
                             <div class="filter-box">
-                                <div class="custom-control custom-checkbox color-checkbox mb-1">
+                                <div class="custom-control custom-checkbox color-checkbox">
                                     <input type="checkbox" name="color" value="{{ color.id }}" class="custom-control-input" id="sopt3-{{ color.id }}" {% if color.checked %}checked{% endif %}>
-                                    <label class="custom-control-label smaller" for="sopt3-{{ color.id }}"><span class="filter-tag" style="background-color: {{ color.color }};"></span>{{ color.name }}</label>
+                                    <label class="custom-control-label smaller" for="sopt3-{{ color.id }}">
+                                        <span 
+                                            {% if color.is_multi %}
+                                            class="filter-tag tag-colored"
+                                            {% else %}
+                                            class="filter-tag"
+                                            style="background-color: {{ color.color }};"
+                                            {% endif %}
+                                            >
+                                        </span>{{ color.name }}
+                                    </label>
                                 </div>
                                 <div class="filter-apply d-none">
                                     <button class="btn btn-outline-dark smallest d-block py-0" type="submit">Показать</button>
@@ -85,7 +96,9 @@
                             </div>
                             {% endfor %}
                         </div>
+                        {% endif %}
 
+                        {% if sizes %}
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Размер</h6>
                             {% for size in sizes %}
@@ -100,7 +113,9 @@
                             </div>
                             {% endfor %}
                         </div>
+                        {% endif %}
 
+                        {% if cups %}
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Чашка</h6>
                             {% for cup in cups %}
@@ -115,12 +130,14 @@
                             </div>
                             {% endfor %}
                         </div>
+                        {% endif %}
 
+                        {% if has_pushup %}
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Пуш-ап</h6>
                             <div class="filter-box">
-                                <div class="custom-control custom-radio mb-1">
-                                    <input type="radio" name="pushup" value="1" class="custom-control-input" id="sopt2-1" {% if pushup == 1 %}checked{% endif %}>
+                                <div class="custom-control custom-checkbox mb-1">
+                                    <input type="checkbox" name="pushup" value="1" class="custom-control-input" id="sopt2-1" {% if 1 in pushup %}checked{% endif %}>
                                     <label class="custom-control-label smaller" for="sopt2-1">Есть</label>
                                 </div>
                                 <div class="filter-apply d-none">
@@ -128,8 +145,8 @@
                                 </div>
                             </div>
                             <div class="filter-box">
-                                <div class="custom-control custom-radio mb-1">
-                                    <input type="radio" name="pushup" value="0" class="custom-control-input" id="sopt2-2" {% if pushup == 0 %}checked{% endif %}>
+                                <div class="custom-control custom-checkbox mb-1">
+                                    <input type="checkbox" name="pushup" value="0" class="custom-control-input" id="sopt2-2" {% if 0 in pushup %}checked{% endif %}>
                                     <label class="custom-control-label smaller" for="sopt2-2">Нет</label>
                                 </div>
                                 <div class="filter-apply d-none">
@@ -137,6 +154,7 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
                     </form>
                 </div>
             </div>
@@ -193,13 +211,24 @@
                             </div>
                         </div>
 
+                        {% if colors %}
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Цвет</h6>
                             {% for color in colors %}
                             <div class="filter-box">
-                                <div class="custom-control custom-checkbox color-checkbox mb-1">
+                                <div class="custom-control custom-checkbox color-checkbox">
                                     <input type="checkbox" name="color" value="{{ color.id }}" class="custom-control-input" id="bopt3-{{ color.id }}" {% if color.checked %}checked{% endif %}>
-                                    <label class="custom-control-label smaller" for="bopt3-{{ color.id }}"><span class="filter-tag" style="background-color: {{ color.color }};"></span>{{ color.name }}</label>
+                                    <label class="custom-control-label smaller" for="bopt3-{{ color.id }}">
+                                        <span 
+                                            {% if color.is_multi %}
+                                            class="filter-tag tag-colored"
+                                            {% else %}
+                                            class="filter-tag"
+                                            style="background-color: {{ color.color }};"
+                                            {% endif %}
+                                            >
+                                        </span>{{ color.name }}
+                                    </label>
                                 </div>
                                 <div class="filter-apply d-none">
                                     <button class="btn btn-outline-dark smallest d-block py-0" type="submit">Показать</button>
@@ -207,7 +236,9 @@
                             </div>
                             {% endfor %}
                         </div>
+                        {% endif %}
 
+                        {% if sizes %}
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Размер</h6>
                             {% for size in sizes %}
@@ -222,7 +253,9 @@
                             </div>
                             {% endfor %}
                         </div>
+                        {% endif %}
 
+                        {% if cups %}
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Чашка</h6>
                             {% for cup in cups %}
@@ -237,12 +270,14 @@
                             </div>
                             {% endfor %}
                         </div>
+                        {% endif %}
 
+                        {% if has_pushup %}
                         <div class="mb-4">
                             <h6 class="mb-2 pb-1 smaller">Пуш-ап</h6>
                             <div class="filter-box">
-                                <div class="custom-control custom-radio mb-1">
-                                    <input type="radio" name="pushup" value="1" class="custom-control-input" id="bopt2-1" {% if pushup == 1 %}checked{% endif %}>
+                                <div class="custom-control custom-checkbox mb-1">
+                                    <input type="checkbox" name="pushup" value="1" class="custom-control-input" id="bopt2-1" {% if 1 in pushup %}checked{% endif %}>
                                     <label class="custom-control-label smaller" for="bopt2-1">Есть</label>
                                 </div>
                                 <div class="filter-apply d-none">
@@ -250,8 +285,8 @@
                                 </div>
                             </div>
                             <div class="filter-box">
-                                <div class="custom-control custom-radio mb-1">
-                                    <input type="radio" name="pushup" value="0" class="custom-control-input" id="bopt2-2" {% if pushup == 0 %}checked{% endif %}>
+                                <div class="custom-control custom-checkbox mb-1">
+                                    <input type="checkbox" name="pushup" value="0" class="custom-control-input" id="bopt2-2" {% if 0 in pushup %}checked{% endif %}>
                                     <label class="custom-control-label smaller" for="bopt2-2">Нет</label>
                                 </div>
                                 <div class="filter-apply d-none">
@@ -259,6 +294,7 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
                     </form>
                 </div>
             </div>
@@ -278,15 +314,17 @@
                                     {% endif %}
                                 </div>
 
-                                {% if offer.promotion_sale %}
-                                <span class="badge badge-danger sale-badge">{{ offer.promotion_sale.text }}</span>
-                                {% elif offer.promotion_sum_present %}
-                                <span class="badge badge-dark sale-badge">{{ offer.promotion_sum_present.text }}</span>
-                                {% elif offer.promotion_three_sales %}
-                                <span class="badge badge-dark sale-badge">{{ offer.promotion_three_sales.text }}</span>
-                                {% elif offer.promotion_min_present %}
-                                <span class="badge badge-dark sale-badge">{{ offer.promotion_min_present.text }}</span>
-                                {% endif %}
+                                <div class="d-flex sale-badges">
+                                    {% if offer.promotion_sale %}
+                                    <span class="badge badge-danger sale-badge">{{ offer.promotion_sale.text }}</span>
+                                    {% elif offer.promotion_sum_present %}
+                                    <span class="badge badge-dark sale-badge">{{ offer.promotion_sum_present.text }}</span>
+                                    {% elif offer.promotion_three_sales %}
+                                    <span class="badge badge-dark sale-badge">{{ offer.promotion_three_sales.text }}</span>
+                                    {% elif offer.promotion_min_present %}
+                                    <span class="badge badge-dark sale-badge">{{ offer.promotion_min_present.text }}</span>
+                                    {% endif %}
+                                </div>
                             </div>
 
                             <div class="product-card-caption">
@@ -304,7 +342,13 @@
                                 {% if offer.color %}
                                 <div class="color-tags pt-2">
                                     {% for color in offer.product.get_colors %}
-                                    <span style="background-color: {{ color.color }};"></span>
+                                    <span
+                                        {% if color.is_multi %}
+                                        class="tag-colored"
+                                        {% else %}
+                                        style="background-color: {{ color.color }};"
+                                        {% endif %}
+                                    ></span>
                                     {% endfor %}
                                 </div>
                                 {% endif %}

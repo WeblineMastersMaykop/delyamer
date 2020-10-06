@@ -212,16 +212,16 @@ $(document).ready(function() {
                         }
                         break;
                     case 'size':
-                        colors = $('#product-color-select');
-                        colors.empty();
-                        for(i=0; i<data.colors.length; i++) {
-                            checked = parseInt(data.colors[i][2]);
-                            colors.append(`
-                            <label class="btn ${ checked ? 'active' : '' }" style="background-color: ${ data.colors[i][1] };">
-                                <input type="radio" name="color" value="${data.colors[i][0]}" autocomplete="off" ${ checked ? 'checked' : '' }>
-                            </label>
-                            `);
-                        }
+                        // colors = $('#product-color-select');
+                        // colors.empty();
+                        // for(i=0; i<data.colors.length; i++) {
+                        //     checked = parseInt(data.colors[i][2]);
+                        //     colors.append(`
+                        //     <label class="btn ${ checked ? 'active' : '' }" style="background-color: ${ data.colors[i][1] };">
+                        //         <input type="radio" name="color" value="${data.colors[i][0]}" autocomplete="off" ${ checked ? 'checked' : '' }>
+                        //     </label>
+                        //     `);
+                        // }
 
                         cups = $('#product-cup-select');
                         cups.empty();
@@ -236,28 +236,28 @@ $(document).ready(function() {
                         }
                         break;
                     case 'cup':
-                        colors = $('#product-color-select');
-                        colors.empty();
-                        for(i=0; i<data.colors.length; i++) {
-                            checked = parseInt(data.colors[i][2]);
-                            colors.append(`
-                            <label class="btn ${ checked ? 'active' : '' }" style="background-color: ${ data.colors[i][1] };">
-                                <input type="radio" name="color" value="${data.colors[i][0]}" autocomplete="off" ${ checked ? 'checked' : '' }>
-                            </label>
-                            `);
-                        }
+                        // colors = $('#product-color-select');
+                        // colors.empty();
+                        // for(i=0; i<data.colors.length; i++) {
+                        //     checked = parseInt(data.colors[i][2]);
+                        //     colors.append(`
+                        //     <label class="btn ${ checked ? 'active' : '' }" style="background-color: ${ data.colors[i][1] };">
+                        //         <input type="radio" name="color" value="${data.colors[i][0]}" autocomplete="off" ${ checked ? 'checked' : '' }>
+                        //     </label>
+                        //     `);
+                        // }
 
-                        sizes = $('#product-size-select');
-                        sizes.empty();
-                        for(i=0; i<data.sizes.length; i++) {
-                            checked = parseInt(data.sizes[i][2]);
-                            sizes.append(`
-                            <label class="btn ${ checked ? 'active' : '' }">
-                                <input type="radio" name="size" value="${data.sizes[i][0]}" autocomplete="off" ${ checked ? 'checked' : '' }>
-                                ${data.sizes[i][1]}
-                            </label>
-                            `);
-                        }
+                        // sizes = $('#product-size-select');
+                        // sizes.empty();
+                        // for(i=0; i<data.sizes.length; i++) {
+                        //     checked = parseInt(data.sizes[i][2]);
+                        //     sizes.append(`
+                        //     <label class="btn ${ checked ? 'active' : '' }">
+                        //         <input type="radio" name="size" value="${data.sizes[i][0]}" autocomplete="off" ${ checked ? 'checked' : '' }>
+                        //         ${data.sizes[i][1]}
+                        //     </label>
+                        //     `);
+                        // }
                         break;
                 }
 

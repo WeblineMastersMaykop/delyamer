@@ -181,15 +181,17 @@
                             {% endif %}
                         </div>
 
-                        {% if product.main_offer.promotion_sale %}
-                        <span class="badge badge-danger sale-badge">{{ product.main_offer.promotion_sale.text }}</span>
-                        {% elif product.main_offer.promotion_sum_present %}
-                        <span class="badge badge-dark sale-badge">{{ product.main_offer.promotion_sum_present.text }}</span>
-                        {% elif product.main_offer.promotion_three_sales %}
-                        <span class="badge badge-dark sale-badge">{{ product.main_offer.promotion_three_sales.text }}</span>
-                        {% elif product.main_offer.promotion_min_present %}
-                        <span class="badge badge-dark sale-badge">{{ product.main_offer.promotion_min_present.text }}</span>
-                        {% endif %}
+                        <div class="d-flex sale-badges">
+                            {% if product.main_offer.promotion_sale %}
+                            <span class="badge badge-danger sale-badge">{{ product.main_offer.promotion_sale.text }}</span>
+                            {% elif product.main_offer.promotion_sum_present %}
+                            <span class="badge badge-dark sale-badge">{{ product.main_offer.promotion_sum_present.text }}</span>
+                            {% elif product.main_offer.promotion_three_sales %}
+                            <span class="badge badge-dark sale-badge">{{ product.main_offer.promotion_three_sales.text }}</span>
+                            {% elif product.main_offer.promotion_min_present %}
+                            <span class="badge badge-dark sale-badge">{{ product.main_offer.promotion_min_present.text }}</span>
+                            {% endif %}
+                        </div>
                     </div>
 
                     <div class="product-card-caption">
@@ -208,7 +210,13 @@
                         {% if product.main_offer.color %}
                         <div class="color-tags pt-2">
                             {% for color in product.get_colors %}
-                            <span style="background-color: {{ color.color }};"></span>
+                            <span
+                                {% if color.is_multi %}
+                                class="tag-colored"
+                                {% else %}
+                                style="background-color: {{ color.color }};"
+                                {% endif %}
+                            ></span>
                             {% endfor %}
                         </div>
                         {% endif %}
@@ -302,15 +310,17 @@
                             {% endif %}
                         </div>
 
-                        {% if product.main_offer.promotion_sale %}
-                        <span class="badge badge-danger sale-badge">{{ product.main_offer.promotion_sale.text }}</span>
-                        {% elif product.main_offer.promotion_sum_present %}
-                        <span class="badge badge-dark sale-badge">{{ product.main_offer.promotion_sum_present.text }}</span>
-                        {% elif product.main_offer.promotion_three_sales %}
-                        <span class="badge badge-dark sale-badge">{{ product.main_offer.promotion_three_sales.text }}</span>
-                        {% elif product.main_offer.promotion_min_present %}
-                        <span class="badge badge-dark sale-badge">{{ product.main_offer.promotion_min_present.text }}</span>
-                        {% endif %}
+                        <div class="d-flex sale-badges">
+                            {% if product.main_offer.promotion_sale %}
+                            <span class="badge badge-danger sale-badge">{{ product.main_offer.promotion_sale.text }}</span>
+                            {% elif product.main_offer.promotion_sum_present %}
+                            <span class="badge badge-dark sale-badge">{{ product.main_offer.promotion_sum_present.text }}</span>
+                            {% elif product.main_offer.promotion_three_sales %}
+                            <span class="badge badge-dark sale-badge">{{ product.main_offer.promotion_three_sales.text }}</span>
+                            {% elif product.main_offer.promotion_min_present %}
+                            <span class="badge badge-dark sale-badge">{{ product.main_offer.promotion_min_present.text }}</span>
+                            {% endif %}
+                        </div>
                     </div>
 
                     <div class="product-card-caption">
@@ -329,7 +339,13 @@
                         {% if product.main_offer.color %}
                         <div class="color-tags pt-2">
                             {% for color in product.get_colors %}
-                            <span style="background-color: {{ color.color }};"></span>
+                            <span
+                            {% if color.is_multi %}
+                            class="tag-colored"
+                            {% else %}
+                            style="background-color: {{ color.color }};"
+                            {% endif %}
+                            ></span>
                             {% endfor %}
                         </div>
                         {% endif %}

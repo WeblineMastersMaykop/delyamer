@@ -48,6 +48,7 @@ class Color(models.Model):
     code_1c = models.CharField('Код 1с', max_length=20, unique=True, null=True, blank=True)
     name = models.CharField('Название', max_length=100)
     color = ColorField('Цвет', null=True, blank=True)
+    is_multi = models.BooleanField('Мультицвет', default=False)
 
     class Meta:
         verbose_name = 'Цвет'
@@ -84,7 +85,7 @@ class Product(SEO):
     code_1c = models.CharField('Код 1с', max_length=100, unique=True)
     name = models.CharField('Название', max_length=250)
     vendor_code = models.CharField('Артикул', max_length=20, null=True, blank=True)
-    pushup = models.BooleanField('Пуш-ап', default=True)
+    pushup = models.BooleanField('Пуш-ап', null=True, blank=True)
     price = models.PositiveIntegerField('Цена', default=0)
     desc = models.TextField('Описание', null=True, blank=True)
     is_active = models.BooleanField('Показывать на сайте', default=True)

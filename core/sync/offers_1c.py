@@ -53,7 +53,7 @@ def sync_1c():
                     'category': category,
                     'name': product_key.attrib['NameFull'],
                     'vendor_code': product_key.attrib['Model'],
-                    'pushup': int(product_key.attrib['Pushup']),
+                    'pushup': int(product_key.attrib['Pushup']) if product_key.attrib.get('Pushup') else None,
                     'price': int(product_key.attrib['Price'].split('.')[0] or 0),
                     'is_active': int(product_key.attrib['Active']),
                     'slug': slugify(product_key.attrib['NameFull'] + '-' + str(product_key.attrib['Code']))

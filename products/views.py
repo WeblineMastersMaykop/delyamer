@@ -38,7 +38,7 @@ class ProductsView(View):
         color_list = request.GET.getlist('color', [])
         size_list = request.GET.getlist('size', [])
         cup_list = request.GET.getlist('cup', [])
-        pushup = request.GET.get('pushup')
+        pushup = request.GET.getlist('pushup', [])
         ordering = request.GET.get('ordering', 1)
 
         get_request = request.GET.copy()
@@ -46,39 +46,61 @@ class ProductsView(View):
         category = Category.objects.none()
         if category_slug:
             category = get_object_or_404(Category, slug=category_slug)
-            offers = Offer.objects.filter(
+            enrty_offers = Offer.objects.filter(
                 product__category=category, product__is_active=True, is_active=True).select_related(
                 'product', 'promotion_sale', 'color', 'size', 'cup').annotate(
                 price_with_sale=F('product__price') * (100 - Coalesce(F('promotion_sale__sale'), 0)) / 100)
         else:
-            offers = Offer.objects.filter(product__is_active=True, is_active=True).select_related(
+            enrty_offers = Offer.objects.filter(product__is_active=True, is_active=True).select_related(
                 'product', 'promotion_sale', 'color', 'size', 'cup').annotate(
                 price_with_sale=F('product__price') * (100 - Coalesce(F('promotion_sale__sale'), 0)) / 100)
 
+        try:
+            in_sale = int(in_sale)
+            enrty_offers = enrty_offers.exclude(promotion_sum_present=None, promotion_three_sales=None, promotion_min_present=None, promotion_sale=None)
+        except:
+            get_request.pop('in_sale', None)
+
         if query:
-            offers = offers.filter(
+            enrty_offers = enrty_offers.filter(
                 Q(product__name__icontains=query) |
                 Q(product__vendor_code__icontains=query) |
                 Q(product__category__name__icontains=query)
             ).distinct()
 
         try:
-            is_bs = int(is_bs)
-            offers = offers.filter(product__is_bs=is_bs)
-        except:
-            get_request.pop('is_bs', None)
-
-        try:
             is_new = int(is_new)
-            offers = offers.filter(product__is_new=is_new)
+            enrty_offers = enrty_offers.filter(product__is_new=is_new)
         except:
             get_request.pop('is_new', None)
 
         try:
-            pushup = int(pushup)
-            offers = offers.filter(product__pushup=pushup)
+            is_bs = int(is_bs)
+            enrty_offers = enrty_offers.filter(product__is_bs=is_bs)
         except:
-            get_request.pop('pushup', None)
+            get_request.pop('is_bs', None)     
+
+        try:
+            price_min = int(price_min)
+            enrty_offers = enrty_offers.filter(price_with_sale__gte=price_min)
+        except:
+            get_request.pop('price_min', None)
+
+        try:
+            price_max = int(price_max)
+            enrty_offers = enrty_offers.filter(price_with_sale__lte=price_max)
+        except:
+            get_request.pop('price_max', None)
+
+
+        offers = enrty_offers
+
+        if pushup:
+            try:
+                pushup = list(map(int, pushup))
+                offers = offers.filter(product__pushup__in=pushup)
+            except:
+                get_request.pop('pushup', None)
 
         if color_list:
             try:
@@ -100,24 +122,6 @@ class ProductsView(View):
                 offers = offers.filter(cup__in=cup_list)
             except:
                 get_request.pop('cup_list', None)
-
-        try:
-            price_min = int(price_min)
-            offers = offers.filter(price_with_sale__gte=price_min)
-        except:
-            get_request.pop('price_min', None)
-
-        try:
-            price_max = int(price_max)
-            offers = offers.filter(price_with_sale__lte=price_max)
-        except:
-            get_request.pop('price_max', None)
-
-        try:
-            in_sale = int(in_sale)
-            offers = offers.exclude(promotion_sum_present=None, promotion_three_sales=None, promotion_min_present=None, promotion_sale=None)
-        except:
-            get_request.pop('in_sale', None)
 
         offers = offers.order_by('product__id', 'price_with_sale')
 
@@ -147,19 +151,30 @@ class ProductsView(View):
         page_number = request.GET.get('page', 1)
         pag_res = pagination(main_offers, page_number, get_request)
 
-        colors = Color.objects.all().annotate(checked=Case(
+        prop_list = {'colors': set(), 'sizes': set(), 'cups': set(), 'has_pushup': False}
+        for offer in enrty_offers:
+            if offer.color:
+                prop_list['colors'].add(offer.color.id)
+            if offer.size:
+                prop_list['sizes'].add(offer.size.id)
+            if offer.cup:
+                prop_list['cups'].add(offer.cup.id)
+            if offer.product.pushup is not None and not prop_list['has_pushup']:
+                prop_list['has_pushup'] = True
+
+        colors = Color.objects.filter(id__in=prop_list['colors']).annotate(checked=Case(
             When(id__in=color_list, then=Value(1)),
             default=0,
             output_field=BooleanField()
         ))
 
-        sizes = Size.objects.all().annotate(checked=Case(
+        sizes = Size.objects.filter(id__in=prop_list['sizes']).annotate(checked=Case(
             When(id__in=size_list, then=Value(1)),
             default=0,
             output_field=BooleanField()
         ))
 
-        cups = Cup.objects.all().annotate(checked=Case(
+        cups = Cup.objects.filter(id__in=prop_list['cups']).annotate(checked=Case(
             When(id__in=cup_list, then=Value(1)),
             default=0,
             output_field=BooleanField()
@@ -185,6 +200,7 @@ class ProductsView(View):
             'sizes': sizes,
             'cups': cups,
             'pushup': pushup,
+            'has_pushup': prop_list['has_pushup'],
             'category': category,
             'main_offers': main_offers,
 
@@ -205,8 +221,8 @@ class ProductView(View):
         size_id = main_offer.size.id if main_offer.size else None
         cup_id = main_offer.cup.id if main_offer.cup else None
 
-        sizes = product.get_sizes(color_id=color_id, cup_id=cup_id)
-        colors = product.get_colors(size_id=size_id, cup_id=cup_id)
+        colors = product.get_colors()
+        sizes = product.get_sizes(color_id=color_id)
         cups = product.get_cups(color_id=color_id, size_id=size_id)
 
         reviews = Review.objects.select_related('order_item', 'order_item__offer', 'order_item__offer__product' ).filter(order_item__offer__product__id=product.id)
@@ -255,32 +271,35 @@ class ChangeOfferView(View):
         if btn_type == 'color':
             if not offer:
                 offer = Offer.objects.filter(product__id=product_id, color__id=color_id).first()
-            for size in product.get_sizes(color_id=color_id, cup_id=cup_id):
+            for size in product.get_sizes(color_id=offer.color.id):
                 checked = 1 if offer.size == size else 0
                 sizes.append((size.id, size.name, checked))
-            for cup in product.get_cups(color_id=color_id, size_id=size_id):
+            for cup in product.get_cups(color_id=offer.color.id, size_id=offer.size.id):
                 checked = 1 if offer.cup == cup else 0
                 cups.append((cup.id, cup.name, checked))
         elif btn_type == 'size':
             if not offer:
-                offer = Offer.objects.filter(product__id=product_id, size__id=size_id).first()
-            for color in product.get_colors(size_id=size_id, cup_id=cup_id):
-                checked = 1 if offer.color == color else 0
-                colors.append((color.id, color.color, checked))
-            for cup in product.get_cups(color_id=color_id, size_id=size_id):
+                offer = Offer.objects.filter(product__id=product_id, size__id=size_id, color__id=color_id).first()
+            # for color in product.get_colors(size_id=size_id, cup_id=cup_id):
+            #     checked = 1 if offer.color == color else 0
+            #     colors.append((color.id, color.color, checked))
+            for cup in product.get_cups(color_id=offer.color.id, size_id=offer.size.id):
                 checked = 1 if offer.cup == cup else 0
                 cups.append((cup.id, cup.name, checked))
         elif btn_type == 'cup':
             if not offer:
-                offer = Offer.objects.filter(product__id=product_id, cup__id=cup_id).first()
-            for color in product.get_colors(size_id=size_id, cup_id=cup_id):
-                checked = 1 if offer.color == color else 0
-                colors.append((color.id, color.color, checked))
-            for size in product.get_sizes(color_id=color_id, cup_id=cup_id):
-                checked = 1 if offer.size == size else 0
-                sizes.append((size.id, size.name, checked))
+                offer = Offer.objects.get(product__id=product_id, cup__id=cup_id, size__id=size_id, color__id=color_id)
+            # for color in product.get_colors(size_id=size_id, cup_id=cup_id):
+            #     checked = 1 if offer.color == color else 0
+            #     colors.append((color.id, color.color, checked))
+            # for size in product.get_sizes(color_id=color_id, cup_id=cup_id):
+            #     checked = 1 if offer.size == size else 0
+            #     sizes.append((size.id, size.name, checked))
 
-        image_id = offer.get_image().id
+        try:
+            image_id = offer.get_image().id
+        except:
+            image_id = None
 
         cart = Cart(request)
         in_cart = 1 if str(offer.id) in cart.cart else 0

@@ -73,7 +73,8 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
 
 @admin.register(Color)
 class ColorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'color', 'code_1c')
+    list_display = ('name', 'color', 'is_multi', 'code_1c')
+    list_editable = ('is_multi',)
 
 
 @admin.register(Size)
@@ -124,7 +125,7 @@ class ProductAdmin(admin.ModelAdmin):
     )
 
     list_display = ('name', 'category', 'code_1c', 'price', 'vendor_code', 'pushup', 'is_new', 'is_bs', 'is_active', 'created', 'updated')
-    list_editable = ('is_active', 'is_new', 'is_bs')
+    list_editable = ('is_active', 'is_new', 'is_bs', 'pushup')
     search_fields = ('name', 'code_1c', 'vendor_code', 'category__name')
     list_filter = ('is_active', 'is_new', 'is_bs', 'category', 'pushup')
     prepopulated_fields = {'slug': ('name','code_1c')}
@@ -240,7 +241,3 @@ class OfferAdmin(admin.ModelAdmin):
         actions['delete_pr'] = (func_maker(), 'delete_pr', 'Убрать акции у товаров')
 
         return actions
-
-
-
-

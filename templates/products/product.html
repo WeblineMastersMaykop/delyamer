@@ -97,7 +97,14 @@
 
                             <div class="btn-group-sm btn-group-toggle product-color-select" id="product-color-select" data-toggle="buttons">
                                 {% for color in colors %}
-                                <label class="btn {% if main_offer.color == color %}active{% endif %}" style="background-color: {{ color.color }};">
+                                <label 
+                                    {% if color.is_multi %}
+                                    class="btn tag-colored {% if main_offer.color == color %}active{% endif %}"
+                                    {% else %}
+                                    class="btn {% if main_offer.color == color %}active{% endif %}"
+                                    style="background-color: {{ color.color }};"
+                                    {% endif %}
+                                >
                                     <input type="radio" name="color" value="{{ color.id }}" autocomplete="off" {% if main_offer.color == color %}checked{% endif %}>
                                 </label>
                                 {% endfor %}
@@ -258,15 +265,17 @@
                         {% endif %}
                     </div>
 
-                    {% if similar.sim_product.main_offer.promotion_sale %}
-                    <span class="badge badge-danger sale-badge">{{ similar.sim_product.main_offer.promotion_sale.text }}</span>
-                    {% elif similar.sim_product.main_offer.promotion_sum_present %}
-                    <span class="badge badge-dark sale-badge">{{ similar.sim_product.main_offer.promotion_sum_present.text }}</span>
-                    {% elif similar.sim_product.main_offer.promotion_three_sales %}
-                    <span class="badge badge-dark sale-badge">{{ similar.sim_product.main_offer.promotion_three_sales.text }}</span>
-                    {% elif similar.sim_product.main_offer.promotion_min_present %}
-                    <span class="badge badge-dark sale-badge">{{ similar.sim_product.main_offer.promotion_min_present.text }}</span>
-                    {% endif %}
+                    <div class="d-flex sale-badges">
+                        {% if similar.sim_product.main_offer.promotion_sale %}
+                        <span class="badge badge-danger sale-badge">{{ similar.sim_product.main_offer.promotion_sale.text }}</span>
+                        {% elif similar.sim_product.main_offer.promotion_sum_present %}
+                        <span class="badge badge-dark sale-badge">{{ similar.sim_product.main_offer.promotion_sum_present.text }}</span>
+                        {% elif similar.sim_product.main_offer.promotion_three_sales %}
+                        <span class="badge badge-dark sale-badge">{{ similar.sim_product.main_offer.promotion_three_sales.text }}</span>
+                        {% elif similar.sim_product.main_offer.promotion_min_present %}
+                        <span class="badge badge-dark sale-badge">{{ similar.sim_product.main_offer.promotion_min_present.text }}</span>
+                        {% endif %}
+                    </div>
                 </div>
 
                 <div class="product-card-caption">
@@ -283,7 +292,13 @@
 
                     <div class="color-tags pt-2">
                         {% for color in similar.sim_product.get_colors %}
-                        <span style="background-color: {{ color.color }};"></span>
+                        <span
+                        {% if color.is_multi %}
+                        class="tag-colored"
+                        {% else %}
+                        style="background-color: {{ color.color }};"
+                        {% endif %}
+                        ></span>
                         {% endfor %}
                     </div>
 
