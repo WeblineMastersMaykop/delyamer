@@ -266,11 +266,11 @@ class ChangeOfferView(View):
         product = Product.objects.get(pk=product_id)
         sizes, colors, cups = [], [], []
 
-        offer = Offer.objects.filter(product__id=product_id, color__id=color_id, size__id=size_id, cup__id=cup_id).first()
+        offer = Offer.objects.filter(product__id=product_id, color__id=color_id, size__id=size_id, cup__id=cup_id, is_active=True).first()
 
         if btn_type == 'color':
             if not offer:
-                offer = Offer.objects.filter(product__id=product_id, color__id=color_id).first()
+                offer = Offer.objects.filter(product__id=product_id, color__id=color_id, is_active=True).first()
             for size in product.get_sizes(color_id=offer.color.id):
                 checked = 1 if offer.size == size else 0
                 sizes.append((size.id, size.name, checked))
@@ -279,7 +279,7 @@ class ChangeOfferView(View):
                 cups.append((cup.id, cup.name, checked))
         elif btn_type == 'size':
             if not offer:
-                offer = Offer.objects.filter(product__id=product_id, size__id=size_id, color__id=color_id).first()
+                offer = Offer.objects.filter(product__id=product_id, size__id=size_id, color__id=color_id, is_active=True).first()
             # for color in product.get_colors(size_id=size_id, cup_id=cup_id):
             #     checked = 1 if offer.color == color else 0
             #     colors.append((color.id, color.color, checked))
@@ -288,7 +288,7 @@ class ChangeOfferView(View):
                 cups.append((cup.id, cup.name, checked))
         elif btn_type == 'cup':
             if not offer:
-                offer = Offer.objects.get(product__id=product_id, cup__id=cup_id, size__id=size_id, color__id=color_id)
+                offer = Offer.objects.get(product__id=product_id, cup__id=cup_id, size__id=size_id, color__id=color_id, is_active=True)
             # for color in product.get_colors(size_id=size_id, cup_id=cup_id):
             #     checked = 1 if offer.color == color else 0
             #     colors.append((color.id, color.color, checked))
