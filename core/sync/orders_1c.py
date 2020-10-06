@@ -20,9 +20,7 @@ def sync_1c():
 
     current_datetime = timezone.now()
     #path = 'C:\\Users\\gurge\\Desktop\\sync\\orders'
-    path = '/home/web/sites/delyamer/Yandex.Disk/Web/orders'
-    os.system('yandex-disk sync')
-    logger.info('Yandex Disk синхронизирован')
+    path = '/home/ftp_delyamer/sync_files'
 
     old_orders = Order.objects.filter(status__in=('new', 'error'), created__lt=current_datetime-timedelta(days=1)).exclude(pay_type='credit')
     old_orders.update(status='canceled')

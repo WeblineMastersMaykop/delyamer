@@ -18,9 +18,7 @@ def sync_1c():
     logger.info('НАЧАЛО СКРИПТА')
 
     #path = 'C:\\Users\\gurge\\Desktop\\sync'
-    path = '/home/web/sites/delyamer/Yandex.Disk/Web'
-    os.system('yandex-disk sync')
-    logger.info('Yandex Disk синхронизирован')
+    path = '/home/ftp_delyamer/sync_files'
 
     try:
         tree = ET.parse(os.path.join(path, 'offers.xml'))
