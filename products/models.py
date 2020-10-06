@@ -114,7 +114,7 @@ class Product(SEO):
         if cup_id:
             offers = offers.filter(cup__id=cup_id)
 
-        return set(offer.color for offer in offers if offer.color is not None)
+        return sorted(list(set(offer.color for offer in offers if offer.color is not None)), key=lambda color: color.position)
 
     def get_sizes(self, *args, **kwargs):
         color_id = kwargs.get('color_id')
@@ -126,7 +126,7 @@ class Product(SEO):
         if color_id:
             offers = offers.filter(color__id=color_id)
 
-        return set(offer.size for offer in offers if offer.size is not None)
+        return sorted(list(set(offer.size for offer in offers if offer.size is not None)), key=lambda size: size.position)
 
     def get_cups(self, *args, **kwargs):
         size_id = kwargs.get('size_id')
@@ -138,7 +138,7 @@ class Product(SEO):
         if color_id:
             offers = offers.filter(color__id=color_id)
 
-        return set(offer.cup for offer in offers if offer.cup is not None)
+        return sorted(list(set(offer.cup for offer in offers if offer.cup is not None)), key=lambda cup: cup.position)
 
     def main_offer(self):
         main_offer = self.offers.filter(is_active=True).select_related('promotion_sale', 'color', 'size', 'cup').order_by('promotion_sale__sale').last()

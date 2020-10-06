@@ -280,21 +280,11 @@ class ChangeOfferView(View):
         elif btn_type == 'size':
             if not offer:
                 offer = Offer.objects.filter(product__id=product_id, size__id=size_id, color__id=color_id, is_active=True).first()
-            # for color in product.get_colors(size_id=size_id, cup_id=cup_id):
-            #     checked = 1 if offer.color == color else 0
-            #     colors.append((color.id, color.color, checked))
             for cup in product.get_cups(color_id=offer.color.id, size_id=offer.size.id):
                 checked = 1 if offer.cup == cup else 0
                 cups.append((cup.id, cup.name, checked))
         elif btn_type == 'cup':
-            if not offer:
-                offer = Offer.objects.get(product__id=product_id, cup__id=cup_id, size__id=size_id, color__id=color_id, is_active=True)
-            # for color in product.get_colors(size_id=size_id, cup_id=cup_id):
-            #     checked = 1 if offer.color == color else 0
-            #     colors.append((color.id, color.color, checked))
-            # for size in product.get_sizes(color_id=color_id, cup_id=cup_id):
-            #     checked = 1 if offer.size == size else 0
-            #     sizes.append((size.id, size.name, checked))
+            pass
 
         try:
             image_id = offer.get_image().id
