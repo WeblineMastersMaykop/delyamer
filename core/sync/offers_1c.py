@@ -81,7 +81,7 @@ def sync_1c():
                         product_image = ProductImage.objects.create(
                             product=product,
                             color=color,
-                            image=ImageFile(open(os.path.join(path, 'Images', color_key.attrib['Picture']), 'rb'))
+                            image=ImageFile(open(os.path.join(path, 'Images', color_key.attrib['Picture']), 'rb', encoding='utf-8'))
                         )
                     except:
                         logger.error('Нет файла: {0}'.format(color_key.attrib['Picture']))
