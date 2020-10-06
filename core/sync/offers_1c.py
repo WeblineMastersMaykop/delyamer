@@ -77,11 +77,14 @@ def sync_1c():
                     )
 
                 if color_key.attrib['Picture']:
-                    product_image = ProductImage.objects.create(
-                        product=product,
-                        color=color,
-                        image=ImageFile(open(os.path.join(path, 'Images', color_key.attrib['Picture']), 'rb'))
-                    )
+                    try:
+                        product_image = ProductImage.objects.create(
+                            product=product,
+                            color=color,
+                            image=ImageFile(open(os.path.join(path, 'Images', color_key.attrib['Picture']), 'rb'))
+                        )
+                    except:
+                        logger.error('Нет файла: {0}'.format(color_key.attrib['Picture']))
 
                 for parametrs_key in color_key:
                     # Создание и изменение размеров
