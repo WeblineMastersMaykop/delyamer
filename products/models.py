@@ -44,7 +44,7 @@ class Category(SEO, Position):
         return self.name
 
 
-class Color(models.Model):
+class Color(Position):
     code_1c = models.CharField('Код 1с', max_length=20, unique=True, null=True, blank=True)
     name = models.CharField('Название', max_length=100)
     color = ColorField('Цвет', null=True, blank=True)
@@ -53,28 +53,31 @@ class Color(models.Model):
     class Meta:
         verbose_name = 'Цвет'
         verbose_name_plural = 'Цвета'
+        ordering = ('position',)
 
     def __str__(self):
         return self.name
 
 
-class Size(models.Model):
+class Size(Position):
     name = models.CharField('Название', max_length=10)
 
     class Meta:
         verbose_name = 'Размер'
         verbose_name_plural = 'Размеры'
+        ordering = ('position',)
 
     def __str__(self):
         return self.name
 
 
-class Cup(models.Model):
+class Cup(Position):
     name = models.CharField('Название', max_length=10)
 
     class Meta:
         verbose_name = 'Размер чашки'
         verbose_name_plural = 'Размеры чашки'
+        ordering = ('position',)
 
     def __str__(self):
         return self.name

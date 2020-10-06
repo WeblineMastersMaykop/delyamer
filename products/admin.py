@@ -72,18 +72,19 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
 
 
 @admin.register(Color)
-class ColorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'color', 'is_multi', 'code_1c')
+class ColorAdmin(SortableAdminMixin, admin.ModelAdmin):
+    list_display = ('name', 'color', 'is_multi', 'code_1c', 'position')
     list_editable = ('is_multi',)
 
 
 @admin.register(Size)
-class SizeAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+class SizeAdmin(SortableAdminMixin, admin.ModelAdmin):
+    list_display = ('name', 'position')
+
 
 @admin.register(Cup)
-class CupAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+class CupAdmin(SortableAdminMixin, admin.ModelAdmin):
+    list_display = ('name', 'position')
 
 
 class ProductImageInline(admin.TabularInline):
