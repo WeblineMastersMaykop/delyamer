@@ -102,10 +102,43 @@
                         {% csrf_token %}
                         <h2 class="h6 mb-4">Доставка</h2>
                         <div class="row">
+                            <div class="col-lg-8">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ order_form.full_name }}
+                                    <label>ФИО*</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ order_form.email }}
+                                    <label>Эл. почта*</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ order_form.phone }}
+                                    <label>Телефон*</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="col-lg-4">
                                 <div class="form-label-group form-label-group-sm smaller mb-4">
                                     {{ order_form.postcode }}
-                                    <label>Почтовый индекс</label>
+                                    <label>Почтовый индекс*</label>
 
                                     <div class="invalid-feedback">
                                         Это обязательное поле
@@ -116,7 +149,7 @@
                             <div class="col-lg-4">
                                 <div class="form-label-group form-label-group-sm smaller mb-4">
                                     {{ order_form.country }}
-                                    <label>Страна</label>
+                                    <label>Страна*</label>
 
                                     <div class="invalid-feedback">
                                         Это обязательное поле
@@ -127,7 +160,7 @@
                             <div class="col-lg-4">
                                 <div class="form-label-group form-label-group-sm smaller mb-4">
                                     {{ order_form.region }}
-                                    <label>Регион</label>
+                                    <label>Регион*</label>
 
                                     <div class="invalid-feedback">
                                         Это обязательное поле
@@ -138,7 +171,7 @@
                             <div class="col-lg-4">
                                 <div class="form-label-group form-label-group-sm smaller mb-4">
                                     {{ order_form.city }}
-                                    <label>Населённый пункт</label>
+                                    <label>Населённый пункт*</label>
 
                                     <div class="invalid-feedback">
                                         Это обязательное поле
@@ -148,8 +181,8 @@
 
                             <div class="col-lg-4">
                                 <div class="form-label-group form-label-group-sm smaller mb-4">
-                                    {{ order_form.address }}
-                                    <label>Адрес</label>
+                                    {{ order_form.micro_district }}
+                                    <label>Микрорайон</label>
 
                                     <div class="invalid-feedback">
                                         Это обязательное поле
@@ -159,31 +192,41 @@
 
                             <div class="col-lg-4">
                                 <div class="form-label-group form-label-group-sm smaller mb-4">
-                                    {{ order_form.phone }}
-                                    <label>Телефон</label>
+                                    {{ order_form.street }}
+                                    <label>Улица*</label>
 
                                     <div class="invalid-feedback">
                                         Это обязательное поле
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="col-lg-8">
-                                <div class="form-label-group form-label-group-sm smaller mb-4">
-                                    {{ order_form.full_name }}
-                                    <label>ФИО</label>
-
-                                    <div class="invalid-feedback">
-                                        Это обязательное поле
-                                    </div>
-                                </div>
-                            </div>
-
 
                             <div class="col-lg-4">
                                 <div class="form-label-group form-label-group-sm smaller mb-4">
-                                    {{ order_form.email }}
-                                    <label>Эл. почта</label>
+                                    {{ order_form.house_nmb }}
+                                    <label>Номер дома*</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ order_form.building_nmb }}
+                                    <label>Корпус</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ order_form.room_nmb }}
+                                    <label>Кваритра (офис)*</label>
 
                                     <div class="invalid-feedback">
                                         Это обязательное поле

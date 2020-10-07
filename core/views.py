@@ -3,8 +3,6 @@ from django.views import View
 from news.models import News
 from products.models import Product
 from core.models import Slide, InstagramPhotos
-from core.utils import get_insta_posts
-
 
 
 class IndexView(View):
@@ -14,8 +12,6 @@ class IndexView(View):
         new_products = Product.objects.filter(is_active=True, is_new=True)[:8]
         slides = Slide.objects.all()
         insta_photos = InstagramPhotos.objects.all()[:8]
-
-        # get_insta_posts()
 
         context = {
             'insta_photos': insta_photos,

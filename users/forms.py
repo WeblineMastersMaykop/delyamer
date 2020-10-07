@@ -30,13 +30,18 @@ class RegisterForm(UserCreationForm):
 class UpdateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('postcode', 'country', 'region', 'city', 'address', 'phone', 'full_name', 'new_email')
+        fields = ('postcode', 'country', 'region', 'city', 'phone', 'full_name', 'new_email',
+                  'micro_district', 'street', 'house_nmb', 'building_nmb', 'room_nmb')
         widgets = {
             'postcode': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Почтовый индекс'}),
             'country': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Страна'}),
-            'region': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Регион'}),
+            'region': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Область, регион'}),
             'city': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Населённый пункт'}),
-            'address': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Адрес'}),
+            'micro_district': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Микрорайон'}),
+            'street': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Улица'}),
+            'house_nmb': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Номер дома'}),
+            'building_nmb': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Корпус'}),
+            'room_nmb': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Квартира (офис)'}),
             'phone': forms.TextInput(attrs={'class': 'form-control form-control-sm phone-input', 'placeholder': 'Телефон'}),
             'full_name': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'ФИО'}),
             'new_email': forms.EmailInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Эл. почта'})

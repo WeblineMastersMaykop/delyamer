@@ -169,22 +169,3 @@ def calc_cdeck_delivery(receiver_postcode):
         print(e)
 
     return result
-
-
-def get_insta_posts():
-    from instagram_web_api import Client, ClientCompatPatch
-
-    user_name = 'gurgen_xd'
-    password = 'WORDpassim1995'
-
-    api = Client()
-    user_feed_info = web_api.user_feed('329452045', count=10)
-    for post in user_feed_info:
-        print('%s from %s' % (post['link'], post['user']['username']))
-    # results = api.feed_timeline()
-    # items = results.get('items', [])
-    # for item in items:
-    #     # Manually patch the entity to match the public api as closely as possible, optional
-    #     # To automatically patch entities, initialise the Client with auto_patch=True
-    #     ClientCompatPatch.media(item)
-    #     print(media['code'])

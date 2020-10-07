@@ -31,7 +31,11 @@ class CartView(View):
                 'country': cart.delivery['country'] or user.country,
                 'region': cart.delivery['region'] or user.region,
                 'city': cart.delivery['city'] or user.city,
-                'address': cart.delivery['address'] or user.address,
+                'micro_district': cart.delivery['micro_district'] or user.micro_district,
+                'street': cart.delivery['street'] or user.street,
+                'house_nmb': cart.delivery['house_nmb'] or user.house_nmb,
+                'building_nmb': cart.delivery['building_nmb'] or user.building_nmb,
+                'room_nmb': cart.delivery['room_nmb'] or user.room_nmb,
                 'phone': cart.delivery['phone'] or user.phone,
                 'full_name': cart.delivery['full_name'] or user.full_name,
                 'email': cart.delivery['email'] or user.email,
@@ -56,8 +60,6 @@ class ChangeDeliveryView(View):
             price = calc_cdeck_delivery(postcode)
         elif delivery_method == 'pochta':
             price = DeliveryMethod.objects.filter(name='pochta').first().price
-
-        print(price)
 
         if price is None:
             cart.change_delivery(None, 0, request.GET)

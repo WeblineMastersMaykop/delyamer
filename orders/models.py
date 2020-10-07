@@ -52,7 +52,11 @@ class Order(models.Model):
     country = models.CharField('Страна', max_length=100, null=True, blank=True)
     region = models.CharField('Регион', max_length=100, null=True, blank=True)
     city = models.CharField('Населенный пункт', max_length=100, null=True, blank=True)
-    address = models.CharField('Адрес', max_length=250, null=True, blank=True)
+    micro_district = models.CharField('Микрорайон', max_length=100, null=True, blank=True)
+    street = models.CharField('Улица', max_length=100, null=True, blank=True)
+    house_nmb = models.CharField('Номер дома', max_length=20, null=True, blank=True)
+    building_nmb = models.CharField('Корпус', max_length=20, null=True, blank=True)
+    room_nmb = models.CharField('Квартира/Офис', max_length=20, null=True, blank=True)
 
     total_price = models.PositiveIntegerField('Итоговая стоимость', default=0)
     total_price_with_sale = models.PositiveIntegerField('Итоговая стоимость со скидкой', default=0)

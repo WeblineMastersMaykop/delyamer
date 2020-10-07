@@ -41,7 +41,11 @@ $(document).ready(function() {
         $('#id_country').clone().addClass('d-none').appendTo(form);
         $('#id_region').clone().addClass('d-none').appendTo(form);
         $('#id_city').clone().addClass('d-none').appendTo(form);
-        $('#id_address').clone().addClass('d-none').appendTo(form);
+        $('#id_micro_district').clone().addClass('d-none').appendTo(form);
+        $('#id_street').clone().addClass('d-none').appendTo(form);
+        $('#id_house_nmb').clone().addClass('d-none').appendTo(form);
+        $('#id_building_nmb').clone().addClass('d-none').appendTo(form);
+        $('#id_room_nmb').clone().addClass('d-none').appendTo(form);
         $('#id_phone').clone().addClass('d-none').appendTo(form);
         $('#id_full_name').clone().addClass('d-none').appendTo(form);
         $('#id_email').clone().addClass('d-none').appendTo(form);
@@ -212,17 +216,6 @@ $(document).ready(function() {
                         }
                         break;
                     case 'size':
-                        // colors = $('#product-color-select');
-                        // colors.empty();
-                        // for(i=0; i<data.colors.length; i++) {
-                        //     checked = parseInt(data.colors[i][2]);
-                        //     colors.append(`
-                        //     <label class="btn ${ checked ? 'active' : '' }" style="background-color: ${ data.colors[i][1] };">
-                        //         <input type="radio" name="color" value="${data.colors[i][0]}" autocomplete="off" ${ checked ? 'checked' : '' }>
-                        //     </label>
-                        //     `);
-                        // }
-
                         cups = $('#product-cup-select');
                         cups.empty();
                         for(i=0; i<data.cups.length; i++) {
@@ -236,28 +229,6 @@ $(document).ready(function() {
                         }
                         break;
                     case 'cup':
-                        // colors = $('#product-color-select');
-                        // colors.empty();
-                        // for(i=0; i<data.colors.length; i++) {
-                        //     checked = parseInt(data.colors[i][2]);
-                        //     colors.append(`
-                        //     <label class="btn ${ checked ? 'active' : '' }" style="background-color: ${ data.colors[i][1] };">
-                        //         <input type="radio" name="color" value="${data.colors[i][0]}" autocomplete="off" ${ checked ? 'checked' : '' }>
-                        //     </label>
-                        //     `);
-                        // }
-
-                        // sizes = $('#product-size-select');
-                        // sizes.empty();
-                        // for(i=0; i<data.sizes.length; i++) {
-                        //     checked = parseInt(data.sizes[i][2]);
-                        //     sizes.append(`
-                        //     <label class="btn ${ checked ? 'active' : '' }">
-                        //         <input type="radio" name="size" value="${data.sizes[i][0]}" autocomplete="off" ${ checked ? 'checked' : '' }>
-                        //         ${data.sizes[i][1]}
-                        //     </label>
-                        //     `);
-                        // }
                         break;
                 }
 

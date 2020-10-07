@@ -31,6 +31,39 @@
                     <form class="needs-validation" novalidate action="{% url 'profile' %}" method="POST">
                         {% csrf_token %}
                         <div class="row">
+                            <div class="col-lg-8">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ update_form.full_name }}
+                                    <label>ФИО</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ update_form.new_email }}
+                                    <label>Эл. почта</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ update_form.phone }}
+                                    <label>Телефон</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <div class="col-lg-4">
                                 <div class="form-label-group form-label-group-sm smaller mb-4">
                                     {{ update_form.postcode }}
@@ -77,8 +110,8 @@
 
                             <div class="col-lg-4">
                                 <div class="form-label-group form-label-group-sm smaller mb-4">
-                                    {{ update_form.address }}
-                                    <label>Адрес</label>
+                                    {{ update_form.micro_district }}
+                                    <label>Микрорайон</label>
 
                                     <div class="invalid-feedback">
                                         Это обязательное поле
@@ -88,19 +121,8 @@
 
                             <div class="col-lg-4">
                                 <div class="form-label-group form-label-group-sm smaller mb-4">
-                                    {{ update_form.phone }}
-                                    <label>Телефон</label>
-
-                                    <div class="invalid-feedback">
-                                        Это обязательное поле
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-8">
-                                <div class="form-label-group form-label-group-sm smaller mb-4">
-                                    {{ update_form.full_name }}
-                                    <label>ФИО</label>
+                                    {{ update_form.street }}
+                                    <label>Улица</label>
 
                                     <div class="invalid-feedback">
                                         Это обязательное поле
@@ -110,8 +132,30 @@
 
                             <div class="col-lg-4">
                                 <div class="form-label-group form-label-group-sm smaller mb-4">
-                                    {{ update_form.new_email }}
-                                    <label>Эл. почта</label>
+                                    {{ update_form.house_nmb }}
+                                    <label>Номер дома</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ update_form.building_nmb }}
+                                    <label>Корпус</label>
+
+                                    <div class="invalid-feedback">
+                                        Это обязательное поле
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-label-group form-label-group-sm smaller mb-4">
+                                    {{ update_form.room_nmb }}
+                                    <label>Кваритра (офис)</label>
 
                                     <div class="invalid-feedback">
                                         Это обязательное поле
