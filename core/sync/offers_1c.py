@@ -83,8 +83,8 @@ def sync_1c():
                             color=color,
                             image=ImageFile(open(os.path.join(path, 'Images', color_key.attrib['Picture']), 'rb', encoding='utf-8'))
                         )
-                    except:
-                        logger.error('Нет файла: {0}'.format(color_key.attrib['Picture']))
+                    except Exception as e:
+                        logger.error(e)
 
                 for parametrs_key in color_key:
                     # Создание и изменение размеров
