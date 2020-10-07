@@ -81,7 +81,7 @@ def sync_1c():
                         product_image = ProductImage.objects.create(
                             product=product,
                             color=color,
-                            image=ImageFile(open(os.path.join(path, 'Images', color_key.attrib['Picture']), 'rb', encoding='utf-8'))
+                            image=ImageFile(open(os.path.join(path, 'Images', color_key.attrib['Picture']), 'rb'))
                         )
                     except Exception as e:
                         logger.error(e)
