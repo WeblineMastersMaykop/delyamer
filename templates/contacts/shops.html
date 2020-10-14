@@ -34,26 +34,28 @@
                 <div class="row no-gutters last-nomargin mb-5">
                     <div class="col-lg-5">
                         <div class="bg-white p-md-5 p-4 map-caption">
+                            <div class="embed-responsive embed-responsive-21by9 bg-img mb-4" style="background-image:url('{{ shop.image_small.url }}')">
+                            </div>
                             <address>
-                                <div class="mb-4 mb-md-3">
-                                    <span class="d-block mb-2 smallest text-muted">Адрес</span>
+                                <div class="mb-3">
+                                    <span class="d-block mb-1 smallest text-muted">Адрес</span>
                                     <span class="d-block smaller mb-1">{{ shop.address }}</span>
                                 </div>
 
-                                <div class="mb-4 mb-md-3">
-                                    <span class="d-block mb-2 smallest text-muted">Телефон</span>
+                                <div class="mb-3">
+                                    <span class="d-block mb-1 smallest text-muted">Телефон</span>
                                     <a href="tel:+{{ shop.phone|only_digits }}" title="" class="d-block smaller mb-1 text-dark text-decoration-none">{{ shop.phone }}</a>
                                 </div>
 
                                 {% if shop.email %}
-                                <div class="mb-4 mb-md-3">
-                                    <span class="d-block mb-2 smallest text-muted">Почта</span>
+                                <div class="mb-3">
+                                    <span class="d-block mb-1 smallest text-muted">Почта</span>
                                     <a href="mailto:{{ shop.email }}" title="" class="smaller mb-1 text-dark">{{ shop.email }}</a>
                                 </div>
                                 {% endif %}
 
-                                <div class="mb-4 mb-md-3">
-                                    <span class="d-block mb-2 smallest text-muted">Режим работы</span>
+                                <div class="mb-3">
+                                    <span class="d-block mb-1 smallest text-muted">Режим работы</span>
                                     {% for item in shop.schedule|split %}
                                     <span class="d-block smaller mb-1">{{ item }}</span>
                                     {% endfor %}
@@ -62,7 +64,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-7">
+                    <div class="col-lg-7 map">
                         {{ shop.map_code|safe }}
                     </div>
                 </div>

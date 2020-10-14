@@ -1461,11 +1461,17 @@ ul.lz-menu {
     }
 
     .map-caption {
-        height: 400px;
+        min-height: 517px;
     }
 
     .border-lg-right {
         border-right: 1px solid $border-color;
+    }
+
+    .map {
+        > ymaps {
+            height: 100% !important;
+        }
     }
 }
 
@@ -1478,6 +1484,10 @@ ul.lz-menu {
                 }
             }
         }
+    }
+
+    .map-caption {
+        min-height: 485px;
     }
 }
 

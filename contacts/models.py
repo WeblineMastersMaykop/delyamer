@@ -1,4 +1,6 @@
 from django.db import models
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 
 
 class ContactInfo(models.Model):
@@ -57,6 +59,13 @@ class Shop(models.Model):
     email = models.EmailField('Эл. почта', max_length=100, null=True, blank=True)
     schedule = models.CharField('Режим работы', max_length=250, help_text='Пункты разделять ";"')
     map_code = models.TextField('Скрипт карты')
+
+    image = models.ImageField(upload_to='images/shops/', verbose_name='Изображение')
+
+    image_small = ImageSpecField(source='image',
+                                processors=[ResizeToFill(600, 257)],
+                                format='JPEG',
+                                options={'quality': 90})
 
     class Meta:
         verbose_name = 'Магазин'
