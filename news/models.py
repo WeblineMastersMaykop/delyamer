@@ -2,7 +2,7 @@ from django.db import models
 from django.urls import reverse
 from core.models import SEO
 from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill
+from imagekit.processors import ResizeToFill, Transpose
 from uuid import uuid1
 
 
@@ -30,12 +30,12 @@ class News(SEO):
     image = models.ImageField(upload_to='images/news/', verbose_name='Изображение')
 
     image_small = ImageSpecField(source='image',
-                                 processors=[ResizeToFill(356, 200)],
+                                 processors=[Transpose('auto'), ResizeToFill(356, 200)],
                                  format='JPEG',
                                  options={'quality': 90})
 
     image_admin = ImageSpecField(source='image',
-                                 processors=[ResizeToFill(70, 40)],
+                                 processors=[Transpose('auto'), ResizeToFill(70, 40)],
                                  format='JPEG',
                                  options={'quality': 90})
 
@@ -62,12 +62,12 @@ class NewsImage(models.Model):
     image = models.ImageField(upload_to=get_picture_url, verbose_name='Изображение')
 
     image_small = ImageSpecField(source='image',
-                                 processors=[ResizeToFill(105, 58)],
+                                 processors=[Transpose('auto'), ResizeToFill(105, 58)],
                                  format='JPEG',
                                  options={'quality': 90})
 
     image_standart = ImageSpecField(source='image',
-                                    processors=[ResizeToFill(729, 410)],
+                                    processors=[Transpose('auto'), ResizeToFill(729, 410)],
                                     format='JPEG',
                                     options={'quality': 90})
 

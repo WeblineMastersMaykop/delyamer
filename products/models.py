@@ -3,7 +3,7 @@ from django.urls import reverse
 from uuid import uuid1
 from colorfield.fields import ColorField
 from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill
+from imagekit.processors import ResizeToFill, Transpose
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from core.models import SEO, Position
@@ -25,7 +25,7 @@ class Category(SEO, Position):
     image = models.ImageField(upload_to=get_picture_url, verbose_name='Изображение', null=True, blank=True)
 
     image_small = ImageSpecField(source='image',
-                                 processors=[ResizeToFill(261, 424)],
+                                 processors=[Transpose('auto'), ResizeToFill(261, 424)],
                                  format='JPEG',
                                  options={'quality': 90})
 
@@ -199,17 +199,17 @@ class ProductImage(models.Model):
     image = models.ImageField(upload_to=get_picture_url, verbose_name='Изображение')
 
     image_big = ImageSpecField(source='image',
-                                 processors=[ResizeToFill(696, 870)],
+                                 processors=[Transpose('auto'), ResizeToFill(696, 870)],
                                  format='JPEG',
                                  options={'quality': 90})
 
     image_medium = ImageSpecField(source='image',
-                                 processors=[ResizeToFill(260, 391)],
+                                 processors=[Transpose('auto'), ResizeToFill(260, 391)],
                                  format='JPEG',
                                  options={'quality': 90})
 
     image_small = ImageSpecField(source='image',
-                                 processors=[ResizeToFill(150, 130)],
+                                 processors=[Transpose('auto'), ResizeToFill(150, 130)],
                                  format='JPEG',
                                  options={'quality': 90})
 

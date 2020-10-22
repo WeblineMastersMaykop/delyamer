@@ -3,7 +3,7 @@ import mptt
 from mptt.models import MPTTModel, TreeForeignKey
 from core.models import Position, SEO
 from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill
+from imagekit.processors import ResizeToFill, Transpose
 from uuid import uuid1
 from django.urls import reverse
 
@@ -55,12 +55,12 @@ class PageImage(models.Model):
     image = models.ImageField(upload_to=get_picture_url, verbose_name='Изображение')
 
     image_small = ImageSpecField(source='image',
-                                 processors=[ResizeToFill(105, 58)],
+                                 processors=[Transpose('auto'), ResizeToFill(105, 58)],
                                  format='JPEG',
                                  options={'quality': 90})
 
     image_standart = ImageSpecField(source='image',
-                                    processors=[ResizeToFill(729, 410)],
+                                    processors=[Transpose('auto'), ResizeToFill(729, 410)],
                                     format='JPEG',
                                     options={'quality': 90})
 
@@ -118,7 +118,7 @@ class PageQuote(models.Model):
     image = models.FileField(max_length=500, upload_to=get_image_url, verbose_name='Изображение')
 
     image_small = ImageSpecField(source='image',
-                                 processors=[ResizeToFill(48, 48)],
+                                 processors=[Transpose('auto'), ResizeToFill(48, 48)],
                                  format='JPEG',
                                  options={'quality': 90})
 

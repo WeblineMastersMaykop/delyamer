@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill
+from imagekit.processors import ResizeToFill, Transpose
 
 
 class SEO(models.Model):
@@ -98,7 +98,7 @@ class Slide(models.Model):
     url = models.CharField('Ссылка', max_length=250, null=True, blank=True)
     image = models.ImageField(upload_to='images/slides/', verbose_name='Изображение', null=True, blank=True)
     image_big = ImageSpecField(source='image',
-                                 processors=[ResizeToFill(1116, 480)],
+                                 processors=[Transpose('auto'), ResizeToFill(1116, 480)],
                                  format='JPEG',
                                  options={'quality': 90})
 
@@ -126,7 +126,7 @@ class Banner(models.Model):
 class InstagramPhotos(models.Model):
     image = models.ImageField(upload_to='images/instagram/', verbose_name='Изображение')
     image_small = ImageSpecField(source='image',
-                                 processors=[ResizeToFill(261, 261)],
+                                 processors=[Transpose('auto'), ResizeToFill(261, 261)],
                                  format='JPEG',
                                  options={'quality': 90})
 

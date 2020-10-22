@@ -1,6 +1,6 @@
 from django.db import models
 from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill
+from imagekit.processors import ResizeToFill, Transpose
 
 
 class ContactInfo(models.Model):
@@ -63,7 +63,7 @@ class Shop(models.Model):
     image = models.ImageField(upload_to='images/shops/', verbose_name='Изображение')
 
     image_small = ImageSpecField(source='image',
-                                processors=[ResizeToFill(600, 257)],
+                                processors=[Transpose('auto'), ResizeToFill(600, 257)],
                                 format='JPEG',
                                 options={'quality': 90})
 
