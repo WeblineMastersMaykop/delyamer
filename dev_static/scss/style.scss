@@ -1443,6 +1443,10 @@ ul.lz-menu {
     }
 }
 
+.news-item-header-img {
+    padding-top: 56.25%;
+}
+
 @include media-breakpoint-up(lg) {
     .photo-swipe {
         figure {

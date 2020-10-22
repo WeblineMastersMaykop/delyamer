@@ -20,6 +20,10 @@
         <article>
             <h1>{{ news_item.title }}</h1>
 
+            <div class="narrow">
+                <div class="news-item-header-img bg-img mb-4" style="background-image: url({{ news_item.image_medium.url }})"></div>
+            </div>
+
             <div class="d-flex align-items-center border-top border-bottom py-3 my-4">
                 <span class="mr-3 text-muted">Поделиться:</span>
                 <div>

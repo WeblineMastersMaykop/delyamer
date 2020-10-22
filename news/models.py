@@ -29,6 +29,11 @@ class News(SEO):
 
     image = models.ImageField(upload_to='images/news/', verbose_name='Изображение')
 
+    image_medium = ImageSpecField(source='image',
+                                 processors=[Transpose('auto'), ResizeToFill(690, 389)],
+                                 format='JPEG',
+                                 options={'quality': 90})
+
     image_small = ImageSpecField(source='image',
                                  processors=[Transpose('auto'), ResizeToFill(356, 200)],
                                  format='JPEG',
