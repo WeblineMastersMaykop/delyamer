@@ -208,6 +208,11 @@ class ProductImage(models.Model):
                                  format='JPEG',
                                  options={'quality': 90})
 
+    image_prod = ImageSpecField(source='image',
+                                 processors=[Transpose('auto'), ResizeToFill(535, 802)],
+                                 format='JPEG',
+                                 options={'quality': 90})
+
     image_small = ImageSpecField(source='image',
                                  processors=[Transpose('auto'), ResizeToFill(150, 130)],
                                  format='JPEG',
