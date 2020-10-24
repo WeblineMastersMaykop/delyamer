@@ -49,34 +49,83 @@
     </div>
 
     <section class="pt-5 pb-4 bg-dark-light">
-        <div class="container mosaic">
-            <div class="row">
+        <div class="container">
+            <div class="mosaic mosaic-main">
+                <div class="row">
+                    <div class="col-lg-2 col-md-4 col-6">
+                        <div class="mosaic-item mi-tall mb-4">
+                            <div class="bg-img" style="background-image: url({% static 'data-images/news-item-header.jpg' %})">
+                            </div>
+                            <a href="{% url 'categories' %}" title="" class="stretched-link text-decoration-none">Каталог</a>
+                        </div>
+                    </div>
+                    {% for category in categories %}
+                    <div class="col-lg-2 col-md-4 col-6">
+                        <div class="mosaic-item mi-tall mb-4">
+                            <div class="bg-img" {% if category.image %}style="background-image: url({{ category.image_small.url }})"{% endif %}>
+                            </div>
+                            <a href="{{ category.get_absolute_url }}" title="" class="stretched-link text-decoration-none">{{ category.name }}</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
 
-                <div class="col-lg-6">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="mosaic-item mi-tall">
-                                <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-1.jpg' %})">
-                                    <a href="{% url 'products' %}?category=komplekty-nizhnego-belia" title="" class="stretched-link text-decoration-none">Комплекты нижнего белья</a>
+                <!-- <div class="row">
+
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="mosaic-item mi-tall">
+                                    <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-1.jpg' %})">
+                                        <a href="{% url 'products' %}?category=komplekty-nizhnego-belia" title="" class="stretched-link text-decoration-none">Комплекты нижнего белья</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-6">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="mosaic-item mb-4">
-                                        <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-2.jpg' %})">
-                                            <a href="{% url 'products' %}?category=biustgaltery" title="" class="stretched-link text-decoration-none">Бюстгальтеры</a>
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="mosaic-item mb-4">
+                                            <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-2.jpg' %})">
+                                                <a href="{% url 'products' %}?category=biustgaltery" title="" class="stretched-link text-decoration-none">Бюстгальтеры</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="mosaic-item mb-4">
+                                            <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-3.jpg' %})">
+                                                <a href="{% url 'products' %}?category=trusy" title="" class="stretched-link text-decoration-none">Трусы</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
 
-                                <div class="col-lg-12">
-                                    <div class="mosaic-item mb-4">
-                                        <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-3.jpg' %})">
-                                            <a href="{% url 'products' %}?category=trusy" title="" class="stretched-link text-decoration-none">Трусы</a>
-                                        </div>
+                    <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="mosaic-item mb-4">
+                                    <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-5.jpg' %})">
+                                        <a href="{% url 'products' %}?category=pizhamy" title="" class="stretched-link text-decoration-none">Пижамы</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="mosaic-item mb-4">
+                                    <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-4.jpg' %})">
+                                        <a href="{% url 'products' %}?category=bodi" title="" class="stretched-link text-decoration-none">Боди</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12 col-6">
+                                <div class="mosaic-item mb-4">
+                                    <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-6.jpg' %})">
+                                        <a href="{% url 'products' %}?category=khalaty-peniuary" title="" class="stretched-link text-decoration-none">Халаты, пеньюары</a>
                                     </div>
                                 </div>
                             </div>
@@ -84,79 +133,51 @@
                     </div>
                 </div>
 
-                <div class="col-lg-6">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="mosaic-item mb-4">
-                                <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-5.jpg' %})">
-                                    <a href="{% url 'products' %}?category=pizhamy" title="" class="stretched-link text-decoration-none">Пижамы</a>
+                <div class="row">
+                    <div class="col-lg-9">
+                        <div class="row">
+                            <div class="col-lg-8 col-6">
+                                <div class="mosaic-item mb-4">
+                                    <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-7.jpg' %})">
+                                        <a href="{% url 'products' %}?category=domashniaia-odezhda" title="" class="stretched-link text-decoration-none">Домашняя одежда</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-6">
-                            <div class="mosaic-item mb-4">
-                                <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-4.jpg' %})">
-                                    <a href="{% url 'products' %}?category=bodi" title="" class="stretched-link text-decoration-none">Боди</a>
+                            <div class="col-lg-4 col-6">
+                                <div class="mosaic-item mb-4">
+                                    <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-8.jpg' %})">
+                                        <a href="{% url 'products' %}?category=kolgotki-chulki" title="" class="stretched-link text-decoration-none">Чулки, колготки</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-lg-12 col-6">
-                            <div class="mosaic-item mb-4">
-                                <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-6.jpg' %})">
-                                    <a href="{% url 'products' %}?category=khalaty-peniuary" title="" class="stretched-link text-decoration-none">Халаты, пеньюары</a>
+                            <div class="col-lg-4 col-6">
+                                <div class="mosaic-item mb-4">
+                                    <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-9.jpg' %})">
+                                        <a href="{% url 'products' %}?category=aksessuary" title="" class="stretched-link text-decoration-none">Аксессуары</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-lg-9">
-                    <div class="row">
-                        <div class="col-lg-8 col-6">
-                            <div class="mosaic-item mb-4">
-                                <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-7.jpg' %})">
-                                    <a href="{% url 'products' %}?category=domashniaia-odezhda" title="" class="stretched-link text-decoration-none">Домашняя одежда</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-6">
-                            <div class="mosaic-item mb-4">
-                                <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-8.jpg' %})">
-                                    <a href="{% url 'products' %}?category=kolgotki-chulki" title="" class="stretched-link text-decoration-none">Чулки, колготки</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-6">
-                            <div class="mosaic-item mb-4">
-                                <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-9.jpg' %})">
-                                    <a href="{% url 'products' %}?category=aksessuary" title="" class="stretched-link text-decoration-none">Аксессуары</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-8 col-6">
-                            <div class="mosaic-item mb-4">
-                                <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-10.jpg' %})">
-                                    <a href="{% url 'products' %}?category=pliazhnaia-odezhda" title="" class="stretched-link text-decoration-none">Пляжная одежда</a>
+                            <div class="col-lg-8 col-6">
+                                <div class="mosaic-item mb-4">
+                                    <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-10.jpg' %})">
+                                        <a href="{% url 'products' %}?category=pliazhnaia-odezhda" title="" class="stretched-link text-decoration-none">Пляжная одежда</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-lg-3">
-                    <div class="mosaic-item mi-tall mi-wide mb-4">
-                        <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-11.jpg' %})">
-                            <a href="{% url 'products' %}?category=kupalniki" title="" class="stretched-link text-decoration-none">Купальники</a>
+                    <div class="col-lg-3">
+                        <div class="mosaic-item mi-tall mi-wide mb-4">
+                            <div class="bg-img d-flex align-items-end" style="background-image: url({% static 'data-images/mosaic-item-11.jpg' %})">
+                                <a href="{% url 'products' %}?category=kupalniki" title="" class="stretched-link text-decoration-none">Купальники</a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </section>

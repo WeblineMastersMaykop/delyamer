@@ -103,7 +103,8 @@ def sync_1c():
                     # Считаю сколько осталось на складе
                     stock = 0
                     for balance_key in parametrs_key:
-                        stock += int(balance_key.attrib['Count'])
+                        if balance_key.attrib['Code'] == '00-000001':
+                            stock += int(balance_key.attrib['Count'])
 
                     # Создание и изменение вариантов товаров
                     offer, created = Offer.objects.update_or_create(

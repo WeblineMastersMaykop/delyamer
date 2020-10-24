@@ -727,24 +727,36 @@ article {
             background-size: cover;
             background-color: $black;
             transition: opacity .1s ease-out;
+            margin-bottom: .25rem;
         }
 
         a {
             color: $black;
-            background-color:darken($light, 2%);
-            padding: .25rem .5rem 0 2px;
+            //            background-color:darken($light, 2%);
+            //            padding: .25rem .5rem 0 2px;
             max-width: 90%;
         }
 
         &.mi-tall {
             .bg-img {
-                height: 424px;
+                //                height: 424px;
+                padding-top: 150%;
             }
         }
 
         &:hover {
             opacity: 1;
             transition: opacity .1s ease-out !important;
+        }
+    }
+
+    &.mosaic-main {
+        .mosaic-item {
+            &.mi-tall {
+                .bg-img {
+                    //                    height: 240px;
+                }
+            }
         }
     }
 }
@@ -1523,7 +1535,7 @@ ul.lz-menu {
 
         &.mi-tall {
             .bg-img {
-                height: 324px !important;
+//                height: 324px !important;
             }
         }
 
