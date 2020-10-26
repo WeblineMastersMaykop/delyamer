@@ -78,7 +78,7 @@ class ProductsView(View):
             is_bs = int(is_bs)
             enrty_offers = enrty_offers.filter(product__is_bs=is_bs)
         except:
-            get_request.pop('is_bs', None)     
+            get_request.pop('is_bs', None)
 
         try:
             price_min = int(price_min)
@@ -186,6 +186,8 @@ class ProductsView(View):
             category_name = 'Распродажа'
         elif is_new:
             category_name = 'Новинки'
+        elif is_bs:
+            category_name = 'Хиты продаж'
         else:
             category_name = 'Все товары'
 

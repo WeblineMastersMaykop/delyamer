@@ -165,6 +165,7 @@
                 <ul class="lz-menu mb-4 pb-4 border-bottom">
                     <li {% if 'in_sale=1' in request.GET.urlencode %}class="active"{% endif %}><a href="{% url 'products' %}?in_sale=1" class="font-500"><i class="fas fa-percentage mr-2"></i>Распродажа</a></li>
                     <li {% if 'is_new=1' in request.GET.urlencode %}class="active"{% endif %}><a href="{% url 'products' %}?is_new=1" class="font-500"><i class="fas fa-fire-alt mr-2"></i>Новинки</a></li>
+                    <li {% if 'is_bs=1' in request.GET.urlencode %}class="active"{% endif %}><a href="{% url 'products' %}?is_bs=1" class="font-500"><i class="fas fa-certificate mr-2"></i>Хиты продаж</a></li>            
                     {% for category_item in categories %}
                         <li class="{% if category_item.slug == category_slug %}active{% endif %}">
                             <a href="{{ request.GET.urlencode|change_category:category_item.slug }}">{{ category_item.name }}<span>{{ category_item.get_products|length }}</span></a>
