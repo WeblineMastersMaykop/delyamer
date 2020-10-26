@@ -57,6 +57,7 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="{% url 'products' %}?in_sale=1" style="font-weight: 700;"><i class="fas fa-percentage mr-2"></i>Распродажа</a>
                             <a class="dropdown-item" href="{% url 'products' %}?is_new=1" style="font-weight: 700;"><i class="fas fa-fire-alt mr-2"></i>Новинки</a>
+                            <a class="dropdown-item" href="{% url 'products' %}?is_bs=1" style="font-weight: 700;"><i class="fas fa-certificate mr-2"></i>Хиты продаж</a>
                             {% for category in categories %}
                             <a class="dropdown-item" href="{{ category.get_absolute_url }}">{{ category.name }}</a>
                             {% endfor %}
