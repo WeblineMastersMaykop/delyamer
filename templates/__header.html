@@ -152,8 +152,9 @@
                         <a class="nav-link" style="font-weight: 700;" href="{% url 'products' %}?is_new=1"><i class="fas fa-fire-alt mr-2"></i>Новинки</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" style="font-weight: 700;" href="{% url 'products' %}?is_bs=1"><i class="fas fa-certificate mr-2"></i>Хиты продаж</a>
+                        <a class="nav-link" href="{% url 'products' %}?is_bs=1" style="font-weight: 700;"><i class="fas fa-certificate mr-2"></i>Хиты продаж</a>
                     </li>
+
 
                     {% for category in categories %}
                         <li class="nav-item">
