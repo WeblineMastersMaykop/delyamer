@@ -407,13 +407,13 @@ article {
             text-align: left;
 
             a {
-                display: inline;
+                display: inline-block;
                 background-color: $primary;
                 color: $dark;
-                line-height: 1.5em;
-                box-shadow: 1rem 0 0 $primary, -1rem 0 0 $primary;
+                line-height: 1.3em;
                 font-size: 2.1rem;
-                padding: .25rem 0 .5rem;
+                padding: .25rem 1.25rem .5rem;
+                border-radius: 2rem;
 
                 &:hover {
                     text-decoration: none;
@@ -421,13 +421,13 @@ article {
             }
 
             p {
-                display: inline;
+                display: inline-block;
                 background-color: $white;
                 color: $dark;
                 line-height: 1.75em;
-                box-shadow: 1rem 0 0 $white, -1rem 0 0 $white;
                 font-size: 1rem;
-                padding: .5rem 0;
+                padding: .5rem 1.25rem;
+                border-radius: 2rem;
                 margin: 0;
             }
         }
@@ -435,7 +435,6 @@ article {
         &:hover {
             a {
                 background-color: $secondary;
-                box-shadow: 1rem 0 0 $secondary, -1rem 0 0 $secondary;
                 transition: all .1s ease-out;
             }
         }
@@ -741,6 +740,13 @@ article {
             .bg-img {
                 //                height: 424px;
                 padding-top: 150%;
+
+                .position-absolute {
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
+                }
             }
         }
 
@@ -1535,7 +1541,7 @@ ul.lz-menu {
 
         &.mi-tall {
             .bg-img {
-//                height: 324px !important;
+                //                height: 324px !important;
             }
         }
 
