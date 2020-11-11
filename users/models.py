@@ -5,7 +5,7 @@ from django.utils.html import mark_safe
 
 class User(AbstractUser):
     full_name = models.CharField('ФИО', max_length=250, null=True, blank=True)
-    postcode = models.CharField('Почтовый индекс', max_length=10, null=True, blank=True)
+    # postcode = models.CharField('Почтовый индекс', max_length=10, null=True, blank=True)
     country = models.CharField('Страна', max_length=100, null=True, blank=True)
     region = models.CharField('Область/Регион', max_length=100, null=True, blank=True)
     city = models.CharField('Населенный пункт', max_length=100, null=True, blank=True)

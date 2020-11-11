@@ -10,11 +10,14 @@
     ФИО: {% firstof order.full_name 'Не указано' %}
     E-mail: {% firstof order.email 'Не указано' %}
     Телефон: {% firstof order.phone 'Не указано' %}
-    Индекс: {% firstof order.postcode 'Не указано' %}
     Страна: {% firstof order.country 'Не указано' %}
     Регион / Область: {% firstof order.region 'Не указано' %}
     Город / Населённый пункт: {% firstof order.city 'Не указано' %}
-    Улица, дом, квартира / офис: {% firstof order.address 'Не указано' %}
+    Микрорайон: {% firstof order.micro_district 'Не указано' %}
+    Улица: {% firstof order.street 'Не указано' %}
+    Дом: {% firstof order.house_nmb 'Не указано' %}
+    Корпус: {% firstof order.building_nmb 'Не указано' %}
+    Квартира / офис: {% firstof order.room_nmb 'Не указано' %}
     
     Способ доставки: {% firstof order.get_delivery_display 'Не указано' %}
 

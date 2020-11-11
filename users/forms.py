@@ -30,10 +30,10 @@ class RegisterForm(UserCreationForm):
 class UpdateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('postcode', 'country', 'region', 'city', 'phone', 'full_name', 'new_email',
+        fields = ('country', 'region', 'city', 'phone', 'full_name', 'new_email',
                   'micro_district', 'street', 'house_nmb', 'building_nmb', 'room_nmb')
         widgets = {
-            'postcode': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Почтовый индекс'}),
+            # 'postcode': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Почтовый индекс'}),
             'country': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Страна'}),
             'region': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Область, регион'}),
             'city': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Населённый пункт'}),

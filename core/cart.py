@@ -16,7 +16,7 @@ class Cart:
             delivery = self.session['delivery'] = {
                 'method': None,
                 'price': 0,
-                'postcode': None,
+                # 'postcode': None,
                 'country': None,
                 'region': None,
                 'city': None,
@@ -196,7 +196,7 @@ class Cart:
         self.delivery = {
             'method': method,
             'price': price,
-            'postcode': get_data['postcode'],
+            # 'postcode': get_data['postcode'],
             'country': get_data['country'],
             'region': get_data['region'],
             'city': get_data['city'],

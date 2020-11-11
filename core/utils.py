@@ -133,15 +133,36 @@ def order_pay_credit(request, order):
     return r_text.get('formUrl')
 
 
-def calc_cdeck_delivery(receiver_postcode):
+def get_city_code(city_name):
+    data = {
+        'cityName': city_name,
+        'size': 1,
+        'page': 0,
+    }
+
+    r = requests.get('http://integration.cdek.ru/v1/location/cities/json', params=data)
+    r_text = json.loads(r.text)
+
+    city_code = None
+    try:
+        city_code = r_text[0]['cityCode']
+    except Exception as e:
+        print(e)
+
+    return city_code
+
+
+def calc_cdeck_delivery(city_name, tariff_id):
+    city_code = get_city_code(city_name)
+
     data = {
         'version': '1.0',
         'dateExecute': date.today().strftime('%Y-%m-%d'),
         'authLogin': 'fPFWQzTQvGqRPLRkSIU2HOqFd7MnRPMZ',
         'secure': 'bgnQbfsRPJaUAGraihgtbc6j07PJJO60',
-        'senderCityPostCode': '350000',
-        'receiverCityPostCode': receiver_postcode,
-        'tariffId': 137,
+        'senderCityId': 435, # Краснодар
+        'receiverCityId': city_code,
+        'tariffId': tariff_id,
         # 'tariffList': [
         #     {'id': 136},
         #     {'id': 137},

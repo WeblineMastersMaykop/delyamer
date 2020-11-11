@@ -37,7 +37,7 @@ $(document).ready(function() {
     $('input[name="delivery"]').change(function() {
         form = $(this).parents('form');
 
-        $('#id_postcode').clone().addClass('d-none').appendTo(form);
+        // $('#id_postcode').clone().addClass('d-none').appendTo(form);
         $('#id_country').clone().addClass('d-none').appendTo(form);
         $('#id_region').clone().addClass('d-none').appendTo(form);
         $('#id_city').clone().addClass('d-none').appendTo(form);

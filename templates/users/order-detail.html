@@ -157,7 +157,15 @@
                     <span class="d-block mb-1">
                         {% firstof order.get_delivery_display 'Не указано' %}
                     </span>
-                    <span class="smaller">{% firstof order.address 'Не указано' %}</span>
+                    <span class="smaller">
+                        {{ order.country }}, 
+                        {{ order.region }}, 
+                        г. {{ order.city }}, 
+                        ул. {{ order.street }}, 
+                        {{ order.house_nmb }}
+                        {% if order.building_nmb %}/{{ order.building_nmb }}{% endif %}
+                        {% if order.room_nmb %}, кв. {{ order.room_nmb }}{% endif %}
+                    </span>
                 </div>
             </div>
 

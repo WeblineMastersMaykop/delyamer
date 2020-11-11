@@ -54,7 +54,7 @@ def sync_1c():
                     'Name': order.full_name,
                     'Tel': order.phone,
                     'Email': order.email,
-                    'Postcode': order.postcode,
+                    # 'Postcode': order.postcode,
                     'Country': order.country,
                     'Region': order.region,
                     'City': order.city,

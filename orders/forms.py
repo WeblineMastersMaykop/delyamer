@@ -15,10 +15,10 @@ class OrderOneClickForm(forms.ModelForm):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ('postcode', 'country', 'region', 'city', 'phone', 'full_name', 'email', 'delivery',
+        fields = ('country', 'region', 'city', 'phone', 'full_name', 'email', 'delivery',
                   'micro_district', 'street', 'house_nmb', 'building_nmb', 'room_nmb')
         widgets = {
-            'postcode': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Почтовый индекс*'}),
+            # 'postcode': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Почтовый индекс*'}),
             'country': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Страна*'}),
             'region': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Регион*'}),
             'city': forms.TextInput(attrs={'class': 'form-control form-control-sm', 'placeholder': 'Населённый пункт*'}),

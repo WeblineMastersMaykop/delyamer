@@ -10,7 +10,7 @@ class UserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (_('Personal info'), {
-            'fields': ('full_name', 'phone', 'email', 'postcode', 'country', 'region', 'city',
+            'fields': ('full_name', 'phone', 'email', 'country', 'region', 'city',
             'micro_district', 'street', 'house_nmb', 'building_nmb', 'room_nmb'),
         }),
         (_('Permissions'), {

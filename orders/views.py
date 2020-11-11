@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.contrib import messages
 from core.utils import (
     send_order_mail, order_pay_response, order_pay_credit,
-    calc_cdeck_delivery
+    calc_cdeck_delivery, get_city_code
 )
 from core.models import MailToString
 from products.models import Offer, Product
@@ -17,8 +17,8 @@ class CartView(View):
     def get(self, request):
         cart = Cart(request)
 
-        if not cart.delivery['price']:
-            messages.error(request, 'Неверный почтовый индекс')
+        # if not cart.delivery['price']:
+        #     messages.error(request, 'Неверный почтовый индекс')
 
         user = request.user
 
@@ -27,7 +27,7 @@ class CartView(View):
             initial = {
                 'method': cart.delivery['method'],
                 'price': cart.delivery['price'],
-                'postcode': cart.delivery['postcode'] or user.postcode,
+                # 'postcode': cart.delivery['postcode'] or user.postcode,
                 'country': cart.delivery['country'] or user.country,
                 'region': cart.delivery['region'] or user.region,
                 'city': cart.delivery['city'] or user.city,
@@ -53,16 +53,19 @@ class ChangeDeliveryView(View):
     def get(self, request):
         cart = Cart(request)
         delivery_method = request.GET.get('delivery')
-        postcode = request.GET.get('postcode')
+        city_name = request.GET.get('city')
 
         price = None
-        if delivery_method == 'cdek':
-            price = calc_cdeck_delivery(postcode)
-        elif delivery_method == 'pochta':
+        if delivery_method == 'pochta':
             price = DeliveryMethod.objects.filter(name='pochta').first().price
+        elif delivery_method == 'cdek_point':
+            price = calc_cdeck_delivery(city_name, 368)
+        elif delivery_method == 'cdek_home':
+            price = calc_cdeck_delivery(city_name, 137)
 
         if price is None:
             cart.change_delivery(None, 0, request.GET)
+            messages.error(request, 'Доставка по этому адрессу недоступна. Перепроверьте введенные данные или свяжитесь с нами.')
             return redirect('cart')
 
         cart.change_delivery(delivery_method, price, request.GET)

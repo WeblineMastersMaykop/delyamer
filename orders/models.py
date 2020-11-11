@@ -40,7 +40,8 @@ class Order(models.Model):
     )
 
     DELIVERY_CHOICES = (
-        ('cdek', 'СДЭК'),
+        ('cdek_point', 'СДЭК (пункт выдачи)'),
+        ('cdek_home', 'СДЭК (курьером до двери)'),
         ('pochta', 'Почта России'),
     )
 
@@ -48,7 +49,7 @@ class Order(models.Model):
     full_name = models.CharField('ФИО', max_length=250)
     phone = models.CharField('Телефон', max_length=20)
     email = models.EmailField('Электронная почта', null=True, blank=True)
-    postcode = models.CharField('Почтовый индекс', max_length=10, null=True, blank=True)
+    # postcode = models.CharField('Почтовый индекс', max_length=10, null=True, blank=True)
     country = models.CharField('Страна', max_length=100, null=True, blank=True)
     region = models.CharField('Регион', max_length=100, null=True, blank=True)
     city = models.CharField('Населенный пункт', max_length=100, null=True, blank=True)
