@@ -11,16 +11,16 @@ from orders.models import Order
 def sync_1c():
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
-    # logger_path = os.path.join(os.path.dirname(__file__), 'logs', 'orders_1c.log')
-    logger_path = 'E:\\Goga\\PycharmProjects\\delyamer\\core\\sync\\logs\\orders_1c.log'
+    logger_path = os.path.join(os.path.dirname(__file__), 'logs', 'orders_1c.log')
+    #logger_path = 'E:\\Goga\\PycharmProjects\\delyamer\\core\\sync\\logs\\orders_1c.log'
     handler = logging.FileHandler(logger_path, 'a', 'utf-8')
     handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s', datefmt='%d.%m.%y %H:%M:%S'))
     logger.addHandler(handler)
     logger.info('НАЧАЛО СКРИПТА')
 
     current_datetime = timezone.now()
-    path = 'C:\\Users\\gurge\\Desktop\\sync\\orders'
-    # path = '/home/ftp_delyamer/sync_files/orders'
+    #path = 'C:\\Users\\gurge\\Desktop\\sync\\orders'
+    path = '/home/ftp_delyamer/sync_files/orders'
 
     old_orders = Order.objects.filter(status__in=('new', 'error'), created__lt=current_datetime-timedelta(days=1)).exclude(pay_type='credit')
     old_orders.update(status='canceled')

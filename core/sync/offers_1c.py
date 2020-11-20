@@ -113,7 +113,7 @@ def sync_1c():
                         color=color,
                         cup=cup,
                         defaults={
-                            'is_active': True,
+                            'is_active': True if stock else False,
                             'stock': stock
                         }
                     )

@@ -213,7 +213,7 @@
             </div>
 
             <div class="owl-carousel carousel-products">
-                {% for product in bs_products %}
+                {% for product in new_products %}
                 <div class="product-card">
                     <div class="bg-img mb-2" style="background-image: url({{ product.main_offer.get_image.image_medium.url }})">
                         <div class="d-flex status-badges">
