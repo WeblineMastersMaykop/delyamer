@@ -370,7 +370,7 @@ $(document).ready(function() {
                 data: data,
                 success: function(data) {
                     if (data.success) {
-                        window.location.replace('/users/profile/');
+                        window.location.replace('/orders/cart/');
                     } else {
                         submit_button.prop("disabled", false);
                         for(i=0; i<data.errors.length; i++){
