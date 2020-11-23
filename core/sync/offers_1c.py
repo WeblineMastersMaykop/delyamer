@@ -121,10 +121,12 @@ def sync_1c():
                     offers = offers.exclude(product=product, size=size, color=color, cup=cup)
 
             # Варианты товаров, которых нет в выгрузке делаю неактивными
-            offers.update(is_active=False)
+            # offers.update(is_active=False)
+            offers.delete()
 
         # Товары, которых нет в выгрузке делаю неактивными
-        products.update(is_active=False)
+        # products.update(is_active=False)
+        products.delete()
 
     logger.info('КОНЕЦ СКРИПТА\n')
 
